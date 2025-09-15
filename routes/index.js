@@ -1,9 +1,11 @@
-var express = require('express');
-var router = express.Router();
+import { Router } from 'express';
+import { router as regisrationRoute } from '../routes/registration.js';
+
+export const router = Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.json({message: "API running"});
 });
 
-module.exports = router;
+router.use('/api/inscription', regisrationRoute);

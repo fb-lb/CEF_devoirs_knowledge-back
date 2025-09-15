@@ -2,16 +2,22 @@
   "name": "knowledge-back",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "cross-env DEBUG=test-back:* env-cmd -f ./env/.env nodemon --inspect ./bin/www"
   },
   "dependencies": {
     "cookie-parser": "~1.4.7",
+    "cors": "^2.8.5",
     "debug": "~4.4.1",
     "express": "~5.1.0",
-    "morgan": "~1.10.1"
+    "morgan": "~1.10.1",
+    "mysql2": "^3.14.5",
+    "sequelize": "^6.37.7"
   },
   "devDependencies": {
-    "env-cmd": "^11.0.0"
+    "cross-env": "^10.0.0",
+    "env-cmd": "^11.0.0",
+    "nodemon": "^3.1.10"
   }
 }
