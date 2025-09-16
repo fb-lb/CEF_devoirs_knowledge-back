@@ -1,6 +1,8 @@
+import { RegistrationBody, RegistrationResponse } from "../types/Resgistration.js";
+
 // If you modify one of these tests, make sure that front end validators are also modified
-export function validateRegistrationForm(body) {
-    const response = {
+export function validateRegistrationForm(body: RegistrationBody): RegistrationResponse {
+    const response: RegistrationResponse = {
         'success': false,
         'message': ''
     }
@@ -39,7 +41,7 @@ export function validateRegistrationForm(body) {
     // Test email format
     const email =  body.email;
     if (!email.includes('@') || 
-        !email.indexOf('@') > 0 ||
+        !(email.indexOf('@') > 0) ||
         !email.includes('.') ||
         !(email.lastIndexOf('.') > email.indexOf('@') + 1) ||
         !(email.lastIndexOf('.') < email.length - 1)) {
