@@ -6,7 +6,15 @@ export interface RegistrationBody {
     confirmPassword: string;
 }
 
-export interface RegistrationResponse {
+export interface RegistrationResponse<T = undefined> {
     success: boolean;
     message: string;
+    data?: T;
+}
+
+export interface AddUser {
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
 }

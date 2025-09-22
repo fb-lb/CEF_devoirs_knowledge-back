@@ -1,7 +1,9 @@
-import { Request, Response } from 'express';
-import { RegistrationBody, RegistrationResponse } from '../types/Resgistration.js';
+import { Request, Response } from "express";
+import { RegistrationBody, RegistrationResponse} from "../types/Resgistration.js";
 import { addUser } from "../services/user.service.js";
 import { validateRegistrationForm } from "../services/form.service.js";
+import { User } from "../models/databaseAssociations.js";
+import { sendEmail } from "../services/email.service.js";
 
 /**
  * User Registration
@@ -13,7 +15,10 @@ import { validateRegistrationForm } from "../services/form.service.js";
  * A compléter
  *
  */
-export async function userRegistration(req: Request<{}, {}, RegistrationBody>, res: Response<RegistrationResponse>): Promise<Response<RegistrationResponse>> {
+export async function userRegistration(
+  req: Request<{}, {}, RegistrationBody>,
+  res: Response<RegistrationResponse<User>>
+): Promise<Response<RegistrationResponse<User>>> {
   const body: RegistrationBody = {
     firstName: req.body.firstName,
     lastName: req.body.lastName,
@@ -30,13 +35,21 @@ export async function userRegistration(req: Request<{}, {}, RegistrationBody>, r
       message: validateUserInformations.message,
     });
   }
-  const message = addUser(req.body.firstName, req.body.lastName);
-  // return res.status(200).json({
-  //     'success': true,
-  //     'message': `Merci ${req.body.firstName} ${req.body.lastName}.\nVous êtes bien inscrit, un mail vous a été envoyé pour activer votre compte.`
-  // })
-  return res.status(200).json({
-    success: true,
-    message: message,
-  });
+
+  try {
+    const user: User = await addUser(body);
+    const emailSent = await sendEmail(body);
+    return res.status(200).json({
+      success: true,
+      message: `Merci ${user.firstName} ${user.lastName}.\nVous êtes bien inscrit, un mail vous a été envoyé pour activer votre compte.`,
+      data: user,
+    });
+  } catch (error: any) {
+    return res.status(error.status).json({
+      success: false,
+      message:
+        error.message ||
+        "Une erreur est survenue lors de votre inscription, vous n'êtes pas enregistré pour le moment.",
+    });
+  }
 }

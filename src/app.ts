@@ -4,38 +4,18 @@ import { fileURLToPath } from "url";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
 import cors from "cors";
-import { Sequelize } from "sequelize";
 
+import { connectDB } from "./config/database.js";
 import { router as indexRouter } from "./routes/index.js";
 import { router as usersRouter } from "./routes/users.js";
 import { AppError } from "./utils/AppError.js";
 
+// Database connection test
+await connectDB();
+
 // Get public folder path
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-// ------------------------------------
-// Initiate connection to the database
-// ------------------------------------
-
-const sequelize = new Sequelize(
-  process.env.DB_NAME,
-  process.env.DB_USERNAME,
-  process.env.DB_PASSWORD,
-  {
-    host: process.env.DB_HOST,
-    dialect: "mysql",
-    logging: console.log,
-  }
-);
-
-// Connection test
-try {
-  await sequelize.authenticate();
-  console.log("Connected to the database.");
-} catch (error) {
-  console.error("Connection to the database failed : ", error);
-}
 
 // -----------------------
 // Express configuration
@@ -75,7 +55,7 @@ app.use(function (err: AppError, req: Request, res: Response, next: NextFunction
   res.status(err.status || 500).json({
     error: err.name || "InternalServerError",
     message:
-      process.env.ENV === "dev"
+      process.env.NODE_ENV === "development"
         ? err.message || "Une erreur est survenu sur le serveur."
         : "Une erreur est survenu sur le serveur.",
   });

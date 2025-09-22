@@ -1,6 +1,6 @@
 import { RegistrationBody, RegistrationResponse } from "../types/Resgistration.js";
 
-// If you modify one of these tests, make sure that front end validators are also modified
+// If you modify one of these tests, make sure that User.ts (models) and front end validators are also modified
 export function validateRegistrationForm(body: RegistrationBody): RegistrationResponse {
     const response: RegistrationResponse = {
         'success': false,

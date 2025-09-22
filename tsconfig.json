@@ -43,7 +43,7 @@
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "NodeNext",
     "esModuleInterop": true,
-    //"allowJs": true,
+    "allowJs": true,
   },
   "include": ["./src"]
 }
