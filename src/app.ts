@@ -9,6 +9,7 @@ import { connectDB } from "./config/database.js";
 import { router as indexRouter } from "./routes/index.js";
 import { router as usersRouter } from "./routes/users.js";
 import { AppError } from "./utils/AppError.js";
+import { ApiResponse } from "./types/Interfaces.js";
 
 // Database connection test
 await connectDB();
@@ -49,15 +50,37 @@ app.use(function (req: Request, res: Response, next: NextFunction): void {
   });
 });
 
-// 500 error management
-app.use(function (err: AppError, req: Request, res: Response, next: NextFunction): void {
-  console.log(err);
-  res.status(err.status || 500).json({
-    error: err.name || "InternalServerError",
-    message:
-      process.env.NODE_ENV === "development"
-        ? err.message || "Une erreur est survenu sur le serveur."
-        : "Une erreur est survenu sur le serveur.",
+// Error management
+app.use(function (err: unknown, req: Request, res: Response, next: NextFunction): Response<ApiResponse> {
+  let status = 500;
+  let message = "Une erreur interne au serveur est survenue. Veuillez nous excuser pour la gène occasionnée. Nous mettons tout en oeuvre pour corriger le problème.";
+  
+  if (err instanceof AppError) {
+    status = err.status;
+    message = err.messageFront;
+    console.error({
+      status: err.status,
+      name: err.name,
+      message: err.message,
+      stack: err.stack,
+      cause: err.cause
+    });
+  } else if (err instanceof Error) {
+    console.error({
+      name: err.name,
+      message: err.message,
+      stack: err.stack,
+      cause: err.cause
+    });
+  } else {
+    console.error(err);
+  }
+
+  // add external service like Sentry to save the error
+
+  return res.status(status).json({
+    success: false,
+    message: message,
   });
 });
 

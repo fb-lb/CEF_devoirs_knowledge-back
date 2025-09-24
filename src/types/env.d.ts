@@ -13,5 +13,7 @@ declare namespace NodeJS {
         EMAILJS_PRIVATE_API_KEY: string;
         EMAILJS_SERVICE_ID: string;
         EMAILJS_TEMPLATE_ID: string;
+        JWT_SECRET_KEY: string;
+        SECURE_COOKIE_OPTION: boolean;
     }
 }
