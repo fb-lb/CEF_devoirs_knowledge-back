@@ -1,11 +1,9 @@
 import { Request, Response, NextFunction, Router } from 'express';
 import { router as regisrationRoute } from './registrationt.js';
+import { login } from '../controllers/authentication.controller.js';
 
 export const router: Router = Router();
 
-/* GET home page. */
-router.get('/', function(req: Request, res: Response, next: NextFunction): void {
-  res.json({message: "API running"});
-});
+router.post('/api/connexion', login);
 
 router.use('/api/inscription', regisrationRoute);
