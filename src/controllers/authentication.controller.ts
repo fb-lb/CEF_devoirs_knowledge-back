@@ -27,3 +27,8 @@ export async function login(req: Request<{}, {}, LoginBody>, res: Response): Pro
 
   return res.status(200).json({success: true, message: ""});
 }
+
+export function logout(req: Request, res: Response): Response<ApiResponse> {
+  res.clearCookie('token');
+  return res.status(200).json({ success: true, message: "" });
+}

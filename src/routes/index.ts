@@ -1,9 +1,8 @@
 import { Request, Response, NextFunction, Router } from 'express';
 import { router as regisrationRoute } from './registrationt.js';
-import { login } from '../controllers/authentication.controller.js';
+import { router as authenticationRoute } from './authentication.js';
 
-export const router: Router = Router();
-
-router.post('/api/connexion', login);
+export const router: Router = Router();;
 
 router.use('/api/inscription', regisrationRoute);
+router.use('/api/authentication', authenticationRoute);
