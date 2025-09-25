@@ -4,10 +4,7 @@ import { addUser, setIsVerified } from "../services/user.service.js";
 import { validateRegistrationForm } from "../services/form.service.js";
 import { User } from "../models/databaseAssociations.js";
 import { sendEmail } from "../services/email.service.js";
-import {
-  checkEmailToken,
-  generateEmailToken,
-} from "../services/token.service.js";
+import { checkEmailToken, generateEmailToken } from "../services/token.service.js";
 import { AppError } from "../utils/AppError.js";
 
 /**
@@ -39,7 +36,7 @@ export async function userRegistration(
   const token: string = await generateEmailToken(body.email);
 
   await sendEmail(body, token);
-  
+
   return res.status(200).json({
     success: true,
     message: `Merci ${user.firstName} ${user.lastName}.\nVous êtes bien inscrit, un mail vous a été envoyé pour activer votre compte.\nVeuillez activer votre compte pour pouvoir vous connecter.`,
@@ -69,7 +66,6 @@ export async function checkEmail(
 
   return res.status(200).json({
     success: true,
-    message:
-      "Votre mail a bien été validé, vous pouvez désormais vous connecter à votre compte personnel avec vos identifiants.",
+    message: "Votre mail a bien été validé, vous pouvez désormais vous connecter à votre compte personnel avec vos identifiants.",
   });
 }

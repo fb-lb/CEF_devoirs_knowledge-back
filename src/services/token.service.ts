@@ -3,7 +3,7 @@ import { User } from "../models/User.js";
 import { AppError } from "../utils/AppError.js";
 import {
   MyCheckingPayload,
-  RegistrationResponse,
+  RegistrationResponse
 } from "../types/Interfaces.js";
 
 export async function generateEmailToken(email: string): Promise<string> {
@@ -63,4 +63,10 @@ export function checkEmailToken(token: string): RegistrationResponse<number> {
       { cause: error }
     );
   }
+}
+
+export function generateLoginToken(user: User): string {
+  const { password: _, ...cleanUser} = user.toJSON();
+  const token = jwt.sign(cleanUser, process.env.JWT_SECRET_KEY, { expiresIn: 60 * 60 * 24 });
+  return token;
 }

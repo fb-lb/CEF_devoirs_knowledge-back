@@ -36,3 +36,8 @@ export interface MyCheckingPayload extends JwtPayload {
     roles: string;      
   };
 }
+
+export interface LoginBody {
+  email: string;
+  password: string;
+}
