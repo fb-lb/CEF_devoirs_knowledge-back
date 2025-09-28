@@ -5,4 +5,4 @@ import { router as authenticationRoute } from './authentication.js';
 export const router: Router = Router();;
 
 router.use('/api/inscription', regisrationRoute);
-router.use('/api/authentication', authenticationRoute);
+router.use('/api/authentification', authenticationRoute);

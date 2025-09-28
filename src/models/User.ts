@@ -58,6 +58,10 @@ User.init(
             type: DataTypes.JSON,
             allowNull: false,
             defaultValue: ["user"],
+            get(){
+                const rawValue = this.getDataValue('roles');
+                return typeof(rawValue) === 'string' ? JSON.parse(rawValue) : rawValue;
+            },
             validate: {
                 isValidRoleArray(value: string[]) {
                     const allowed = ["user", "admin"];

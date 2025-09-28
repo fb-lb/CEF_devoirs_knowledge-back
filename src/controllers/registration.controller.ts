@@ -1,11 +1,9 @@
 import { Request, Response } from "express";
-import { RegistrationBody, RegistrationResponse } from "../types/Interfaces.js";
+import { MyCheckingPayload, RegistrationBody, RegistrationResponse } from "../types/Interfaces.js";
 import { addUser, setIsVerified } from "../services/user.service.js";
 import { validateRegistrationForm } from "../services/form.service.js";
-import { User } from "../models/databaseAssociations.js";
 import { sendEmail } from "../services/email.service.js";
-import { checkEmailToken, generateEmailToken } from "../services/token.service.js";
-import { AppError } from "../utils/AppError.js";
+import { isTokenValid, generateToken } from "../services/token.service.js";
 
 /**
  * User Registration
@@ -19,8 +17,8 @@ import { AppError } from "../utils/AppError.js";
  */
 export async function userRegistration(
   req: Request<{}, {}, RegistrationBody>,
-  res: Response<RegistrationResponse<User>>
-): Promise<Response<RegistrationResponse<User>>> {
+  res: Response<RegistrationResponse<MyCheckingPayload['user']>>
+): Promise<Response<RegistrationResponse<MyCheckingPayload['user']>>> {
   const body: RegistrationBody = {
     firstName: req.body.firstName,
     lastName: req.body.lastName,
@@ -30,11 +28,8 @@ export async function userRegistration(
   };
 
   validateRegistrationForm(body);
-
-  const user: User = await addUser(body);
-
-  const token: string = await generateEmailToken(body.email);
-
+  const user: MyCheckingPayload['user'] = await addUser(body);
+  const token: string = generateToken(user);
   await sendEmail(body, token);
 
   return res.status(200).json({
@@ -50,19 +45,10 @@ export async function checkEmail(
 ): Promise<Response<RegistrationResponse>> {
   // Check the token is valid
   const token: string = req.body.token;
-  const checkTokenResponse: RegistrationResponse<number> = checkEmailToken(token);
+  const user = isTokenValid(token).data as MyCheckingPayload['user'];
 
   // Set isVerified to true for this user
-  let verifiedUserResponse: RegistrationResponse;
-  if (checkTokenResponse.data !== undefined) {
-    verifiedUserResponse = await setIsVerified(checkTokenResponse.data);
-  } else {
-    throw new AppError(
-      400,
-      "checkmail function in registration controller failed because checkEmailToken function (in token service) returned undefined for data property",
-      "Nous n'avons pas pu mettre à jour votre compte, veuilez réessayer ultérieurement ou contacter le support."
-    );
-  }
+  await setIsVerified(user.id);
 
   return res.status(200).json({
     success: true,
