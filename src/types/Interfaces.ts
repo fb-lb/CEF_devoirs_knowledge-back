@@ -33,7 +33,8 @@ export interface MyCheckingPayload extends JwtPayload {
     firstName: string;        
     lastName: string;
     email: string;
-    roles: string;      
+    roles: ('user' | 'admin')[];
+    isVerified: boolean;
   };
 }
 

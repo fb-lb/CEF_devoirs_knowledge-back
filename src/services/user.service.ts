@@ -3,11 +3,12 @@ import {
   RegistrationBody,
   AddUser,
   RegistrationResponse,
+  MyCheckingPayload,
 } from "../types/Interfaces.js";
 import { User } from "../models/databaseAssociations.js";
 import { AppError } from "../utils/AppError.js";
 
-export async function addUser(body: RegistrationBody): Promise<User> {
+export async function addUser(body: RegistrationBody): Promise<MyCheckingPayload['user']> {
   try {
     const { confirmPassword, ...userData } = body;
 
@@ -15,7 +16,9 @@ export async function addUser(body: RegistrationBody): Promise<User> {
     userData.password = hashedPassword;
 
     const newUser = await User.create(userData as AddUser);
-    return newUser;
+    const {password: _, ...cleanUser} = newUser.get({plain: true});
+    
+    return cleanUser;
   } catch (error: any) {
     if (error.name === "SequelizeUniqueConstraintError") {
       throw new AppError(
