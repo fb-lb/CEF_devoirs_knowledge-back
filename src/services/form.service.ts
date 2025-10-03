@@ -1,4 +1,4 @@
-import { RegistrationBody, RegistrationResponse } from "../types/Interfaces.js";
+import { RegistrationBody, RegistrationResponse, UpdateUserBody } from "../types/Interfaces.js";
 import { AppError } from "../utils/AppError.js";
 
 // If you modify one of these tests, make sure that User.ts (models) and front end validators are also modified
@@ -90,6 +90,81 @@ export function validateRegistrationForm(body: RegistrationBody): void {
   // Test equality between password and confirm password
   if (body.password !== body.confirmPassword) {
     error.messageFront = 'Les champs "Mot de passe" et "Confirmation du mot de passe" doivent être identiques.';
+    throw error;
+  }
+}
+
+export function validateUpdateUserForm(body: UpdateUserBody): void {
+  const error = new AppError(
+    422,
+    "validateUpdateUserForm function in form service failed because of an invalid form field",
+    ""
+  );
+
+  // Test required validator
+  if (
+    !body.id ||
+    !body.firstName ||
+    !body.lastName ||
+    !body.email
+  ) {
+    error.messageFront = 'Les champs "Identifiant", "Nom", "Prénom" et "Email" sont obligatoires.';
+    throw error;
+  }
+
+  // Test id value
+  if (body.id < 1) {
+    error.messageFront = `La valeur du champ "Identifiant" doit être d'au moins 1.`;
+    throw error;
+  }
+
+  // Test id length
+  if (body.id.toLocaleString.length > 20) {
+    error.messageFront = `Le champ "Identifiant" doit contenir au maximum 20 caractères.`;
+    throw error;
+  }
+
+  // Test firstName length
+  if (body.firstName.length > 60) {
+    error.messageFront = 'Le champ "Prénom" doit contenir au maximum 60 caractères.';
+    throw error;
+  }
+
+  // Test lastName length
+  if (body.lastName.length > 60) {
+    error.messageFront = 'Le champ "Nom" doit contenir au maximum 60 caractères.';
+    throw error;
+  }
+
+  // Test firstName special caracters
+  const regex = /^[a-zA-Zéèêàîùôçïäâëüöœ '\-\.]*$/;
+  if (!regex.test(body.firstName)) {
+    error.messageFront = 'Le champ "Prénom" contient des caractères non autorisés.';
+    throw error;
+  }
+
+  // Test lastName special caracters
+  if (!regex.test(body.lastName)) {
+    error.messageFront = 'Le champ "Nom" contient des caractères non autorisés.';
+    throw error;
+  }
+
+  // Test email format
+  const email = body.email;
+  if (
+    !email.includes("@") ||
+    !(email.indexOf("@") > 0) ||
+    !email.includes(".") ||
+    !(email.lastIndexOf(".") > email.indexOf("@") + 1) ||
+    !(email.lastIndexOf(".") < email.length - 1)
+  ) {
+    error.messageFront = "Le format email doit être respecté.";
+    throw error;
+  }
+
+  // Test email length
+  if (body.email.length > 80) {
+    error.messageFront = 'Le champ "Email" doit contenir au maximum 80 caractères.';
     throw error;
   }
 }

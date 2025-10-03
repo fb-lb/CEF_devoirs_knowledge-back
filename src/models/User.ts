@@ -12,9 +12,12 @@ interface UserAttributes {
     isVerified: boolean;
     createdAt?: Date;
     updatedAt?: Date;
+    updatedBy: number | null;
+    UpdatedByUsers?: User | null;
+    UpdatedUsers?: User[];
 }
 
-interface UserCreationAttributes extends Optional<UserAttributes, "id" | "roles" | "isVerified" | "createdAt" | "updatedAt"> {}
+interface UserCreationAttributes extends Optional<UserAttributes, "id" | "roles" | "isVerified" | "createdAt" | "updatedAt" | "updatedBy" | "UpdatedByUsers" | "UpdatedUsers"> {}
 
 export class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
     declare id: number;
@@ -27,6 +30,9 @@ export class User extends Model<UserAttributes, UserCreationAttributes> implemen
 
     declare readonly createdAt: Date;
     declare readonly updatedAt: Date;
+    declare updatedBy: number | null;
+    declare UpdatedByUsers: User | null;
+    declare UpdatedUsers: User[];
 }
 
 // If you modify one of these conditions, make sure that back end validators (in form.service.ts) and front end validators are also modified
@@ -75,6 +81,11 @@ User.init(
             type: DataTypes.BOOLEAN,
             allowNull: false,
             defaultValue: false,
+        },
+        updatedBy: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+            defaultValue: null,
         }
     },
     {

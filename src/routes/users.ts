@@ -1,8 +1,9 @@
 import { Router, Request, Response, NextFunction } from 'express';
+import { privateAdmin } from '../middlewares/private.middleware.js';
+import { allUsers, deleteUserController, updateUserController } from '../controllers/users.controller.js';
 
 export const router = Router();
 
-/* GET users listing. */
-router.get('/', function(req: Request, res: Response, next: NextFunction): void {
-  res.json({message: 'users routes'});
-});
+router.get('/tous',privateAdmin, allUsers);
+router.patch('/:id', privateAdmin, updateUserController);
+router.delete('/:id', privateAdmin, deleteUserController);

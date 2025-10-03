@@ -1,4 +1,4 @@
-import { User } from "../models/User.js";
+import { User } from "../models/databaseAssociations.js";
 import { AppError } from "../utils/AppError.js";
 import { Response } from "express";
 import bcrypt from 'bcrypt';
@@ -8,7 +8,7 @@ export async function testLoginRequest(email: string, password: string): Promise
   try {
     const user = await User.findOne(
       { where: { email: email }, 
-      attributes: ['id', 'email', 'firstName', 'lastName', 'password', 'roles', 'isVerified']
+      attributes: ['id', 'email', 'firstName', 'lastName', 'password', 'roles', 'isVerified', 'createdAt', 'updatedAt', 'updatedBy']
     });
 
     if (!user) return 'Cet email ne correspond à aucun compte enregistré.';
@@ -17,7 +17,17 @@ export async function testLoginRequest(email: string, password: string): Promise
     
     if (!checkPassword) return 'Email et/ou mot de passe invalide.';
 
-    const { password: _, ...cleanUser } = user.get({ plain: true });
+    const cleanUser = {
+        id: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        roles: user.roles,
+        isVerified: user.isVerified,
+        createdAt: user.createdAt.toLocaleString('fr-FR', {timeZone: 'Europe/Paris'}),
+        updatedAt: user.updatedAt.toLocaleString('fr-FR', {timeZone: 'Europe/Paris'}),
+        updatedBy: user.updatedBy,
+      };
 
     return cleanUser;  
   } catch (error: any) {
