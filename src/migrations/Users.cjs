@@ -4,26 +4,26 @@ module.exports = {
     async up(queryInterface, Sequelize) {
         await queryInterface.createTable("Users", {
             id: {
-                type: Sequelize.INTEGER,
+                type: Sequelize.INTEGER.UNSIGNED,
                 autoIncrement: true,
                 primaryKey: true,
                 allowNull: false,
             },
             firstName: {
-                type: Sequelize.STRING,
+                type: Sequelize.STRING(60),
                 allowNull: false,
             },
             lastName: {
-                type: Sequelize.STRING,
+                type: Sequelize.STRING(60),
                 allowNull: false,
             },
             email: {
-                type: Sequelize.STRING,
+                type: Sequelize.STRING(80),
                 allowNull: false,
                 unique: true,
             },
             password: {
-                type: Sequelize.STRING,
+                type: Sequelize.STRING(100),
                 allowNull: false,
             },
             roles: {
@@ -43,6 +43,16 @@ module.exports = {
             updatedAt: {
                 type: Sequelize.DATE,
                 allowNull: false,
+            },
+            updatedBy: {
+                type: Sequelize.INTEGER,
+                allowNull: true,
+                reference: {
+                    model: "users",
+                    key: "id"
+                },
+                onUpdate: "CASCADE",
+                onDelete: "CASCADE",
             },
         });
     },

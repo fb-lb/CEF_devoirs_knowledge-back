@@ -1,5 +1,4 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { User } from "../models/User.js";
 import { AppError } from "../utils/AppError.js";
 import {
   MyCheckingPayload,
@@ -28,6 +27,20 @@ export function isTokenValid(token: string): RegistrationResponse<MyCheckingPayl
       500,
       "isTokenValid function in token service failed",
       "La vérification du token a échoué, veuillez réessayer ultérieurement ou contacter le support.",
+      { cause: error }
+    );
+  }
+}
+
+export function getRequestorId(token: string) {
+  try {
+    const payload = jwt.decode(token);
+    return (payload as MyCheckingPayload).user.id;
+  } catch (error: any) {
+    throw new AppError(
+      500,
+      "getRequestorId function in token service failed",
+      "Le décodage du token a échoué, veuillez réessayer ultérieurement ou contacter le support.",
       { cause: error }
     );
   }

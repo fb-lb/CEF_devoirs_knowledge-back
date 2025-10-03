@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import { ApiResponse, LoginBody, MyCheckingPayload } from "../types/Interfaces.js";
 import { setCookies, testLoginRequest } from "../services/authentication.service.js";
 import { generateToken } from "../services/token.service.js";
-import { User } from "../models/User.js";
 
 export async function login(req: Request<{}, {}, LoginBody>, res: Response): Promise<Response<ApiResponse>> {
   const body: LoginBody = {

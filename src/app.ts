@@ -10,9 +10,11 @@ import { router as indexRouter } from "./routes/index.js";
 import { router as usersRouter } from "./routes/users.js";
 import { AppError } from "./utils/AppError.js";
 import { ApiResponse } from "./types/Interfaces.js";
+import { setupAssociations } from "./models/databaseAssociations.js";
 
-// Database connection test
+// Set Database
 await connectDB();
+setupAssociations()
 
 // Get public folder path
 const __filename = fileURLToPath(import.meta.url);
@@ -27,7 +29,7 @@ const app = express();
 app.use(
   cors({
     origin: process.env.FRONT_URL,
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     credentials: true,
   })
 );
