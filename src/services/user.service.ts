@@ -91,7 +91,7 @@ export async function getAllUsers(): Promise<MyCheckingPayload['user'][]> {
         roles: user.roles,
         isVerified: user.isVerified,
         createdAt: user.createdAt.toLocaleString('fr-FR', {timeZone: 'Europe/Paris'}),
-        updatedAt: user.updatedAt.toLocaleString('fr-FR', {timeZone: 'Europe/Paris'}),
+        updatedAt: user.updatedAt.toISOString() === user.createdAt.toISOString() ? '' : user.updatedAt.toLocaleString('fr-FR', {timeZone: 'Europe/Paris'}),
         updatedBy: user.updatedBy,
       });
     });
