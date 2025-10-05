@@ -2,7 +2,7 @@
 
 module.exports = {
     async up(queryInterface, Sequelize) {
-        await queryInterface.createTable("Users", {
+        await queryInterface.createTable("user", {
             id: {
                 type: Sequelize.INTEGER.UNSIGNED,
                 autoIncrement: true,
@@ -45,19 +45,19 @@ module.exports = {
                 allowNull: false,
             },
             updatedBy: {
-                type: Sequelize.INTEGER,
+                type: Sequelize.INTEGER.UNSIGNED,
                 allowNull: true,
-                reference: {
-                    model: "users",
+                references: {
+                    model: "user",
                     key: "id"
                 },
                 onUpdate: "CASCADE",
-                onDelete: "CASCADE",
+                onDelete: "SET NULL",
             },
         });
     },
 
     async down(queryInterface, Sequelize) {
-        await queryInterface.dropTable("Users");
+        await queryInterface.dropTable("user");
     },
 }

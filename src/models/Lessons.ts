@@ -55,6 +55,7 @@ Lesson.init({
   },
   price: {
     type: DataTypes.INTEGER,
+    allowNull: false,
   },
   order: {
     type: DataTypes.INTEGER,
