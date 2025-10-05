@@ -6,7 +6,6 @@ import { Cursus } from "./Cursus.js";
 interface ThemeAttributes {
   id: number;
   name: string;
-  price: number;
   order: number;
   createdAt?: Date;
   updatedAt?: Date;
@@ -22,7 +21,6 @@ interface ThemeCreationAttributes extends Optional<ThemeAttributes, "id" | "crea
 export class Theme extends Model<ThemeAttributes, ThemeCreationAttributes> implements ThemeAttributes {
   declare id: number;
   declare name: string;
-  declare price: number;
   declare order: number;
   
   declare readonly createdAt: Date;
@@ -43,10 +41,6 @@ Theme.init(
   },
   name: {
     type: DataTypes.STRING(255),
-    allowNull: false,
-  },
-  price: {
-    type: DataTypes.INTEGER,
     allowNull: false,
   },
   order: {

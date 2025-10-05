@@ -13,10 +13,6 @@ module.exports = {
                 type: Sequelize.STRING(255),
                 allowNull: false,
             },
-            price: {
-                type: Sequelize.INTEGER,
-                allowNull: false,
-            },
             order: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
