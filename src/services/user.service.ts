@@ -114,7 +114,6 @@ export async function updateUser(requestorId: number, userData: UpdateUserBody):
     user.email = userData.email;
     user.firstName = userData.firstName;
     user.lastName = userData.lastName;
-    //userData.roles.push('user');
     user.roles = userData.roles
     user.isVerified = userData.isVerified;
     user.updatedBy = requestorId;
@@ -134,13 +133,6 @@ export async function deleteUser(userId: number): Promise<void> {
   try {
     const userToDelete = await User.findByPk(userId, {include: ['UpdatedUsers']});
     if (!userToDelete) throw new AppError(404, "User not found with provided Id in deleteUser function in user services", "L'identifiant fourni ne permet pas de retrouver l'utilisateur à supprimer.");
-    // Set null on updatedBy FK if corresponding to userToDeleteId because otherwise it would delete updatedUsers too because onDelete = 'CASCADE'
-    if (userToDelete.roles.includes('admin')) {
-      for (const user of userToDelete.UpdatedUsers ||  []) {
-        user.updatedBy = null;
-        await user.save();
-      }
-    }
     await userToDelete.destroy();
   } catch (error: any) {
     if (error instanceof AppError) throw error;

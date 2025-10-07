@@ -10,8 +10,8 @@ interface ImageAttributes {
   alternative: string;
   createdAt?: Date;
   updatedAt?: Date;
-  createdBy: User | null;
-  updatedBy: User | null;
+  createdBy: number | null;
+  updatedBy: number | null;
 
   IncludedInElement?: Element;
   UpdatedByUser?: User | null;
@@ -27,8 +27,8 @@ export class Image extends Model<ImageAttributes, ImageCreationAttributes> imple
 
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
-  declare createdBy: User | null;
-  declare updatedBy: User | null;
+  declare createdBy: number | null;
+  declare updatedBy: number | null;
 
   declare IncludedInElement: Element;
   declare UpdatedByUser: User | null;

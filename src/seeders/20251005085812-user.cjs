@@ -14,8 +14,8 @@ module.exports = {
         password: await bcrypt.hash('00000000', 10),
         roles: JSON.stringify(['user', 'admin']),
         isVerified: true,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: new Date(Date.now() - (1000 * 3600 * 100)),
+        updatedAt: new Date(Date.now() - (1000 * 3600 * 100)),
         updatedBy: null,
       },
       { 
@@ -26,9 +26,9 @@ module.exports = {
         password: await bcrypt.hash('00000000', 10),
         roles: JSON.stringify(['user', 'admin']),
         isVerified: true,
-        createdAt: new Date(),
+        createdAt: new Date(Date.now() - (1000 * 3600 * 42)),
         updatedAt: new Date(),
-        updatedBy: null,
+        updatedBy: 1,
       },
       { 
         id: 3,
@@ -55,25 +55,9 @@ module.exports = {
         updatedBy: null,
       }
     ], {})
-    
-    /**
-     * Add seed commands here.
-     *
-     * Example:
-     * await queryInterface.bulkInsert('People', [{
-     *   name: 'John Doe',
-     *   isBetaMember: false
-     * }], {});
-    */
   },
 
   async down (queryInterface, Sequelize) {
     return queryInterface.bulkDelete('user', null, {});
-    /**
-     * Add commands to revert seed here.
-     *
-     * Example:
-     * await queryInterface.bulkDelete('People', null, {});
-     */
   }
 }

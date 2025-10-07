@@ -9,8 +9,8 @@ interface TextAttributes {
   content: string;
   createdAt?: Date;
   updatedAt?: Date;
-  createdBy: User | null;
-  updatedBy: User | null;
+  createdBy: number | null;
+  updatedBy: number | null;
 
   IncludedInElement?: Element;
   UpdatedByUser?: User;
@@ -25,8 +25,8 @@ export class Text extends Model<TextAttributes, TextCreationAttributes> implemen
 
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
-  declare createdBy: User | null;
-  declare updatedBy: User | null;
+  declare createdBy: number | null;
+  declare updatedBy: number | null;
 
   declare IncludedInElement: Element;
   declare UpdatedByUser: User;
