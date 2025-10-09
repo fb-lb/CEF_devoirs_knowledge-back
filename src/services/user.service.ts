@@ -8,6 +8,7 @@ import {
 } from "../types/Interfaces.js";
 import { User } from "../models/databaseAssociations.js";
 import { AppError } from "../utils/AppError.js";
+import { Request } from "express";
 
 export async function addUser(body: RegistrationBody): Promise<MyCheckingPayload['user']> {
   try {
@@ -143,4 +144,14 @@ export async function deleteUser(userId: number): Promise<void> {
       { cause : error }
     )
   }
+}
+
+export function getUserIdInRequest(req: Request): number {
+  if(!req.user) throw new AppError(
+    404,
+    "getUserIdInRequest function in user service failed : no id stored in req.id in private middleware or you have to use a private middleware to get id in request",
+    "Votre identifiant n'a pas été retrouvé dans la base de données, si vous n'êtes pas connecté actuellement, veuillez contacter le support."
+  )
+
+  return req.user.id;
 }

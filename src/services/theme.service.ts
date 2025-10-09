@@ -29,9 +29,9 @@ export async function getAllThemes(): Promise<ThemeData[]> {
   }
 }
 
-export async function  changeOrderThemes(id: number, move: 'up' | 'down'): Promise<ApiResponse> {
+export async function  changeOrderThemes(themeId: number, move: 'up' | 'down', userId: number): Promise<ApiResponse> {
   try {
-    const targetTheme = await Theme.findOne({ where: { id: id } });
+    const targetTheme = await Theme.findOne({ where: { id: themeId } });
     if (!targetTheme) throw new AppError(
       404,
       "changeOrderThemes function in theme service failed : target theme not found with provided id",
@@ -41,32 +41,28 @@ export async function  changeOrderThemes(id: number, move: 'up' | 'down'): Promi
     if(move === 'up') {
       if (targetTheme.order === 1) return { success: false, message: "Le changement d'ordre n'est pas possible car ce thème est déjà à la première place."};
 
-      const themetoSwap = await Theme.findOne({ where: { order: targetTheme.order - 1 } });
-      if (!themetoSwap) throw new AppError(
+      const themeToSwap = await Theme.findOne({ where: { order: targetTheme.order - 1 } });
+      if (!themeToSwap) throw new AppError(
         404,
         "changeOrderThemes function in theme service failed : theme to swap not found",
         "Le thème avec qui il faut échanger l'ordre n'a pas été retrouvé en base de données."
       );
 
-      themetoSwap.order += 1;
-      targetTheme.order -= 1;
-      await themetoSwap.save();
-      await targetTheme.save();
+      await themeToSwap.update({ order: themeToSwap.order += 1, updatedBy: userId });
+      await targetTheme.update({ order: targetTheme.order -= 1, updatedBy: userId });
     } else if (move === 'down') {
       const allTheme = await Theme.findAll();
       if (targetTheme.order === allTheme.length) return { success: false, message: "Le changement d'ordre n'est pas possible car ce thème est déjà à la dernière place."};
       
-      const themetoSwap = await Theme.findOne({ where: { order: targetTheme.order + 1 } });
-      if (!themetoSwap) throw new AppError(
+      const themeToSwap = allTheme.find(theme => theme.order === targetTheme.order + 1);
+      if (!themeToSwap) throw new AppError(
         404,
         "changeOrderThemes function in theme service failed : theme to swap not found",
         "Le thème avec qui il faut échanger l'ordre n'a pas été retrouvé en base de données."
       );
 
-      themetoSwap.order -= 1;
-      targetTheme.order += 1;
-      await themetoSwap.save();
-      await targetTheme.save();
+      await themeToSwap.update({ order: themeToSwap.order -= 1, updatedBy: userId });
+      await targetTheme.update({ order: targetTheme.order += 1, updatedBy: userId});
     }
 
     return { success: true, message: ''};

@@ -5,5 +5,4 @@ import { changeOrderThemesController, getAllThemesController } from "../controll
 export const router = Router();
 
 router.get('/all', privateAdmin, getAllThemesController);
-
 router.get('/:id/:move', privateAdmin, changeOrderThemesController);
