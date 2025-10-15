@@ -6,6 +6,7 @@ import { Element } from "./Element.js";
 interface TextAttributes {
   id: number;
   element_id: number;
+  type: 'title1' | 'title2' | 'title3' | 'paragraph';
   content: string;
   createdAt?: Date;
   updatedAt?: Date;
@@ -21,6 +22,7 @@ interface TextCreationAttributes extends Optional<TextAttributes, 'id' | 'create
 export class Text extends Model<TextAttributes, TextCreationAttributes> implements TextAttributes {
   declare id: number;
   declare element_id: number;
+  declare type: 'title1' | 'title2' | 'title3' | 'paragraph';
   declare content: string;
 
   declare readonly createdAt: Date;
@@ -42,9 +44,16 @@ Text.init({
     type: DataTypes.INTEGER.UNSIGNED,
     allowNull: false,
   },
-  content: {
-    type: DataTypes.STRING(255),
+  type: {
+    type: DataTypes.ENUM('title1', 'title2', 'title3', 'paragraph'),
     allowNull: false,
+  },
+  content: {
+    type: DataTypes.TEXT,
+    allowNull: false,
+    validate: {
+      len: [1, 5000],
+    }
   },
   createdBy: {
     type: DataTypes.INTEGER.UNSIGNED,

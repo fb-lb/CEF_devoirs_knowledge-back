@@ -19,8 +19,12 @@ module.exports = {
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE',
             },
+            type: {
+                type : Sequelize.ENUM('title1', 'title2', 'title3', 'paragraph'),
+                allowNull: false,
+            },
             content: {
-                type: Sequelize.STRING(255),
+                type: Sequelize.TEXT,
                 allowNull: false,
             },
             createdAt: {

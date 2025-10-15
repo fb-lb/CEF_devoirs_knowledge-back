@@ -6,6 +6,7 @@ import { Element } from "./Element.js";
 interface ImageAttributes {
   id: number;
   element_id: number;
+  legend: string | null;
   source: string;
   alternative: string;
   createdAt?: Date;
@@ -22,6 +23,7 @@ interface ImageCreationAttributes extends Optional<ImageAttributes, 'id' | 'crea
 export class Image extends Model<ImageAttributes, ImageCreationAttributes> implements ImageAttributes {
   declare id: number;
   declare element_id: number;
+  declare legend: string | null;
   declare source: string;
   declare alternative: string;
 
@@ -43,6 +45,10 @@ Image.init({
   element_id: {
     type: DataTypes.INTEGER.UNSIGNED,
     allowNull: false,
+  },
+  legend: {
+    type: DataTypes.STRING,
+    allowNull: true,
   },
   source: {
     type: DataTypes.STRING(255),

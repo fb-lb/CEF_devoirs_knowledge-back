@@ -89,16 +89,25 @@ export interface LessonData {
   updatedBy: number | null;
 }
 
-export interface ElementData {
+export interface BaseElement {
   id: number;
   lessonId: number;
-  type: 'text' | 'image';
   order: number;
   createdAt: string;
   updatedAt: string;
   createdBy: number | null;
   updatedBy: number | null;
-  content?: string;
-  source?: string;
-  alternative?: string;
 }
+
+export type ElementData =
+  | (BaseElement & {
+    type: 'text';
+    textType: 'title1' | 'title2' | 'title3' | 'paragraph';
+    content: string;
+  })
+  | (BaseElement & {
+    type: 'image';
+    legend: string | null;
+    source: string;
+    alternative: string;
+  });
