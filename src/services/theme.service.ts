@@ -76,3 +76,49 @@ export async function  changeOrderThemes(themeId: number, move: 'up' | 'down', u
     );
   }
 }
+
+export async function addTheme(themeName: string, allThemes: ThemeData[], requestorId: number): Promise<void> {
+  for (const theme of allThemes) {
+    if (theme.name === themeName) throw new AppError(
+      422,
+      "addTheme function in theme service failed",
+      "Un thème porte déjà ce nom, veuillez choisir un thème avec un nom différent.",
+    );
+  }
+
+  try {
+    await Theme.create({
+      name: themeName,
+      order: allThemes.length + 1,
+      createdBy: requestorId,
+      updatedBy: null,
+    });
+  } catch (error: any) {
+    throw new AppError(
+      500,
+      "addTheme function in theme service failed",
+      "L'ajout d'un nouveau thème a échoué, veuillez réessayer ultérieurement ou contacter le support.",
+      { cause: error }
+    );
+  }
+}
+
+export async function deleteTheme(themeId: number): Promise<void> {
+  try {
+    const themeToDelete = await Theme.findByPk(themeId);
+    if (!themeToDelete) throw new AppError(
+      404,
+      "deleteTheme function in theme service failed : theme not found with provided id",
+      "Le thème n'a pas pu être retrouvé avec l'identifiant fourni, veuillez réessayer ultérieurement ou contacter le support.",
+    );
+    await themeToDelete.destroy();
+  } catch (error: any) {
+    if (error instanceof AppError) throw error;
+    throw new AppError(
+      500,
+      "deleteTheme function in theme service failed",
+      "La suppression du thème a échoué, veuillez réessayer ultérieurement ou contacter le support.",
+      { cause: error }
+    );
+  }
+}

@@ -169,3 +169,62 @@ async function updateUpdatedBy(type: 'element' | 'text' | 'image', elementId: nu
     );
   }
 }
+
+export async function addImage(lessonId: number, requestorId: number, legend: string | null, source: string, alternative: string, allElements: ElementData[]): Promise<void> {
+  try {
+    const elementsInSameLesson = allElements.filter(element => element.lessonId === lessonId);
+    const newElement = await Element.create({
+      order: elementsInSameLesson.length + 1,
+      lesson_id: lessonId,
+      type: 'image',
+      createdBy: requestorId,
+      updatedBy: null,
+    });
+
+    const newImage = await Image.create({
+      element_id: newElement.id,
+      source: source,
+      legend: legend,
+      alternative: alternative,
+      createdBy: requestorId,
+      updatedBy: null,
+    });
+  } catch (error: any) {
+    //if (error instanceof AppError) throw error;
+    throw new AppError(
+      500,
+      "addImage function in element service failed",
+      "L'ajout de l'image à la base de donnée a échoué, veuillez réessayer ultérieurement ou contacter le support.",
+      { cause: error }
+    );
+  }
+}
+
+export async function addText(lessonId: number, requestorId: number, textType: 'title1' | 'title2' | 'title3' | 'paragraph', content: string, allElements: ElementData[]): Promise<void> {
+  try {
+    const elementsInSameLesson = allElements.filter(element => element.lessonId === lessonId);
+    const newElement = await Element.create({
+      order: elementsInSameLesson.length + 1,
+      lesson_id: lessonId,
+      type: 'text',
+      createdBy: requestorId,
+      updatedBy: null,
+    });
+
+    const newText = await Text.create({
+      element_id: newElement.id,
+      type: textType,
+      content: content,
+      createdBy: requestorId,
+      updatedBy: null,
+    });
+  } catch (error: any) {
+    //if (error instanceof AppError) throw error;
+    throw new AppError(
+      500,
+      "addImage function in element service failed",
+      "L'ajout de l'image à la base de donnée a échoué, veuillez réessayer ultérieurement ou contacter le support.",
+      { cause: error }
+    );
+  }
+}

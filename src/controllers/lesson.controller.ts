@@ -1,8 +1,10 @@
 import { Request, Response } from 'express';
 import { ApiResponse, LessonData } from "../types/Interfaces.js";
-import { changeOrderLessons, getAllLessons } from '../services/lesson.service.js';
+import { addLesson, changeOrderLessons, getAllLessons } from '../services/lesson.service.js';
 import { AppError } from '../utils/AppError.js';
 import { getUserIdInRequest } from '../services/user.service.js';
+import { validateAddLessonForm } from '../services/form.service.js';
+import { getRequestorId } from '../services/token.service.js';
 
 export async function getAllLessonsController(req: Request, res: Response): Promise<Response<ApiResponse<LessonData[]>>> {
   const allLessons: LessonData[] = await getAllLessons();
@@ -34,6 +36,31 @@ export async function changeOrderLessonsController(req: Request, res: Response) 
   return res.status(200).json({
     success: true,
     message: '',
+    data: allLessons,
+  });
+}
+
+export async function addLessonController(req: Request, res: Response): Promise<Response<ApiResponse<LessonData[]>>> {
+  const lessonName: string = req.body.name;
+  const cursusId: number = req.body.cursusId;
+  const price: number = req.body.price;
+  validateAddLessonForm(lessonName, cursusId, price);
+
+  const requestorId = getRequestorId(req.cookies.token);
+
+  let allLessons = await getAllLessons();
+  let selectedLessons: LessonData[] = [];
+  for (const lesson of allLessons) {
+    if (lesson.cursusId === cursusId) selectedLessons.push(lesson);
+  }
+  
+  await addLesson(lessonName, price, selectedLessons, requestorId, cursusId);
+
+  allLessons = await getAllLessons();
+
+  return res.status(200).json({
+    success: true,
+    message: `La leçon ${lessonName} a bien été ajoutée`,
     data: allLessons,
   });
 }

@@ -78,3 +78,31 @@ export async function  changeOrderLessons(lessonId: number, move: 'up' | 'down',
     );
   }
 }
+
+export async function addLesson(lessonName: string, price: number, lessonsInSameCursus: LessonData[], requestorId: number, cursusId: number): Promise<void> {
+  for (const lesson of lessonsInSameCursus) {
+    if (lesson.name === lessonName) throw new AppError(
+      422,
+      "addLesson function in lesson service failed",
+      "Une leçon porte déjà ce nom au sein de ce cursus, veuillez choisir une leçon avec un nom différent.",
+    );
+  }
+
+  try {
+    await Lesson.create({
+      name: lessonName,
+      cursus_id: cursusId,
+      price: price,
+      order: lessonsInSameCursus.length + 1,
+      createdBy: requestorId,
+      updatedBy: null,
+    });
+  } catch (error: any) {
+    throw new AppError(
+      500,
+      "addLesson function in lesson service failed",
+      "L'ajout d'une nouvelle leçon a échouée, veuillez réessayer ultérieurement ou contacter le support.",
+      { cause: error }
+    );
+  }
+}

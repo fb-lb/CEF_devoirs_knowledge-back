@@ -78,3 +78,31 @@ export async function  changeOrderCursus(cursusId: number, move: 'up' | 'down', 
     );
   }
 }
+
+export async function addCursus(cursusName: string, price: number, cursusInSameTheme: CursusData[], requestorId: number, themeId: number): Promise<void> {
+  for (const cursus of cursusInSameTheme) {
+    if (cursus.name === cursusName) throw new AppError(
+      422,
+      "addCursus function in cursus service failed",
+      "Un cursus porte déjà ce nom au sein de ce thème, veuillez choisir un cursus avec un nom différent.",
+    );
+  }
+
+  try {
+    await Cursus.create({
+      name: cursusName,
+      theme_id: themeId,
+      price: price,
+      order: cursusInSameTheme.length + 1,
+      createdBy: requestorId,
+      updatedBy: null,
+    });
+  } catch (error: any) {
+    throw new AppError(
+      500,
+      "addCursus function in cursus service failed",
+      "L'ajout d'un nouveau cursus a échoué, veuillez réessayer ultérieurement ou contacter le support.",
+      { cause: error }
+    );
+  }
+}
