@@ -60,8 +60,6 @@ export async function addThemeController(req: Request, res: Response): Promise<R
 }
 
 export async function deleteThemeController(req: Request, res: Response): Promise<Response<ApiResponse<ThemeData[]>>> {
-  let allThemes = await getAllThemes();
-  
   if(!req.params.id) throw new AppError(
     422,
     'deleteThemeController function in theme controller failed : no id provided in url parameter',
@@ -71,10 +69,10 @@ export async function deleteThemeController(req: Request, res: Response): Promis
   const themeId = parseInt(req.params.id);
   await deleteTheme(themeId);
 
-  allThemes = await getAllThemes();
+  const allThemes = await getAllThemes();
   return res.status(200).json({
     success: true,
-    message: 'Le thème a bien été supprimé',
+    message: 'Le thème a bien été supprimé.',
     data: allThemes,
   });
 }

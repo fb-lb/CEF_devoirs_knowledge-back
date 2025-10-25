@@ -1,6 +1,8 @@
+import Sequelize, { Op } from "sequelize";
 import { Lesson } from "../models/Lesson.js";
 import { ApiResponse, LessonData } from "../types/Interfaces.js";
 import { AppError } from "../utils/AppError.js";
+import { deleteImageFiles } from "./element.service.js";
 
 export async function getAllLessons(): Promise<LessonData[]> {
   try {
@@ -102,6 +104,36 @@ export async function addLesson(lessonName: string, price: number, lessonsInSame
       500,
       "addLesson function in lesson service failed",
       "L'ajout d'une nouvelle leçon a échouée, veuillez réessayer ultérieurement ou contacter le support.",
+      { cause: error }
+    );
+  }
+}
+
+export async function deleteLesson(lessonId: number): Promise<void> {
+  try {
+    const lessonToDelete = await Lesson.findByPk(lessonId);
+    if (!lessonToDelete) throw new AppError(
+      404,
+      "deleteLesson function in lesson service failed : lesson not found with provided id",
+      "La leçon n'a pas pu être retrouvée avec l'identifiant fourni, veuillez réessayer ultérieurement ou contacter le support.",
+    );
+
+    // Delete images files in this lesson
+    await deleteImageFiles('lesson', lessonId);
+
+    // Decrease by 1 order of lesson with order greater than order of lesson to delete
+    await Lesson.update(
+      { order: Sequelize.literal('`order` - 1') },
+      { where: { order: { [Op.gt]: lessonToDelete.order } } }
+    );
+
+    await lessonToDelete.destroy();
+  } catch (error: any) {
+    if (error instanceof AppError) throw error;
+    throw new AppError(
+      500,
+      "deleteLesson function in lesson service failed",
+      "La suppression de la leçon a échouée, veuillez réessayer ultérieurement ou contacter le support.",
       { cause: error }
     );
   }

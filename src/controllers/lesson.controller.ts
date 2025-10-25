@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { ApiResponse, LessonData } from "../types/Interfaces.js";
-import { addLesson, changeOrderLessons, getAllLessons } from '../services/lesson.service.js';
+import { addLesson, changeOrderLessons, deleteLesson, getAllLessons } from '../services/lesson.service.js';
 import { AppError } from '../utils/AppError.js';
 import { getUserIdInRequest } from '../services/user.service.js';
 import { validateAddLessonForm } from '../services/form.service.js';
@@ -61,6 +61,24 @@ export async function addLessonController(req: Request, res: Response): Promise<
   return res.status(200).json({
     success: true,
     message: `La leçon ${lessonName} a bien été ajoutée`,
+    data: allLessons,
+  });
+}
+
+export async function deleteLessonController(req: Request, res: Response): Promise<Response<ApiResponse<LessonData[]>>> {
+    if(!req.params.id) throw new AppError(
+    422,
+    'deleteLessonController function in lesson controller failed : no id provided in url parameter',
+    "La leçon n'a pas pu être retrouvée car son identifiant n'est pas fourni, veuillez contacter le support pour solutionner le problème au plus vite."
+  );
+
+  const lessonId = parseInt(req.params.id);
+  await deleteLesson(lessonId);
+
+  const allLessons = await getAllLessons();
+  return res.status(200).json({
+    success: true,
+    message: 'La leçon a bien été supprimée.',
     data: allLessons,
   });
 }

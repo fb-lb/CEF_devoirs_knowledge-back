@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { ApiResponse, CursusData } from "../types/Interfaces.js";
-import { addCursus, changeOrderCursus, getAllCursus } from '../services/cursus.service.js';
+import { addCursus, changeOrderCursus, deleteCursus, getAllCursus } from '../services/cursus.service.js';
 import { AppError } from '../utils/AppError.js';
 import { getUserIdInRequest } from '../services/user.service.js';
 import { getRequestorId } from '../services/token.service.js';
@@ -61,6 +61,24 @@ export async function addCursusController(req: Request, res: Response): Promise<
   return res.status(200).json({
     success: true,
     message: `Le cursus ${cursusName} a bien été ajouté`,
+    data: allCursus,
+  });
+}
+
+export async function deleteCursusController(req: Request, res: Response): Promise<Response<ApiResponse<CursusData[]>>> {
+  if(!req.params.id) throw new AppError(
+    422,
+    'deleteCursusController function in cursus controller failed : no id provided in url parameter',
+    "Le cursus n'a pas pu être retrouvé car son identifiant n'est pas fourni, veuillez contacter le support pour solutionner le problème au plus vite."
+  );
+
+  const cursusId = parseInt(req.params.id);
+  await deleteCursus(cursusId);
+
+  const allCursus = await getAllCursus();
+  return res.status(200).json({
+    success: true,
+    message: 'Le cursus a bien été supprimé.',
     data: allCursus,
   });
 }

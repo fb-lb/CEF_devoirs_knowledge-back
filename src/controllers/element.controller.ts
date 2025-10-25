@@ -1,11 +1,13 @@
 import { Request, Response } from 'express';
-import { promises as fs } from 'fs';
+import fs, { promises as fsPromises } from 'fs';
 import { ApiResponse, ElementData } from "../types/Interfaces.js";
-import { addImage, addText, changeOrderElements, getAllElements } from '../services/element.service.js';
+import { addImage, addText, changeOrderElements, deleteElement, getAllElements } from '../services/element.service.js';
 import { AppError } from '../utils/AppError.js';
 import { getUserIdInRequest } from '../services/user.service.js';
 import { getRequestorId } from '../services/token.service.js';
 import { validateAddImageForm, validateAddTextForm } from '../services/form.service.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 export async function getAllElementsController(req: Request, res: Response): Promise<Response<ApiResponse<ElementData[]>>> {
   const allElements: ElementData[] = await getAllElements();
@@ -70,7 +72,7 @@ export async function addImageController(req: Request, res: Response): Promise<R
   } catch (error: any) {
     if (req.file?.path) {
       try {
-        await fs.unlink(req.file.path);
+        await fsPromises.unlink(req.file.path);
       } catch (error: any) {
         throw new AppError(
           500,
@@ -121,4 +123,43 @@ export async function addTextController(req: Request, res: Response): Promise<Re
       { cause: error }
     );
   }
+}
+
+export async function deleteElementController(req: Request, res: Response): Promise<Response<ApiResponse<ElementData[]>>> {
+  if(!req.params.id) throw new AppError(
+    422,
+    'deleteElementController function in element controller failed : no id provided in url parameter',
+    "L'élément n'a pas pu être retrouvé car son identifiant n'est pas fourni, veuillez contacter le support pour solutionner le problème au plus vite."
+  );
+
+  const elementId = parseInt(req.params.id);
+  await deleteElement(elementId);
+
+  const allElements = await getAllElements();
+  return res.status(200).json({
+    success: true,
+    message: "L'élément a bien été supprimé.",
+    data: allElements,
+  });
+}
+
+export function getImageController(req: Request, res: Response): void {
+  const fileName = req.params.fileName;
+  if(!fileName) throw new AppError(
+    422,
+    'getImageController function in element controller failed : no file name provided in url parameters',
+    "Nous ne pouvons pas trouver l'image car son nom n'est pas fourni, veuillez contacter le support pour solutionner le problème au plus vite."
+  );
+  
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__filename);
+  const filePath = path.join(__dirname, '../../uploads/elements_images', fileName);
+
+  if(!fs.existsSync(filePath)) throw new AppError(
+    404,
+    'getImageController function in element controller failed : image not found with provided file name',
+    "Nous ne pouvons pas trouver l'image avec le nom fourni, veuillez contacter le support pour solutionner le problème au plus vite."
+  );
+
+  res.sendFile(filePath);
 }

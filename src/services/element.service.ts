@@ -1,8 +1,14 @@
+import Sequelize, { Op } from "sequelize";
 import { Element } from "../models/Element.js";
 import { Image } from "../models/Image.js";
 import { Text } from "../models/Text.js";
-import { ApiResponse, BaseElement, ElementData } from "../types/Interfaces.js";
+import { ApiResponse, BaseElement, ElementData, LessonData } from "../types/Interfaces.js";
 import { AppError } from "../utils/AppError.js";
+import { fileURLToPath } from "url";
+import path from "path";
+import { Cursus } from "../models/Cursus.js";
+import { Lesson } from "../models/Lesson.js";
+import fs, { promises as fsPromises } from "fs";
 
 export async function getAllElements(): Promise<ElementData[]> {
   try {
@@ -222,8 +228,138 @@ export async function addText(lessonId: number, requestorId: number, textType: '
     //if (error instanceof AppError) throw error;
     throw new AppError(
       500,
-      "addImage function in element service failed",
-      "L'ajout de l'image à la base de donnée a échoué, veuillez réessayer ultérieurement ou contacter le support.",
+      "addText function in element service failed",
+      "L'ajout du texte à la base de donnée a échoué, veuillez réessayer ultérieurement ou contacter le support.",
+      { cause: error }
+    );
+  }
+}
+
+export async function deleteElement(elementId: number): Promise<void> {
+  try {
+    const elementToDelete = await Element.findByPk(elementId);
+    if (!elementToDelete) throw new AppError(
+      404,
+      "deleteElement function in element service failed : element not found with provided id",
+      "L'élément n'a pas pu être retrouvé avec l'identifiant fourni, veuillez réessayer ultérieurement ou contacter le support.",
+    );
+
+    // Delete image file associated to this element if it is an image
+    if (elementToDelete.type === 'image') await deleteImageFiles('element', elementId);
+
+    // Decrease by 1 order of themes with order greater than order of theme to delete
+    await Element.update(
+      { order: Sequelize.literal('`order` - 1') },
+      { where: { order: { [Op.gt]: elementToDelete.order } } }
+    );
+
+    await elementToDelete.destroy();
+  } catch (error: any) {
+    if (error instanceof AppError) throw error;
+    throw new AppError(
+      500,
+      "deleteElement function in element service failed",
+      "La suppression de l'élément a échoué, veuillez réessayer ultérieurement ou contacter le support.",
+      { cause: error }
+    );
+  }
+}
+
+export async function deleteImageFiles(type: 'theme' | 'cursus' | 'lesson' | 'element', id: number): Promise<void> {
+  try {
+    let imageFileNames: string[] = [];
+
+    if(type === 'theme') {
+      const allCursusInTheme = await Cursus.findAll({ where: { theme_id: id } });
+      if (allCursusInTheme.length === 0) return;
+
+      const allLessonsInTheme: Lesson[] = [];
+      for (const cursus of allCursusInTheme) {
+        const allLessonsInCursus = await Lesson.findAll({ where: { cursus_id: cursus.id } });
+        for (const lesson of allLessonsInCursus) {
+          allLessonsInTheme.push(lesson);
+        }
+      }
+      if (allLessonsInTheme.length === 0) return;
+
+      const allImagesInTheme: Image[] = [];
+      for (const lesson of allLessonsInTheme) {
+        const allElementsImageInLesson = await Element.findAll({ where: { lesson_id: lesson.id, type: 'image' } });
+        for (const element of allElementsImageInLesson) {
+          const image = await Image.findOne({ where: { element_id: element.id } });
+          if (image) allImagesInTheme.push(image);
+        }
+      }
+      if (allImagesInTheme.length === 0) return;
+
+      for (const image of allImagesInTheme) {
+        imageFileNames.push(image.source);
+      }
+    }
+
+    if (type === 'cursus') {
+      const allLessonsInCursus = await Lesson.findAll({ where: { cursus_id: id } });
+      if (allLessonsInCursus.length === 0) return;
+
+      const allImagesInCursus: Image[] = [];
+      for (const lesson of allLessonsInCursus) {
+        const allElementsImageInLesson = await Element.findAll({ where: { lesson_id: lesson.id, type: 'image' } });
+        for (const element of allElementsImageInLesson) {
+          const image = await Image.findOne({ where: { element_id: element.id } });
+          if (image) allImagesInCursus.push(image);
+        }
+      }
+      if (allImagesInCursus.length === 0) return;
+
+      for (const image of allImagesInCursus) {
+        imageFileNames.push(image.source);
+      }
+    }
+
+    if (type === 'lesson') {
+      const allImagesInLesson: Image[] = [];
+
+      const allElementsImageInLesson = await Element.findAll({ where: { lesson_id: id, type: 'image' } });
+      for (const element of allElementsImageInLesson) {
+        const image = await Image.findOne({ where: { element_id: element.id } });
+        if (image) allImagesInLesson.push(image);
+      }
+      if (allImagesInLesson.length === 0) return;
+
+      for (const image of allImagesInLesson) {
+        imageFileNames.push(image.source);
+      }
+    }
+
+    if (type === 'element') {
+      const image = await Image.findOne({ where: { element_id: id } });
+      if (image) imageFileNames.push(image.source);
+    }
+
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
+    for (const imageFileName of imageFileNames) {
+      const filePath = path.join(__dirname, '../../uploads/elements_images', imageFileName);
+      if (fs.existsSync(filePath)) {
+        try {
+          await fsPromises.unlink(filePath);
+        } catch (error: any) {
+          throw new AppError(
+            404,
+            "deleteImageFiles function in element service failed : images not found with file names in database",
+            "La suppression des fichiers d'image associés à l'élément a échoué, veuillez réessayer ultérieurement ou contacter le support.",
+            { cause: error }
+          );
+        }
+        
+      }
+    }
+  } catch (error: any) {
+    if (error instanceof AppError) throw error;
+    throw new AppError(
+      500,
+      "deleteImageFiles function in element service failed",
+      "La suppression des fichiers d'image associés à l'élément a échoué, veuillez réessayer ultérieurement ou contacter le support.",
       { cause: error }
     );
   }

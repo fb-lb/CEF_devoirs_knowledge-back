@@ -1,6 +1,8 @@
+import Sequelize, { Op } from "sequelize";
 import { Cursus } from "../models/Cursus.js";
 import { ApiResponse, CursusData } from "../types/Interfaces.js";
 import { AppError } from "../utils/AppError.js";
+import { deleteImageFiles } from "./element.service.js";
 
 export async function getAllCursus(): Promise<CursusData[]> {
   try {
@@ -102,6 +104,36 @@ export async function addCursus(cursusName: string, price: number, cursusInSameT
       500,
       "addCursus function in cursus service failed",
       "L'ajout d'un nouveau cursus a échoué, veuillez réessayer ultérieurement ou contacter le support.",
+      { cause: error }
+    );
+  }
+}
+
+export async function deleteCursus(cursusId: number): Promise<void> {
+  try {
+    const cursusToDelete = await Cursus.findByPk(cursusId);
+    if (!cursusToDelete) throw new AppError(
+      404,
+      "deleteCursus function in cursus service failed : cursus not found with provided id",
+      "Le cursus n'a pas pu être retrouvé avec l'identifiant fourni, veuillez réessayer ultérieurement ou contacter le support.",
+    );
+
+    // Delete images files in all lessons of this cursus
+    await deleteImageFiles('cursus', cursusId);
+
+    // Decrease by 1 order of cursus with order greater than order of cursus to delete
+    await Cursus.update(
+      { order: Sequelize.literal('`order` - 1') },
+      { where: { order: { [Op.gt]: cursusToDelete.order } } }
+    );
+
+    await cursusToDelete.destroy();
+  } catch (error: any) {
+    if (error instanceof AppError) throw error;
+    throw new AppError(
+      500,
+      "deleteCursus function in cursus service failed",
+      "La suppression du cursus a échoué, veuillez réessayer ultérieurement ou contacter le support.",
       { cause: error }
     );
   }

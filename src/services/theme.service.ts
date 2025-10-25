@@ -1,6 +1,10 @@
+import Sequelize, { Op } from "sequelize";
 import { Theme } from "../models/Theme.js";
 import { ApiResponse, ThemeData } from "../types/Interfaces.js";
 import { AppError } from "../utils/AppError.js";
+import { fileURLToPath } from "url";
+import path from "path";
+import { deleteImageFiles } from "./element.service.js";
 
 export async function getAllThemes(): Promise<ThemeData[]> {
   try {
@@ -111,6 +115,16 @@ export async function deleteTheme(themeId: number): Promise<void> {
       "deleteTheme function in theme service failed : theme not found with provided id",
       "Le thème n'a pas pu être retrouvé avec l'identifiant fourni, veuillez réessayer ultérieurement ou contacter le support.",
     );
+
+    // Delete images files in all lessons in all cursus of this theme
+    await deleteImageFiles('theme', themeId);
+
+    // Decrease by 1 order of themes with order greater than order of theme to delete
+    await Theme.update(
+      { order: Sequelize.literal('`order` - 1') },
+      { where: { order: { [Op.gt]: themeToDelete.order } } }
+    );
+
     await themeToDelete.destroy();
   } catch (error: any) {
     if (error instanceof AppError) throw error;
