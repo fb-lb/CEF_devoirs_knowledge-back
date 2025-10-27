@@ -24,7 +24,7 @@ const fileFilter = (req: Request, file: Express.Multer.File, callback: FileFilte
   } else {
     callback(new AppError(
       422,
-      'filed filter in upload image middleware failed : only images are accepted, bad MIME Type',
+      'file filter in upload image middleware failed : only images are accepted, bad MIME Type',
       "Seules les images sont acceptées comme fichier."
     ))
   }

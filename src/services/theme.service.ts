@@ -136,3 +136,24 @@ export async function deleteTheme(themeId: number): Promise<void> {
     );
   }
 }
+
+export async function updateTheme(themeId: number, newThemeName: string, requestorId: number): Promise<void> {
+  try {
+    const themeToUpdate = await Theme.findByPk(themeId);
+    if(!themeToUpdate) throw new AppError(
+      404,
+      "updateTheme function in theme service failed : theme not found with provided theme id",
+      "Le thème qui doit être modifié n'a pas été retrouvé en base de données, veuillez contacter le support.",
+    );
+
+    await themeToUpdate.update({ name: newThemeName, updatedBy: requestorId });
+  } catch (error: any) {
+    if (error instanceof AppError) throw error;
+    throw new AppError(
+      500,
+      "updateTheme function in theme service failed",
+      "La mise à jour du thème a échoué, veuillez réessayer ultérieurement ou contacter le support.",
+      { cause: error }
+    );
+  }
+}

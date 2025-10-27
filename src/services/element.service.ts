@@ -364,3 +364,75 @@ export async function deleteImageFiles(type: 'theme' | 'cursus' | 'lesson' | 'el
     );
   }
 }
+
+export async function updateText(elementId: number, newTextType: 'title1' | 'title2' | 'title3' | 'paragraph', newContent: string, requestorId: number): Promise<void> {
+  try {
+    const elementToUpdate = await Element.findByPk(elementId);
+    if(!elementToUpdate) throw new AppError(
+      404,
+      "updateText function in element service failed : element not found with provided element id",
+      "L'élément qui doit être modifié n'a pas été retrouvé en base de données, veuillez contacter le support.",
+    );
+
+    const textToUpdate = await Text.findOne({ where: { element_id: elementToUpdate.id } });
+    if(!textToUpdate) throw new AppError(
+      404,
+      "updateText function in element service failed : text not found with element id property",
+      "Le texte qui doit être modifié n'a pas été retrouvé en base de données, veuillez contacter le support.",
+    );
+
+    const updatedAtTextValueBeforeUpdate = textToUpdate.updatedAt.toISOString();
+    
+    const textUpdated = await textToUpdate.update({ type: newTextType, content: newContent, updatedBy: requestorId });
+
+    if (updatedAtTextValueBeforeUpdate !== textUpdated.updatedAt.toISOString()) {
+      elementToUpdate.set('updatedBy', requestorId);
+      elementToUpdate.changed('updatedAt', true );
+      await elementToUpdate.save();
+    }
+  } catch (error: any) {
+    if (error instanceof AppError) throw error;
+    throw new AppError(
+      500,
+      "updateText function in element service failed",
+      "La mise à jour de l'élément texte a échoué, veuillez réessayer ultérieurement ou contacter le support.",
+      { cause: error }
+    );
+  }
+}
+
+export async function updateImage(elementId: number, newAlternative: string, newLegend: string | null, newSource: string, requestorId: number): Promise<void> {
+  try {
+    const elementToUpdate = await Element.findByPk(elementId);
+    if(!elementToUpdate) throw new AppError(
+      404,
+      "updateImage function in element service failed : element not found with provided element id",
+      "L'élément qui doit être modifié n'a pas été retrouvé en base de données, veuillez contacter le support.",
+    );
+
+    const imageToUpdate = await Image.findOne({ where: { element_id: elementToUpdate.id } });
+    if(!imageToUpdate) throw new AppError(
+      404,
+      "updateImage function in element service failed : image not found with element id property",
+      "L'image qui doit être modifiée n'a pas été retrouvée en base de données, veuillez contacter le support.",
+    );
+
+    const updatedAtImageValueBeforeUpdate = imageToUpdate.updatedAt.toISOString();
+    
+    const imageUpdated = await imageToUpdate.update({ alternative: newAlternative, legend: newLegend, source: newSource, updatedBy: requestorId });
+    
+    if (updatedAtImageValueBeforeUpdate !== imageUpdated.updatedAt.toISOString()) {
+      elementToUpdate.set('updatedBy', requestorId);
+      elementToUpdate.changed('updatedAt', true );
+      await elementToUpdate.save();
+    }
+  } catch (error: any) {
+    if (error instanceof AppError) throw error;
+    throw new AppError(
+      500,
+      "updateImage function in element service failed",
+      "La mise à jour de l'élément image a échoué, veuillez réessayer ultérieurement ou contacter le support.",
+      { cause: error }
+    );
+  }
+}

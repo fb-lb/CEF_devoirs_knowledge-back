@@ -337,3 +337,152 @@ export function validateAddTextForm(textType: string, content: string, lessonId:
     throw error;
   }
 }
+
+export function validateUpdateThemeForm(newThemeName: string): void {
+  const error = new AppError(
+    422,
+    "validateUpdateThemeForm function in form service failed because of an invalid form field",
+    ""
+  );
+
+  // Test required validator
+  if (!newThemeName) {
+    error.messageFront = 'Le champ "Nom du thème" est obligatoire.';
+    throw error;
+  }
+
+  // Test newThemeName length
+  if (newThemeName.length > 255) {
+    error.messageFront = `Le champ "Nom du thème" doit contenir au maximum 255 caractères.`;
+    throw error;
+  }
+
+  // Test newThemeName special caracters
+  const regex = /^[a-zA-ZÀ-ÖØ-öø-ÿ0-9 ?!\/:'"(),.\-]*$/;
+  if (!regex.test(newThemeName)) {
+    error.messageFront = 'Le champ "Nom du thème" contient des caractères non autorisés.';
+    throw error;
+  }
+}
+
+export function validateUpdateCursusForm(newCursusName: string, newCursusPrice: number): void {
+  const error = new AppError(
+    422,
+    "validateUpdateCursusForm function in form service failed because of an invalid form field",
+    ""
+  );
+
+  // Test required validator
+  if (!newCursusName || !newCursusPrice) {
+    error.messageFront = 'Les champs "Nom du cursus" et "Prix du cursus" sont obligatoires.';
+    throw error;
+  }
+
+  // Test newCursusName length
+  if (newCursusName.length > 255) {
+    error.messageFront = `Le champ "Nom du cursus" doit contenir au maximum 255 caractères.`;
+    throw error;
+  }
+
+  // Test newCursusName special caracters
+  const regex = /^[a-zA-ZÀ-ÖØ-öø-ÿ0-9 ?!\/:'"(),.\-]*$/;
+  if (!regex.test(newCursusName)) {
+    error.messageFront = 'Le champ "Nom du cursus" contient des caractères non autorisés.';
+    throw error;
+  }
+
+  // Test newCursusPrice value
+  if (newCursusPrice < 0) {
+    error.messageFront = 'Le prix doit être positif.';
+    throw error;
+  }
+}
+
+export function validateUpdateLessonForm(newLessonName: string, newLessonPrice: number): void {
+  const error = new AppError(
+    422,
+    "validateUpdateLessonForm function in form service failed because of an invalid form field",
+    ""
+  );
+
+  // Test required validator
+  if (!newLessonName || !newLessonPrice) {
+    error.messageFront = 'Les champs "Nom de la leçon" et "Prix de la leçon" sont obligatoires.';
+    throw error;
+  }
+
+  // Test newLessonName length
+  if (newLessonName.length > 255) {
+    error.messageFront = `Le champ "Nom de la leçon" doit contenir au maximum 255 caractères.`;
+    throw error;
+  }
+
+  // Test newLessonName special caracters
+  const regex = /^[a-zA-ZÀ-ÖØ-öø-ÿ0-9 ?!\/:'"(),.\-]*$/;
+  if (!regex.test(newLessonName)) {
+    error.messageFront = 'Le champ "Nom de la leçon" contient des caractères non autorisés.';
+    throw error;
+  }
+
+  // Test newLessonPrice value
+  if (newLessonPrice < 0) {
+    error.messageFront = 'Le prix doit être positif.';
+    throw error;
+  }
+}
+
+export function validateUpdateTextForm(newTextType: string, newContent: string): void {
+  const error = new AppError(
+    422,
+    "validateUpdateTextForm function in form service failed because of an invalid form field",
+    ""
+  );
+
+  // Test required validator
+  if (!newContent) {
+    error.messageFront = 'Le champ contenant le texte est obligatoire.';
+    throw error;
+  }
+
+  if (!newTextType) {
+    error.messageFront = "La nature du texte est manquante (titre1, 2, 3 ou paragraphe), veuillez contacter le support pour que le problème soit réglé au plus vite.";
+    throw error;
+  }
+
+  // Test newTextType value
+  if (newTextType !== 'title1' && newTextType !== 'title2' && newTextType !== 'title3' && newTextType !== 'paragraph') {
+    error.messageFront = `Le type du texte n'est pas valide. Veuillez contacter le support.`;
+    throw error;
+  }
+}
+
+export function validateUpdateImageForm(newSource: string, newAlternative: string): void {
+  const error = new AppError(
+    422,
+    "validateUpdateImageForm function in form service failed because of an invalid form field",
+    ""
+  );
+
+  // Test required validator
+  if (!newAlternative) {
+    error.messageFront = 'Le champ "Texte alternatif" est obligatoire.';
+    throw error;
+  }
+
+  if (!newSource) {
+    error.messageFront = "Le nom du fichier est manquant, veuillez contacter le support pour que le problème soit réglé au plus vite.";
+    throw error;
+  }
+
+  // Test newSource length
+  if (newSource.length > 255) {
+    error.messageFront = `Le nom du fichier est trop long, il doit contenir au maximum 255 caractères. Veuillez contacter le support.`;
+    throw error;
+  }
+
+  // Test newAlternative length
+  if (newAlternative.length > 255) {
+    error.messageFront = `Le champ "Alternative" doit contenir au maximum 255 caractères.`;
+    throw error;
+  }
+}

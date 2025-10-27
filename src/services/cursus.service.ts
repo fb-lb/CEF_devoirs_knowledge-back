@@ -138,3 +138,24 @@ export async function deleteCursus(cursusId: number): Promise<void> {
     );
   }
 }
+
+export async function updateCursus(cursusId: number, newCursusName: string, newCursusPrice: number, requestorId: number): Promise<void> {
+  try {
+    const cursusToUpdate = await Cursus.findByPk(cursusId);
+    if(!cursusToUpdate) throw new AppError(
+      404,
+      "updateCursus function in cursus service failed : cursus not found with provided cursus id",
+      "Le cursus qui doit être modifié n'a pas été retrouvé en base de données, veuillez contacter le support.",
+    );
+
+    await cursusToUpdate.update({ name: newCursusName, price: newCursusPrice, updatedBy: requestorId });
+  } catch (error: any) {
+    if (error instanceof AppError) throw error;
+    throw new AppError(
+      500,
+      "updateCursus function in cursus service failed",
+      "La mise à jour du cursus a échoué, veuillez réessayer ultérieurement ou contacter le support.",
+      { cause: error }
+    );
+  }
+}

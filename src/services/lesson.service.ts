@@ -138,3 +138,24 @@ export async function deleteLesson(lessonId: number): Promise<void> {
     );
   }
 }
+
+export async function updateLesson(lessonId: number, newLessonName: string, newLessonPrice: number, requestorId: number): Promise<void> {
+  try {
+    const lessonToUpdate = await Lesson.findByPk(lessonId);
+    if(!lessonToUpdate) throw new AppError(
+      404,
+      "updateLesson function in lesson service failed : lesson not found with provided lesson id",
+      "La leçon qui doit être modifiée n'a pas été retrouvée en base de données, veuillez contacter le support.",
+    );
+
+    await lessonToUpdate.update({ name: newLessonName, price: newLessonPrice, updatedBy: requestorId });
+  } catch (error: any) {
+    if (error instanceof AppError) throw error;
+    throw new AppError(
+      500,
+      "lessonCursus function in lesson service failed",
+      "La mise à jour de la leçon a échoué, veuillez réessayer ultérieurement ou contacter le support.",
+      { cause: error }
+    );
+  }
+}

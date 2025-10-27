@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
 import { ApiResponse, CursusData } from "../types/Interfaces.js";
-import { addCursus, changeOrderCursus, deleteCursus, getAllCursus } from '../services/cursus.service.js';
+import { addCursus, changeOrderCursus, deleteCursus, getAllCursus, updateCursus } from '../services/cursus.service.js';
 import { AppError } from '../utils/AppError.js';
 import { getUserIdInRequest } from '../services/user.service.js';
 import { getRequestorId } from '../services/token.service.js';
-import { validateAddCursusForm } from '../services/form.service.js';
+import { validateAddCursusForm, validateUpdateCursusForm } from '../services/form.service.js';
 
 export async function getAllCursusController(req: Request, res: Response): Promise<Response<ApiResponse<CursusData[]>>> {
   const allCursus: CursusData[] = await getAllCursus();
@@ -79,6 +79,32 @@ export async function deleteCursusController(req: Request, res: Response): Promi
   return res.status(200).json({
     success: true,
     message: 'Le cursus a bien été supprimé.',
+    data: allCursus,
+  });
+}
+
+export async function updateCursusController(req: Request, res: Response): Promise<Response<ApiResponse<CursusData[]>>> {
+  if(!req.params.id) throw new AppError(
+    422,
+    'updateCursusController function in cursus controller failed : no cursus id provided in url paramater',
+    "L'identifiant du cursus n'a pas été fourni avec le formulaire, veuillez contacter le support pour solutionner le problème au plus vite.",
+  );
+
+  const cursusId = parseInt(req.params.id);
+
+  const newCursusName: string = req.body.name;
+  const newCursusPrice: number = Number(req.body.price);
+  validateUpdateCursusForm(newCursusName, newCursusPrice);
+
+  const requestorId = getRequestorId(req.cookies.token);
+
+  await updateCursus(cursusId, newCursusName, newCursusPrice, requestorId);
+
+  const allCursus = await getAllCursus();
+
+  return res.status(200).json({
+    success: true,
+    message: 'Le cursus a bien été mis à jour.',
     data: allCursus,
   });
 }

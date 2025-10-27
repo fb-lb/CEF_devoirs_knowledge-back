@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import { ApiResponse, LessonData } from "../types/Interfaces.js";
-import { addLesson, changeOrderLessons, deleteLesson, getAllLessons } from '../services/lesson.service.js';
+import { addLesson, changeOrderLessons, deleteLesson, getAllLessons, updateLesson } from '../services/lesson.service.js';
 import { AppError } from '../utils/AppError.js';
 import { getUserIdInRequest } from '../services/user.service.js';
-import { validateAddLessonForm } from '../services/form.service.js';
+import { validateAddLessonForm, validateUpdateLessonForm } from '../services/form.service.js';
 import { getRequestorId } from '../services/token.service.js';
 
 export async function getAllLessonsController(req: Request, res: Response): Promise<Response<ApiResponse<LessonData[]>>> {
@@ -79,6 +79,32 @@ export async function deleteLessonController(req: Request, res: Response): Promi
   return res.status(200).json({
     success: true,
     message: 'La leçon a bien été supprimée.',
+    data: allLessons,
+  });
+}
+
+export async function updateLessonController(req: Request, res: Response): Promise<Response<ApiResponse<LessonData[]>>> {
+  if(!req.params.id) throw new AppError(
+    422,
+    'updateLessonController function in lesson controller failed : no lesson id provided in url paramater',
+    "L'identifiant de la leçon n'a pas été fourni avec le formulaire, veuillez contacter le support pour solutionner le problème au plus vite.",
+  );
+
+  const lessonId = Number(req.params.id);
+
+  const newLessonName: string = req.body.name;
+  const newLessonPrice: number = Number(req.body.price);
+  validateUpdateLessonForm(newLessonName, newLessonPrice);
+
+  const requestorId = getRequestorId(req.cookies.token);
+
+  await updateLesson(lessonId, newLessonName, newLessonPrice, requestorId);
+
+  const allLessons = await getAllLessons();
+
+  return res.status(200).json({
+    success: true,
+    message: 'La leçon a bien été mise à jour.',
     data: allLessons,
   });
 }

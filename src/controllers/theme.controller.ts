@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
 import { ApiResponse, ThemeData } from "../types/Interfaces.js";
-import { addTheme, changeOrderThemes, deleteTheme, getAllThemes } from '../services/theme.service.js';
+import { addTheme, changeOrderThemes, deleteTheme, getAllThemes, updateTheme } from '../services/theme.service.js';
 import { AppError } from '../utils/AppError.js';
 import { getUserIdInRequest } from '../services/user.service.js';
 import { getRequestorId } from '../services/token.service.js';
-import { validateAddThemeForm } from '../services/form.service.js';
+import { validateAddThemeForm, validateUpdateThemeForm } from '../services/form.service.js';
 
 export async function getAllThemesController(req: Request, res: Response): Promise<Response<ApiResponse<ThemeData[]>>> {
   const allThemes: ThemeData[] = await getAllThemes();
@@ -73,6 +73,31 @@ export async function deleteThemeController(req: Request, res: Response): Promis
   return res.status(200).json({
     success: true,
     message: 'Le thème a bien été supprimé.',
+    data: allThemes,
+  });
+}
+
+export async function updateThemeController(req: Request, res: Response): Promise<Response<ApiResponse<ThemeData[]>>> {
+  if(!req.params.id) throw new AppError(
+    422,
+    'updateThemeController function in theme controller failed : no theme id provided in url paramater',
+    "L'identifiant du thème n'a pas été fourni avec le formulaire, veuillez contacter le support pour solutionner le problème au plus vite.",
+  );
+
+  const themeId = parseInt(req.params.id);
+
+  const newThemeName: string = req.body.name;
+  validateUpdateThemeForm(newThemeName);
+
+  const requestorId = getRequestorId(req.cookies.token);
+
+  await updateTheme(themeId, newThemeName, requestorId);
+
+  const allThemes = await getAllThemes();
+
+  return res.status(200).json({
+    success: true,
+    message: 'Le thème a bien été mis à jour.',
     data: allThemes,
   });
 }

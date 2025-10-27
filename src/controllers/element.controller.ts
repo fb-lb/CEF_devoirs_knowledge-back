@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
 import fs, { promises as fsPromises } from 'fs';
 import { ApiResponse, ElementData } from "../types/Interfaces.js";
-import { addImage, addText, changeOrderElements, deleteElement, getAllElements } from '../services/element.service.js';
+import { addImage, addText, changeOrderElements, deleteElement, getAllElements, updateImage, updateText } from '../services/element.service.js';
 import { AppError } from '../utils/AppError.js';
 import { getUserIdInRequest } from '../services/user.service.js';
 import { getRequestorId } from '../services/token.service.js';
-import { validateAddImageForm, validateAddTextForm } from '../services/form.service.js';
+import { validateAddImageForm, validateAddTextForm, validateUpdateImageForm, validateUpdateTextForm } from '../services/form.service.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -65,7 +65,7 @@ export async function addImageController(req: Request, res: Response): Promise<R
     allElements = await getAllElements();
     
     return res.status(200).json({
-      surccess: true,
+      success: true,
       message: "L'élément a bien été ajouté à la leçon.",
       data: allElements,
     });
@@ -110,7 +110,7 @@ export async function addTextController(req: Request, res: Response): Promise<Re
     allElements = await getAllElements();
     
     return res.status(200).json({
-      surccess: true,
+      success: true,
       message: "L'élément a bien été ajouté à la leçon.",
       data: allElements,
     });
@@ -162,4 +162,113 @@ export function getImageController(req: Request, res: Response): void {
   );
 
   res.sendFile(filePath);
+}
+
+export async function updateTextController(req: Request, res: Response): Promise<Response<ApiResponse<ElementData[]>>> {
+  if(!req.params.id) throw new AppError(
+    422,
+    'updateTextController function in element controller failed : no element id provided in url paramater',
+    "L'identifiant de l'élément n'a pas été fourni avec le formulaire, veuillez contacter le support pour solutionner le problème au plus vite.",
+  );
+
+  const elementId = Number(req.params.id);
+
+  const rawNewTextType: string = req.body.textType;
+  const newContent: string = req.body.content;
+  validateUpdateTextForm(rawNewTextType, newContent);
+
+  const newTextType = rawNewTextType as 'title1' | 'title2' | 'title3' | 'paragraph';
+
+  const requestorId = getRequestorId(req.cookies.token);
+
+  await updateText(elementId, newTextType, newContent, requestorId);
+
+  const allElements = await getAllElements();
+
+  return res.status(200).json({
+    success: true,
+    message: "L'élément texte a bien été mis à jour.",
+    data: allElements,
+  });
+}
+
+export async function updateImageController(req: Request, res: Response): Promise<Response<ApiResponse<ElementData[]>>> {
+  try {
+    if (!req.file?.filename) throw new AppError(
+      500,
+      "updateImageController function in element controller failed : req.file.filename is null or undefined",
+      "La mise à jour de l'élément a échoué, veuillez réessayer ultérieurement ou contacter le support.",
+    );
+    const newSource: string = req.file.filename;
+
+    const elementId = Number(req.params.id);
+
+    let allElements = await getAllElements();
+    const elementData = allElements.find(element => element.id === elementId);
+
+    if (!elementData) throw new AppError(
+      404,
+      "updateImageController function in element controller failed : element not found with provided id",
+      "La mise à jour de l'élément a échoué, veuillez réessayer ultérieurement ou contacter le support."
+    );
+
+    if (elementData.type !== 'image') throw new AppError(
+      404,
+      "updateImageController function in element controller failed : element found is not an image",
+      "La mise à jour de l'élément a échoué, veuillez réessayer ultérieurement ou contacter le support."
+    );
+    
+    const sourceToTest = req.body.source;
+    const isImageFileUpdated = (elementData.source !== sourceToTest);
+
+    const newLegend: string = req.body.legend;
+    const newAlternative: string = req.body.alternative;
+
+    validateUpdateImageForm(newSource, newAlternative);
+
+    const requestorId = getRequestorId(req.cookies.token);
+
+    
+
+    if (isImageFileUpdated) {
+      await updateImage(elementId, newAlternative, newLegend, newSource, requestorId);
+
+      const oldSourcePath = path.join(req.file.destination, elementData.source)
+      if (fs.existsSync(oldSourcePath)) await fsPromises.unlink(oldSourcePath)
+    } else {
+      await updateImage(elementId, newAlternative, newLegend, elementData.source, requestorId);
+
+      const newSourcePath = path.join(req.file.destination, newSource);
+      if (fs.existsSync(newSourcePath)) await fsPromises.unlink(newSourcePath);
+    }
+    
+    allElements = await getAllElements();
+    
+    return res.status(200).json({
+      success: true,
+      message: "L'élément a bien été mis à jour.",
+      data: allElements,
+    });
+  } catch (error: any) {
+    if (req.file?.path) {
+      try {
+        await fsPromises.unlink(req.file.path);
+      } catch (error: any) {
+        throw new AppError(
+          500,
+          "updateImageController function in element controller failed a second time : can't delete uploaded file",
+          "La mise à jour de l'élément a échoué, veuillez réessayer ultérieurement ou contacter le support.",
+          { cause: error }
+        );
+      }
+    }
+
+    if (error instanceof AppError) throw error;
+    throw new AppError(
+      500,
+      "updateImageController function in element controller failed",
+      "La mise à jour de l'élément a échoué, veuillez réessayer ultérieurement ou contacter le support.",
+      { cause: error }
+    );
+  }
 }
