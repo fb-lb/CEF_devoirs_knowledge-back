@@ -54,3 +54,60 @@ export interface UpdateUserBody {
   roles: ('user' | 'admin')[];
   isVerified: boolean;
 }
+
+export interface ThemeData {
+  id: number;
+  name: string;
+  order: number;
+  createdAt: string;
+  updatedAt: string;
+  createdBy: number | null;
+  updatedBy: number | null;
+}
+
+export interface CursusData {
+  id: number;
+  themeId: number;
+  name: string;
+  price: number;
+  order: number;
+  createdAt: string;
+  updatedAt: string;
+  createdBy: number | null;
+  updatedBy: number | null;
+}
+
+export interface LessonData {
+  id: number;
+  cursusId: number;
+  name: string;
+  price: number;
+  order: number;
+  createdAt: string;
+  updatedAt: string;
+  createdBy: number | null;
+  updatedBy: number | null;
+}
+
+export interface BaseElement {
+  id: number;
+  lessonId: number;
+  order: number;
+  createdAt: string;
+  updatedAt: string;
+  createdBy: number | null;
+  updatedBy: number | null;
+}
+
+export type ElementData =
+  | (BaseElement & {
+    type: 'text';
+    textType: 'title1' | 'title2' | 'title3' | 'paragraph';
+    content: string;
+  })
+  | (BaseElement & {
+    type: 'image';
+    legend: string | null;
+    source: string;
+    alternative: string;
+  });

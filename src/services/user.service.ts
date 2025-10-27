@@ -8,6 +8,7 @@ import {
 } from "../types/Interfaces.js";
 import { User } from "../models/databaseAssociations.js";
 import { AppError } from "../utils/AppError.js";
+import { Request } from "express";
 
 export async function addUser(body: RegistrationBody): Promise<MyCheckingPayload['user']> {
   try {
@@ -91,7 +92,7 @@ export async function getAllUsers(): Promise<MyCheckingPayload['user'][]> {
         roles: user.roles,
         isVerified: user.isVerified,
         createdAt: user.createdAt.toLocaleString('fr-FR', {timeZone: 'Europe/Paris'}),
-        updatedAt: user.updatedAt.toLocaleString('fr-FR', {timeZone: 'Europe/Paris'}),
+        updatedAt: user.updatedAt.toISOString() === user.createdAt.toISOString() ? '' : user.updatedAt.toLocaleString('fr-FR', {timeZone: 'Europe/Paris'}),
         updatedBy: user.updatedBy,
       });
     });
@@ -114,7 +115,6 @@ export async function updateUser(requestorId: number, userData: UpdateUserBody):
     user.email = userData.email;
     user.firstName = userData.firstName;
     user.lastName = userData.lastName;
-    //userData.roles.push('user');
     user.roles = userData.roles
     user.isVerified = userData.isVerified;
     user.updatedBy = requestorId;
@@ -134,13 +134,6 @@ export async function deleteUser(userId: number): Promise<void> {
   try {
     const userToDelete = await User.findByPk(userId, {include: ['UpdatedUsers']});
     if (!userToDelete) throw new AppError(404, "User not found with provided Id in deleteUser function in user services", "L'identifiant fourni ne permet pas de retrouver l'utilisateur à supprimer.");
-    // Set null on updatedBy FK if corresponding to userToDeleteId because otherwise it would delete updatedUsers too because onDelete = 'CASCADE'
-    if (userToDelete.roles.includes('admin')) {
-      for (const user of userToDelete.UpdatedUsers ||  []) {
-        user.updatedBy = null;
-        await user.save();
-      }
-    }
     await userToDelete.destroy();
   } catch (error: any) {
     if (error instanceof AppError) throw error;
@@ -151,4 +144,14 @@ export async function deleteUser(userId: number): Promise<void> {
       { cause : error }
     )
   }
+}
+
+export function getUserIdInRequest(req: Request): number {
+  if(!req.user) throw new AppError(
+    404,
+    "getUserIdInRequest function in user service failed : no id stored in req.id in private middleware or you have to use a private middleware to get id in request",
+    "Votre identifiant n'a pas été retrouvé dans la base de données, si vous n'êtes pas connecté actuellement, veuillez contacter le support."
+  )
+
+  return req.user.id;
 }

@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { ApiResponse, MyCheckingPayload } from '../types/Interfaces.js';
 import { generateToken, isTokenValid } from '../services/token.service.js';
 import { checkAuthorization, setCookies } from '../services/authentication.service.js';
+import { AppError } from '../utils/AppError.js';
 
 export async function privateUser(req: Request, res: Response, next: NextFunction): Promise<void | Promise<Response<ApiResponse>>> {
   const token = req.cookies.token;
@@ -9,6 +10,7 @@ export async function privateUser(req: Request, res: Response, next: NextFunctio
   const isAuthorized = await checkAuthorization(user.id, 'user');
 
   if(isAuthorized) {
+    req.user = { id: user.id };
     const newToken = generateToken(user);
     setCookies(res, newToken, false);
     return next();
@@ -21,8 +23,9 @@ export async function privateAdmin(req: Request, res: Response, next: NextFuncti
   const token = req.cookies.token;
   const user = isTokenValid(token).data as MyCheckingPayload['user'];
   const isAuthorized = await checkAuthorization(user.id, 'admin');
-  
+
   if(isAuthorized) {
+    req.user = { id: user.id };
     const newToken = generateToken(user);
     setCookies(res, newToken, true);
     return next();
