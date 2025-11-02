@@ -4,7 +4,7 @@ import { addLessonController, changeOrderLessonsController, deleteLessonControll
 
 export const router = Router();
 
-router.get('/all', privateAdmin, getAllLessonsController);
+router.get('/all', getAllLessonsController);
 router.get('/:id/:move', privateAdmin, changeOrderLessonsController);
 router.post('/add', privateAdmin, addLessonController);
 router.delete('/:id', privateAdmin, deleteLessonController);

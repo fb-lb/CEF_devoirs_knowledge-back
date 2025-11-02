@@ -33,7 +33,69 @@ export async function getAllLessons(): Promise<LessonData[]> {
   }
 }
 
-export async function  changeOrderLessons(lessonId: number, move: 'up' | 'down', userId: number): Promise<ApiResponse> {
+export async function getLessonsInCursus(cursusId: number): Promise<LessonData[]> {
+  try {
+    const lessonsInCursus = await Lesson.findAll({ where: { cursus_id: cursusId } });
+    const lessonsInCursusData: LessonData[] = [];
+    lessonsInCursus.forEach(lesson => {
+      const lessonData: LessonData = {
+        id: lesson.id,
+        cursusId: lesson.cursus_id,
+        name: lesson.name,
+        price: lesson.price,
+        order: lesson.order,
+        createdAt: lesson.createdAt.toLocaleString('fr-FR', { timeZone: 'Europe/Paris' }),
+        updatedAt: lesson.updatedAt.toLocaleString('fr-FR', { timeZone: 'Europe/Paris' }),
+        createdBy: lesson.createdBy,
+        updatedBy: lesson.updatedBy,
+      };
+      lessonsInCursusData.push(lessonData);
+    });
+    return lessonsInCursusData;
+  } catch (error: any) {
+    throw new AppError(
+      500,
+      "getLessonsInCursus function in lesson service failed",
+      "La récupération des leçons du cursus a échoué, veuillez réessayer ultérieurement ou contacter le support.",
+      { cause: error }
+    );
+  }
+}
+
+export async function getLesson(lessonId: number): Promise<LessonData> {
+  try {
+    const lesson = await Lesson.findByPk(lessonId);
+    if (!lesson) throw new AppError(
+      404,
+      'getLesson function in lesson service failed : lesson not found with provided id',
+      "La leçon n'a pas été retrouvée avec l'identifiant fourni, veuillez contacter le support pour solutionner le problème au plus vite",
+    )
+
+    const lessonData = {
+        id: lesson.id,
+        cursusId: lesson.cursus_id,
+        name: lesson.name,
+        price: lesson.price,
+        order: lesson.order,
+        createdAt: lesson.createdAt.toLocaleString('fr-FR', { timeZone: 'Europe/Paris' }),
+        updatedAt: lesson.updatedAt.toLocaleString('fr-FR', { timeZone: 'Europe/Paris' }),
+        createdBy: lesson.createdBy,
+        updatedBy: lesson.updatedBy,
+    };
+    
+    return lessonData;
+  } catch (error: any) {
+    if (error instanceof AppError) throw error;
+    throw new AppError(
+      500,
+      "getLesson function in lesson service failed",
+      "La récupération de la leçon a échoué, veuillez réessayer ultérieurement ou contacter le support.",
+      { cause: error }
+    );
+  }
+}
+
+export async function changeOrderLessons(lessonId: number, move: 'up' | 'down', userId: number): Promise<ApiResponse> {
   try {
     const targetLesson = await Lesson.findOne({ where: { id: lessonId } });
     if (!targetLesson) throw new AppError(
@@ -91,7 +153,7 @@ export async function addLesson(lessonName: string, price: number, lessonsInSame
   }
 
   try {
-    await Lesson.create({
+    const newLesson = await Lesson.create({
       name: lessonName,
       cursus_id: cursusId,
       price: price,
@@ -124,8 +186,14 @@ export async function deleteLesson(lessonId: number): Promise<void> {
     // Decrease by 1 order of lesson with order greater than order of lesson to delete
     await Lesson.update(
       { order: Sequelize.literal('`order` - 1') },
-      { where: { order: { [Op.gt]: lessonToDelete.order } } }
+      { where: { 
+          order: { [Op.gt]: lessonToDelete.order },
+          cursus_id: lessonToDelete.cursus_id, 
+        } 
+      }
     );
+
+    const cursusId = lessonToDelete.cursus_id;
 
     await lessonToDelete.destroy();
   } catch (error: any) {

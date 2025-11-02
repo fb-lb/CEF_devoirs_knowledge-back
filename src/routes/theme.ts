@@ -4,7 +4,7 @@ import { addThemeController, changeOrderThemesController, deleteThemeController,
 
 export const router = Router();
 
-router.get('/all', privateAdmin, getAllThemesController);
+router.get('/all', getAllThemesController);
 router.get('/:id/:move', privateAdmin, changeOrderThemesController);
 router.post('/add', privateAdmin, addThemeController);
 router.delete('/:id', privateAdmin, deleteThemeController);
