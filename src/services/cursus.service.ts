@@ -3,6 +3,7 @@ import { Cursus } from "../models/Cursus.js";
 import { ApiResponse, CursusData } from "../types/Interfaces.js";
 import { AppError } from "../utils/AppError.js";
 import { deleteImageFiles } from "./element.service.js";
+import { Lesson } from "../models/Lesson.js";
 
 export async function getAllCursus(): Promise<CursusData[]> {
   try {
@@ -28,6 +29,39 @@ export async function getAllCursus(): Promise<CursusData[]> {
       500,
       "getAllCursus function in cursus service failed",
       "La récupération des cursus a échoué, veuillez réessayer ultérieurement ou contacter le support.",
+      { cause: error }
+    );
+  }
+}
+
+export async function getCursus(cursusId: number): Promise<CursusData> {
+  try {
+    const cursus = await Cursus.findByPk(cursusId);
+    if (!cursus) throw new AppError(
+      404,
+      'getCursus function in cursus service failed : cursus not found with provided id',
+      "Le cursus n'a pas été retrouvé avec l'identifiant fourni, veuillez contacter le support pour solutionner le problème au plus vite",
+    )
+
+    const cursusData = {
+        id: cursus.id,
+        themeId: cursus.theme_id,
+        name: cursus.name,
+        price: cursus.price,
+        order: cursus.order,
+        createdAt: cursus.createdAt.toLocaleString('fr-FR', { timeZone: 'Europe/Paris' }),
+        updatedAt: cursus.updatedAt.toLocaleString('fr-FR', { timeZone: 'Europe/Paris' }),
+        createdBy: cursus.createdBy,
+        updatedBy: cursus.updatedBy,
+    };
+    
+    return cursusData;
+  } catch (error: any) {
+    if (error instanceof AppError) throw error;
+    throw new AppError(
+      500,
+      "getCursus function in cursus service failed",
+      "La récupération du cursus a échoué, veuillez réessayer ultérieurement ou contacter le support.",
       { cause: error }
     );
   }
@@ -124,7 +158,11 @@ export async function deleteCursus(cursusId: number): Promise<void> {
     // Decrease by 1 order of cursus with order greater than order of cursus to delete
     await Cursus.update(
       { order: Sequelize.literal('`order` - 1') },
-      { where: { order: { [Op.gt]: cursusToDelete.order } } }
+      { where: { 
+          order: { [Op.gt]: cursusToDelete.order },
+          theme_id: cursusToDelete.theme_id,
+        }
+      }
     );
 
     await cursusToDelete.destroy();

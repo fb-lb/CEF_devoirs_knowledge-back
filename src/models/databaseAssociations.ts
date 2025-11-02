@@ -5,6 +5,9 @@ import { Lesson } from "./Lesson.js";
 import { Element } from "./Element.js";
 import { Text } from "./Text.js";
 import { Image } from "./Image.js";
+import { UserTheme } from "./User-Theme.js";
+import { UserCursus } from "./User-Cursus.js";
+import { UserLesson } from "./User-Lesson.js";
 
 // Relations between models
 
@@ -140,6 +143,143 @@ export function setupAssociations() {
     as: "UpdatedImages",
     foreignKey: "updatedBy",
   });
+
+  // Associations between UserTheme and User
+  UserTheme.belongsTo(User, {
+    as: "PurchasedByUser",
+    foreignKey: "user_id",
+  });
+
+  UserTheme.belongsTo(User, {
+    as: "CreatedByUser",
+    foreignKey: "createdBy",
+  })
+
+  UserTheme.belongsTo(User, {
+    as: "UpdatedByUser",
+    foreignKey: "updatedBy",
+  });
+
+  User.hasMany(UserTheme, {
+    as: "HasThemes",
+    foreignKey: "user_id",
+  });
+
+  User.hasMany(UserTheme, {
+    as: "CreatedUsersThemes",
+    foreignKey: "createdBy",
+  });
+
+  User.hasMany(UserTheme, {
+    as: "UpdatedUsersThemes",
+    foreignKey: "updatedBy",
+  });
+
+  // Association between UserTheme and Theme
+  UserTheme.belongsTo(Theme, {
+    as: "RelatedToTheme",
+    foreignKey: "theme_id",
+  });
+
+  Theme.hasMany(UserTheme, {
+    as: "ThemePurchases",
+    foreignKey: "theme_id",
+  });
+
+  // Associations between UserCursus and User
+  UserCursus.belongsTo(User, {
+    as: "PurchasedByUser",
+    foreignKey: "user_id",
+  });
+
+  UserCursus.belongsTo(User, {
+    as: "CreatedByUser",
+    foreignKey: "createdBy",
+  })
+
+  UserCursus.belongsTo(User, {
+    as: "UpdatedByUser",
+    foreignKey: "updatedBy",
+  });
+
+  User.hasMany(UserCursus, {
+    as: "HasCursus",
+    foreignKey: "user_id",
+  });
+
+  User.hasMany(UserCursus, {
+    as: "CreatedUsersCursus",
+    foreignKey: "createdBy",
+  });
+
+  User.hasMany(UserCursus, {
+    as: "UpdatedUsersCursus",
+    foreignKey: "updatedBy",
+  });
+
+  // Association between UserCursus and Cursus
+  UserCursus.belongsTo(Cursus, {
+    as: "RelatedToCursus",
+    foreignKey: "cursus_id",
+  });
+
+  Cursus.hasMany(UserCursus, {
+    as: "CursusPurchases",
+    foreignKey: "cursus_id",
+  });
+
+  // Associations between UserLesson and User
+  UserLesson.belongsTo(User, {
+    as: "PurchasedByUser",
+    foreignKey: "user_id",
+  });
+
+  UserLesson.belongsTo(User, {
+    as: "CreatedByUser",
+    foreignKey: "createdBy",
+  });
+
+  UserLesson.belongsTo(User, {
+    as: "UpdatedByUser",
+    foreignKey: "updatedBy",
+  });
+
+  User.hasMany(UserLesson, {
+    as: "HasLessons",
+    foreignKey: "user_id",
+  });
+
+  User.hasMany(UserLesson, {
+    as: "CreatedUsersLessons",
+    foreignKey: "createdBy",
+  });
+
+  User.hasMany(UserTheme, {
+    as: "UpdatedUsersLessons",
+    foreignKey: "updatedBy",
+  });
+
+  // Association between UserLesson and Lesson
+  UserLesson.belongsTo(Lesson, {
+    as: "RelatedToLesson",
+    foreignKey: "lesson_id",
+  });
+
+  Lesson.hasMany(UserLesson, {
+    as: "LessonPurchases",
+    foreignKey: "lesson_id",
+  });
 }
 
-export { User };
+export { 
+  User,
+  Theme,
+  Cursus,
+  Lesson,
+  Element,
+  Text,
+  Image,
+  UserTheme,
+  UserCursus,
+  UserLesson,
+ };

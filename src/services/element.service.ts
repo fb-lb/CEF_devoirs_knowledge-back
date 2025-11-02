@@ -250,7 +250,11 @@ export async function deleteElement(elementId: number): Promise<void> {
     // Decrease by 1 order of themes with order greater than order of theme to delete
     await Element.update(
       { order: Sequelize.literal('`order` - 1') },
-      { where: { order: { [Op.gt]: elementToDelete.order } } }
+      { where: {
+          order: { [Op.gt]: elementToDelete.order },
+          lesson_id: elementToDelete.lesson_id,
+        } 
+      }
     );
 
     await elementToDelete.destroy();

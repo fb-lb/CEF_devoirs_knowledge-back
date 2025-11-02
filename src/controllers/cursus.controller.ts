@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { ApiResponse, CursusData } from "../types/Interfaces.js";
-import { addCursus, changeOrderCursus, deleteCursus, getAllCursus, updateCursus } from '../services/cursus.service.js';
+import { addCursus, changeOrderCursus, deleteCursus, getAllCursus, getCursus, updateCursus } from '../services/cursus.service.js';
 import { AppError } from '../utils/AppError.js';
 import { getUserIdInRequest } from '../services/user.service.js';
 import { getRequestorId } from '../services/token.service.js';
@@ -12,6 +12,16 @@ export async function getAllCursusController(req: Request, res: Response): Promi
     success: true,
     message: '',
     data: allCursus,
+  });
+}
+
+export async function getCursusController(req: Request, res: Response): Promise<Response<ApiResponse<CursusData>>> {
+  const cursusId = Number(req.params.id);
+  const cursus: CursusData = await getCursus(cursusId);
+  return res.status(200).json({
+    success: true,
+    message: '',
+    data: cursus,
   });
 }
 

@@ -15,5 +15,7 @@ declare namespace NodeJS {
         EMAILJS_TEMPLATE_ID: string;
         JWT_SECRET_KEY: string;
         SECURE_COOKIE_OPTION: boolean;
+        STRIPE_PUBLIC_KEY: string;
+        STRIPE_SECRET_KEY: string;
     }
 }

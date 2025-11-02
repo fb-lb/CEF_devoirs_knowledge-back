@@ -70,6 +70,9 @@ Cursus.init(
     price: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
+      get() {
+        return Number(this.getDataValue('price'));
+      }
     },
     order: {
       type: DataTypes.INTEGER,

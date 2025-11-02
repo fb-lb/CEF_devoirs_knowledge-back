@@ -33,7 +33,7 @@ export async function getAllThemes(): Promise<ThemeData[]> {
   }
 }
 
-export async function  changeOrderThemes(themeId: number, move: 'up' | 'down', userId: number): Promise<ApiResponse> {
+export async function changeOrderThemes(themeId: number, move: 'up' | 'down', userId: number): Promise<ApiResponse> {
   try {
     const targetTheme = await Theme.findOne({ where: { id: themeId } });
     if (!targetTheme) throw new AppError(
