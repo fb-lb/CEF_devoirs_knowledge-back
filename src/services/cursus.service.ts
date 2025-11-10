@@ -3,7 +3,6 @@ import { Cursus } from "../models/Cursus.js";
 import { ApiResponse, CursusData } from "../types/Interfaces.js";
 import { AppError } from "../utils/AppError.js";
 import { deleteImageFiles } from "./element.service.js";
-import { Lesson } from "../models/Lesson.js";
 
 export async function getAllCursus(): Promise<CursusData[]> {
   try {

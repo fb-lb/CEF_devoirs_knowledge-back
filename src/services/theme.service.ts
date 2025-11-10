@@ -2,8 +2,6 @@ import Sequelize, { Op } from "sequelize";
 import { Theme } from "../models/Theme.js";
 import { ApiResponse, ThemeData } from "../types/Interfaces.js";
 import { AppError } from "../utils/AppError.js";
-import { fileURLToPath } from "url";
-import path from "path";
 import { deleteImageFiles } from "./element.service.js";
 
 export async function getAllThemes(): Promise<ThemeData[]> {
@@ -28,6 +26,37 @@ export async function getAllThemes(): Promise<ThemeData[]> {
       500,
       "getAllThemes function in theme service failed",
       "La récupération des thèmes a échoué, veuillez réessayer ultérieurement ou contacter le support.",
+      { cause: error }
+    );
+  }
+}
+
+export async function getTheme(themeId: number): Promise<ThemeData> {
+  try {
+    const theme = await Theme.findByPk(themeId);
+    if (!theme) throw new AppError(
+      404,
+      'getTheme function in theme service failed : theme not found with provided id',
+      "Le thème n'a pas été retrouvé avec l'identifiant fourni, veuillez contacter le support pour solutionner le problème au plus vite",
+    )
+
+    const themeData: ThemeData = {
+        id: theme.id,
+        name: theme.name,
+        order: theme.order,
+        createdAt: theme.createdAt.toLocaleString('fr-FR', { timeZone: 'Europe/Paris' }),
+        updatedAt: theme.updatedAt.toLocaleString('fr-FR', { timeZone: 'Europe/Paris' }),
+        createdBy: theme.createdBy,
+        updatedBy: theme.updatedBy,
+    };
+    
+    return themeData;
+  } catch (error: any) {
+    if (error instanceof AppError) throw error;
+    throw new AppError(
+      500,
+      "getTheme function in theme service failed",
+      "La récupération du thème a échoué, veuillez réessayer ultérieurement ou contacter le support.",
       { cause: error }
     );
   }

@@ -2,13 +2,14 @@ import Sequelize, { Op } from "sequelize";
 import { Element } from "../models/Element.js";
 import { Image } from "../models/Image.js";
 import { Text } from "../models/Text.js";
-import { ApiResponse, BaseElement, ElementData, LessonData } from "../types/Interfaces.js";
+import { ApiResponse, BaseElement, ElementData } from "../types/Interfaces.js";
 import { AppError } from "../utils/AppError.js";
 import { fileURLToPath } from "url";
 import path from "path";
 import { Cursus } from "../models/Cursus.js";
 import { Lesson } from "../models/Lesson.js";
 import fs, { promises as fsPromises } from "fs";
+import { UserLesson } from "../models/User-Lesson.js";
 
 export async function getAllElements(): Promise<ElementData[]> {
   try {
@@ -70,6 +71,82 @@ export async function getAllElements(): Promise<ElementData[]> {
       "La récupération des éléments (textes, images) a échoué, veuillez réessayer ultérieurement ou contacter le support.",
       { cause: error }
     );
+  }
+}
+
+export async function getAllElementsAvailable(userId: number): Promise<ElementData[]> {
+  try {
+    const allUserLessons = await UserLesson.findAll({ where: { user_id: userId } });
+    const allLessonsIdAvailable: number[] = [];
+    for (const userLesson of allUserLessons) {
+      allLessonsIdAvailable.push(userLesson.dataValues.lesson_id);
+    }
+
+    const allElementsAvailable = await Element.findAll({
+      include: [
+        {
+          model: Lesson,
+          as: 'IncludedInLesson',
+          where: {id: { [Op.in]: allLessonsIdAvailable }},
+        },
+        {
+          model: Text,
+          as: 'IncludeText',
+          required: false,
+        },
+        {
+          model: Image,
+          as: 'IncludeImage',
+          required: false,
+        }
+      ],
+    });
+    
+    const allElementsDataAvailable: ElementData[] = [];
+
+    for (const element of allElementsAvailable) {
+      const baseElementData: BaseElement = {
+        id: element.id,
+        lessonId: element.lesson_id,
+        order: element.order,
+        createdAt: element.createdAt.toLocaleString('fr-FR', { timeZone: 'Europe/Paris' }),
+        updatedAt: element.updatedAt.toLocaleString('fr-FR', { timeZone: 'Europe/Paris' }),
+        createdBy: element.createdBy,
+        updatedBy: element.updatedBy,
+      };
+
+      if(element.type === 'text') {
+        const fullElementData: ElementData = {
+          ...baseElementData,
+          type: element.type,
+          textType: element.IncludeText.type,
+          content: element.IncludeText.content,
+        }
+
+        allElementsDataAvailable.push(fullElementData);
+      }
+
+      if (element.type === 'image') {
+        const fullElementData: ElementData = {
+          ...baseElementData,
+          type: element.type,
+          legend: element.IncludeImage.legend,
+          source: element.IncludeImage.source,
+          alternative: element.IncludeImage.alternative,
+        }
+
+        allElementsDataAvailable.push(fullElementData);
+      }
+    }
+
+    return allElementsDataAvailable;
+  } catch (error: any) {
+   throw new AppError(
+    500,
+    'getAllElementsAvailable function in element service failed',
+    "La récupération des thèmes disponibles pour cet utilisateur a échoué, veuillez contacter le support pour solutionner le problème au plus vite.",
+    { cause: error },
+  );
   }
 }
 

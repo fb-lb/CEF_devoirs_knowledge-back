@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import fs, { promises as fsPromises } from 'fs';
 import { ApiResponse, ElementData } from "../types/Interfaces.js";
-import { addImage, addText, changeOrderElements, deleteElement, getAllElements, updateImage, updateText } from '../services/element.service.js';
+import { addImage, addText, changeOrderElements, deleteElement, getAllElements, getAllElementsAvailable, updateImage, updateText } from '../services/element.service.js';
 import { AppError } from '../utils/AppError.js';
 import { getUserIdInRequest } from '../services/user.service.js';
 import { getRequestorId } from '../services/token.service.js';
@@ -271,4 +271,16 @@ export async function updateImageController(req: Request, res: Response): Promis
       { cause: error }
     );
   }
+}
+
+export async function getAllElementsAvailableController(req: Request, res: Response): Promise<Response<ApiResponse<ElementData[]>>> {
+  const requestorId = getRequestorId(req.cookies.token);
+  
+  const allElementsAvailable = await getAllElementsAvailable(requestorId);
+
+  return res.status(200).json({
+    success: true,
+    message: '',
+    data: allElementsAvailable,
+  });
 }

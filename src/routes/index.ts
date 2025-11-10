@@ -9,6 +9,7 @@ import { router as elementRoute } from './element.js';
 import { router as stripeRoute } from './stripe.js';
 import { router as userCursusRoute } from './user-cursus.js';
 import { router as userLessonRoute } from './user-lesson.js';
+import { router as userThemeRoute } from './user-theme.js';
 
 export const router: Router = Router();
 
@@ -22,5 +23,6 @@ router.use('/api/content/cursus', cursusRoute);
 router.use('/api/content/lesson', lessonRoute);
 router.use('/api/content/element', elementRoute);
 
+router.use('/api/user-theme', userThemeRoute)
 router.use('/api/user-cursus', userCursusRoute);
 router.use('/api/user-lesson', userLessonRoute);
