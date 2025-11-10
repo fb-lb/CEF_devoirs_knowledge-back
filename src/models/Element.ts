@@ -17,8 +17,8 @@ interface ElementAttributes {
 
   IncludedInLesson?: Lesson;
   UpdatedByUser?: User | null;
-  IncludesTexts?: Text[];
-  IncludesImages?: Image[];
+  IncludeText?: Text;
+  IncludeImage?: Image;
 }
 
 interface ElementCreationAttributes
@@ -30,8 +30,8 @@ interface ElementCreationAttributes
     | "updatedBy"
     | "IncludedInLesson"
     | "UpdatedByUser"
-    | "IncludesTexts"
-    | "IncludesImages"
+    | "IncludeText"
+    | "IncludeImage"
   > {}
 
 export class Element
@@ -50,8 +50,8 @@ export class Element
 
   declare IncludedInLesson: Lesson;
   declare UpdatedByUser: User | null;
-  declare IncludesTexts: Text[];
-  declare IncludesImages: Image[];
+  declare IncludeText: Text;
+  declare IncludeImage: Image;
 }
 
 Element.init(

@@ -221,7 +221,7 @@ export async function updateLesson(lessonId: number, newLessonName: string, newL
     if (error instanceof AppError) throw error;
     throw new AppError(
       500,
-      "lessonCursus function in lesson service failed",
+      "updateLesson function in lesson service failed",
       "La mise à jour de la leçon a échoué, veuillez réessayer ultérieurement ou contacter le support.",
       { cause: error }
     );

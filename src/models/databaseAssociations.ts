@@ -106,8 +106,8 @@ export function setupAssociations() {
     foreignKey: "element_id",
   });
 
-  Element.hasMany(Text, {
-    as: "IncludesTexts",
+  Element.hasOne(Text, {
+    as: "IncludeText",
     foreignKey: "element_id",
   });
 
@@ -128,8 +128,8 @@ export function setupAssociations() {
     foreignKey: "element_id",
   });
 
-  Element.hasMany(Image, {
-    as: "IncludesImages",
+  Element.hasOne(Image, {
+    as: "IncludeImage",
     foreignKey: "element_id",
   });
 
