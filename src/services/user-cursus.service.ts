@@ -81,7 +81,7 @@ export async function getAllCursusAvailable(userId: number): Promise<CursusData[
   }
 }
 
-export async function checkUserCursusValidation(cursusId: number, userId: number): Promise<boolean> {
+export async function checkUserCursusValidation(cursusId: number, userId: number): Promise<void> {
   try {
     const userLessonsInCursusForThisUser = await UserLesson.findAll({
       where: { user_id: userId },
@@ -103,13 +103,11 @@ export async function checkUserCursusValidation(cursusId: number, userId: number
     for(const userLesson of userLessonsInCursusForThisUser) {
       if (!userLesson.isValidated) {
         await userCursus.update({ isValidated: false });
-        return false
+        return
       };
     }
 
     await userCursus.update({ isValidated: true });
-
-    return true;
   } catch (error: any) {
     if (error instanceof AppError) throw error;
     throw new AppError(
