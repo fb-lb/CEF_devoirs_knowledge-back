@@ -100,17 +100,16 @@ export async function updateUserLessonValidation(lessonId: number, userId: numbe
 
     await userLesson.update({ isValidated: isValidated });
 
-    const isCursusValidated = await checkUserCursusValidation(lesson.cursus_id, userId);
-    if(isCursusValidated) {
-      const cursus = await Cursus.findByPk(lesson.cursus_id);
-      if(!cursus) throw new AppError(
-        404,
-        "updateUserLessonValidation function in user-lesson service failed : cursus not found with lesson.cursus_id in lesson",
-        "Le cursus de la leçon n'a pas été retrouvée en base de données."
-      )
+    await checkUserCursusValidation(lesson.cursus_id, userId);
+    
+    const cursus = await Cursus.findByPk(lesson.cursus_id);
+    if(!cursus) throw new AppError(
+      404,
+      "updateUserLessonValidation function in user-lesson service failed : cursus not found with lesson.cursus_id in lesson",
+      "Le cursus de la leçon n'a pas été retrouvée en base de données."
+    )
 
-      await checkUserThemeCertification(cursus.theme_id, userId);
-    }
+    await checkUserThemeCertification(cursus.theme_id, userId);
   } catch (error: any) {
     if (error instanceof AppError) throw error;
     throw new AppError(
