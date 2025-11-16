@@ -1,5 +1,7 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import { sequelize } from "../config/database.js";
+import { User } from "./User.js";
+import { Cursus } from "./Cursus.js";
 
 interface UserCursusAttributes {
   id: number,
@@ -10,6 +12,11 @@ interface UserCursusAttributes {
   updatedAt?: Date,
   createdBy: number | null,
   updatedBy: number | null,
+
+  PurchasedByUser?: User;
+  CreatedByUser?: User;
+  UpdatedByUser?: User;
+  RelatedToCursus?: Cursus;
 }
 
 interface UserCursusCreationAttributes
@@ -19,6 +26,10 @@ interface UserCursusCreationAttributes
     | "createdAt"
     | "updatedAt"
     | "updatedBy"
+    | "PurchasedByUser"
+    | "CreatedByUser"
+    | "UpdatedByUser"
+    | "RelatedToCursus"
   > {}
 
 export class UserCursus
@@ -34,6 +45,11 @@ export class UserCursus
   declare readonly updatedAt: Date;
   declare createdBy: number | null;
   declare updatedBy: number | null;
+
+  declare PurchasedByUser: User;
+  declare CreatedByUser: User;
+  declare UpdatedByUser: User;
+  declare RelatedToCursus: Cursus;
 }
 
 UserCursus.init(

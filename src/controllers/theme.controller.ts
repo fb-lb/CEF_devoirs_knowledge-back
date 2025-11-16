@@ -5,6 +5,7 @@ import { AppError } from '../utils/AppError.js';
 import { getUserIdInRequest } from '../services/user.service.js';
 import { getRequestorId } from '../services/token.service.js';
 import { validateAddThemeForm, validateUpdateThemeForm } from '../services/form.service.js';
+import { deleteUserThemeForThisTheme } from '../services/user-theme.service.js';
 
 export async function getAllThemesController(req: Request, res: Response): Promise<Response<ApiResponse<ThemeData[]>>> {
   const allThemes: ThemeData[] = await getAllThemes();
@@ -67,6 +68,9 @@ export async function deleteThemeController(req: Request, res: Response): Promis
   );
 
   const themeId = parseInt(req.params.id);
+
+  await deleteUserThemeForThisTheme(themeId);
+  
   await deleteTheme(themeId);
 
   const allThemes = await getAllThemes();

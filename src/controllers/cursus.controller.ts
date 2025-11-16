@@ -1,10 +1,12 @@
 import { Request, Response } from 'express';
 import { ApiResponse, CursusData } from "../types/Interfaces.js";
-import { addCursus, changeOrderCursus, deleteCursus, getAllCursus, getCursus, updateCursus } from '../services/cursus.service.js';
+import { addCursus, changeOrderCursus, deleteCursus, getAllCursus, getCursus, getThemeIdForThisCursus, updateCursus } from '../services/cursus.service.js';
 import { AppError } from '../utils/AppError.js';
 import { getUserIdInRequest } from '../services/user.service.js';
 import { getRequestorId } from '../services/token.service.js';
 import { validateAddCursusForm, validateUpdateCursusForm } from '../services/form.service.js';
+import { deleteUserCursus, deleteUserCursusForThisCursus, getUsersWhoHaveUserCursusForThisTheme } from '../services/user-cursus.service.js';
+import { checkUserThemeCertification } from '../services/user-theme.service.js';
 
 export async function getAllCursusController(req: Request, res: Response): Promise<Response<ApiResponse<CursusData[]>>> {
   const allCursus: CursusData[] = await getAllCursus();
@@ -68,6 +70,12 @@ export async function addCursusController(req: Request, res: Response): Promise<
 
   allCursus = await getAllCursus();
 
+  // Check theme certification for each user who have access to the theme of this cursus
+  const users = await getUsersWhoHaveUserCursusForThisTheme(themeId);
+  for(const user of users) {
+    await checkUserThemeCertification(themeId, user.id, requestorId);
+  }
+
   return res.status(200).json({
     success: true,
     message: `Le cursus ${cursusName} a bien été ajouté`,
@@ -82,8 +90,19 @@ export async function deleteCursusController(req: Request, res: Response): Promi
     "Le cursus n'a pas pu être retrouvé car son identifiant n'est pas fourni, veuillez contacter le support pour solutionner le problème au plus vite."
   );
 
+  const requestorId = getRequestorId(req.cookies.token);
   const cursusId = parseInt(req.params.id);
+
+  const themeId = await getThemeIdForThisCursus(cursusId);
+  const usersWhoHaveUserCursusForThisTheme = await getUsersWhoHaveUserCursusForThisTheme(themeId);
+
+  await deleteUserCursusForThisCursus(cursusId, requestorId);
+
   await deleteCursus(cursusId);
+
+  for(const user of usersWhoHaveUserCursusForThisTheme) {
+    await checkUserThemeCertification(themeId, user.id, requestorId);
+  }
 
   const allCursus = await getAllCursus();
   return res.status(200).json({

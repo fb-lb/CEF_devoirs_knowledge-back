@@ -3,6 +3,8 @@ import { Lesson } from "../models/Lesson.js";
 import { ApiResponse, LessonData } from "../types/Interfaces.js";
 import { AppError } from "../utils/AppError.js";
 import { deleteImageFiles } from "./element.service.js";
+import { Cursus } from "../models/Cursus.js";
+import { Theme } from "../models/Theme.js";
 
 export async function getAllLessons(): Promise<LessonData[]> {
   try {
@@ -143,7 +145,7 @@ export async function changeOrderLessons(lessonId: number, move: 'up' | 'down', 
   }
 }
 
-export async function addLesson(lessonName: string, price: number, lessonsInSameCursus: LessonData[], requestorId: number, cursusId: number): Promise<void> {
+export async function addLesson(lessonName: string, price: number, lessonsInSameCursus: LessonData[], requestorId: number, cursusId: number): Promise<number> {
   for (const lesson of lessonsInSameCursus) {
     if (lesson.name === lessonName) throw new AppError(
       422,
@@ -161,6 +163,7 @@ export async function addLesson(lessonName: string, price: number, lessonsInSame
       createdBy: requestorId,
       updatedBy: null,
     });
+    return newLesson.id;
   } catch (error: any) {
     throw new AppError(
       500,
@@ -223,6 +226,42 @@ export async function updateLesson(lessonId: number, newLessonName: string, newL
       500,
       "updateLesson function in lesson service failed",
       "La mise à jour de la leçon a échoué, veuillez réessayer ultérieurement ou contacter le support.",
+      { cause: error }
+    );
+  }
+}
+
+export async function getCursusIdAndThemeIdForThisLesson(lessonId: number): Promise<{ cursusId: number, themeId: number }> {
+  try {
+    const lesson = await Lesson.findByPk(lessonId, {
+      include: [
+        {
+          model: Cursus,
+          as: 'IncludedInCursus',
+          include: [
+            {
+              model: Theme,
+              as: 'IncludedInTheme',
+            }
+          ]
+        }
+      ]
+    });
+
+    if(!lesson) throw new AppError(
+      404,
+      "getCursusIdAndThemeIdForThisLesson function in lesson service failed : lesson not found with provided id",
+      "Leçon non trouvée avec l'identifiant fourni",
+    )
+    const themeId = lesson.IncludedInCursus.IncludedInTheme.dataValues.id;
+    const cursusId = lesson.IncludedInCursus.dataValues.id;
+    return { cursusId, themeId };
+  } catch (error: any) {
+    if (error instanceof AppError) throw error;
+    throw new AppError(
+      500,
+      "getCursusIdAndThemeIdForThisLesson function in lesson service failed",
+      "La recherche des identifiants du cursus et du thème de la leçon a échoué, veuillez réessayer ultérieurement ou contacter le support.",
       { cause: error }
     );
   }

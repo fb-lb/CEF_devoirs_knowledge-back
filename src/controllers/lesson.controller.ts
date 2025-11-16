@@ -1,10 +1,13 @@
 import { Request, Response } from 'express';
 import { ApiResponse, LessonData } from "../types/Interfaces.js";
-import { addLesson, changeOrderLessons, deleteLesson, getAllLessons, updateLesson } from '../services/lesson.service.js';
+import { addLesson, changeOrderLessons, deleteLesson, getAllLessons, getCursusIdAndThemeIdForThisLesson, updateLesson } from '../services/lesson.service.js';
 import { AppError } from '../utils/AppError.js';
 import { getUserIdInRequest } from '../services/user.service.js';
 import { validateAddLessonForm, validateUpdateLessonForm } from '../services/form.service.js';
 import { getRequestorId } from '../services/token.service.js';
+import { deleteUserLessonForThisLesson, getUsersWhoHaveUserLessonForThisCursus } from '../services/user-lesson.service.js';
+import { checkUserCursusValidation } from '../services/user-cursus.service.js';
+import { checkUserThemeCertification } from '../services/user-theme.service.js';
 
 export async function getAllLessonsController(req: Request, res: Response): Promise<Response<ApiResponse<LessonData[]>>> {
   const allLessons: LessonData[] = await getAllLessons();
@@ -42,19 +45,27 @@ export async function changeOrderLessonsController(req: Request, res: Response) 
 
 export async function addLessonController(req: Request, res: Response): Promise<Response<ApiResponse<LessonData[]>>> {
   const lessonName: string = req.body.name;
-  const cursusId: number = req.body.cursusId;
+  const cursusIdForThisLesson: number = req.body.cursusId;
   const price: number = req.body.price;
-  validateAddLessonForm(lessonName, cursusId, price);
+  validateAddLessonForm(lessonName, cursusIdForThisLesson, price);
 
   const requestorId = getRequestorId(req.cookies.token);
 
   let allLessons = await getAllLessons();
   let selectedLessons: LessonData[] = [];
   for (const lesson of allLessons) {
-    if (lesson.cursusId === cursusId) selectedLessons.push(lesson);
+    if (lesson.cursusId === cursusIdForThisLesson) selectedLessons.push(lesson);
   }
   
-  await addLesson(lessonName, price, selectedLessons, requestorId, cursusId);
+  const lessonId = await addLesson(lessonName, price, selectedLessons, requestorId, cursusIdForThisLesson);
+
+  // Check cursus validation and theme certification for user who have access to this lesson
+  const { themeId, cursusId } = await getCursusIdAndThemeIdForThisLesson(lessonId);
+  const users = await getUsersWhoHaveUserLessonForThisCursus(cursusId);
+  for(const user of users) {
+    await checkUserCursusValidation(cursusId, user.id, requestorId);
+    await checkUserThemeCertification(themeId, user.id, requestorId);
+  }
 
   allLessons = await getAllLessons();
 
@@ -72,9 +83,21 @@ export async function deleteLessonController(req: Request, res: Response): Promi
     "La leçon n'a pas pu être retrouvée car son identifiant n'est pas fourni, veuillez contacter le support pour solutionner le problème au plus vite."
   );
 
+  const requestorId = getRequestorId(req.cookies.token);
   const lessonId = parseInt(req.params.id);
+  
+  const { cursusId, themeId } = await getCursusIdAndThemeIdForThisLesson(lessonId);
+  const usersWhoHaveUserLessonForThisCursus = await getUsersWhoHaveUserLessonForThisCursus(cursusId);
+
+  await deleteUserLessonForThisLesson(lessonId, requestorId);
+  
   await deleteLesson(lessonId);
 
+  for(const user of usersWhoHaveUserLessonForThisCursus) {
+    await checkUserCursusValidation(cursusId, user.id, requestorId);
+    await checkUserThemeCertification(themeId, user.id, requestorId);
+  }
+  
   const allLessons = await getAllLessons();
   return res.status(200).json({
     success: true,

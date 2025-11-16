@@ -63,7 +63,7 @@ export function setupAssociations() {
   });
 
   Cursus.hasMany(Lesson, {
-    as: "InludesLessons",
+    as: "IncludesLessons",
     foreignKey: "cursus_id",
   });
 
@@ -85,7 +85,7 @@ export function setupAssociations() {
   });
 
   Lesson.hasMany(Element, {
-    as: "InludesElements",
+    as: "IncludesElements",
     foreignKey: "lesson_id",
   });
 
@@ -161,7 +161,7 @@ export function setupAssociations() {
   });
 
   User.hasMany(UserTheme, {
-    as: "HasThemes",
+    as: "HasUserThemes",
     foreignKey: "user_id",
   });
 
@@ -203,7 +203,7 @@ export function setupAssociations() {
   });
 
   User.hasMany(UserCursus, {
-    as: "HasCursus",
+    as: "HasUserCursus",
     foreignKey: "user_id",
   });
 
@@ -245,7 +245,7 @@ export function setupAssociations() {
   });
 
   User.hasMany(UserLesson, {
-    as: "HasLessons",
+    as: "HasUserLessons",
     foreignKey: "user_id",
   });
 

@@ -1,5 +1,7 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import { sequelize } from "../config/database.js";
+import { User } from "./User.js";
+import { Theme } from "./Theme.js";
 
 interface UserThemeAttributes {
   id: number,
@@ -10,6 +12,11 @@ interface UserThemeAttributes {
   updatedAt?: Date,
   createdBy: number | null,
   updatedBy: number | null,
+
+  PurchasedByUser?: User;
+  CreatedByUser?: User;
+  UpdatedByUser?: User;
+  RelatedToTheme?: Theme;
 }
 
 interface UserThemeCreationAttributes
@@ -19,6 +26,10 @@ interface UserThemeCreationAttributes
     | "createdAt"
     | "updatedAt"
     | "updatedBy"
+    | "PurchasedByUser"
+    | "CreatedByUser"
+    | "UpdatedByUser"
+    | "RelatedToTheme"
   > {}
 
 export class UserTheme
@@ -34,6 +45,11 @@ export class UserTheme
   declare readonly updatedAt: Date;
   declare createdBy: number | null;
   declare updatedBy: number | null;
+
+  declare PurchasedByUser: User;
+  declare CreatedByUser: User;
+  declare UpdatedByUser: User;
+  declare RelatedToTheme: Theme;
 }
 
 UserTheme.init(
