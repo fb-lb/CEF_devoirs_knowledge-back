@@ -3,6 +3,7 @@ import { Cursus } from "../models/Cursus.js";
 import { ApiResponse, CursusData } from "../types/Interfaces.js";
 import { AppError } from "../utils/AppError.js";
 import { deleteImageFiles } from "./element.service.js";
+import { Theme } from "../models/Theme.js";
 
 export async function getAllCursus(): Promise<CursusData[]> {
   try {
@@ -192,6 +193,35 @@ export async function updateCursus(cursusId: number, newCursusName: string, newC
       500,
       "updateCursus function in cursus service failed",
       "La mise à jour du cursus a échoué, veuillez réessayer ultérieurement ou contacter le support.",
+      { cause: error }
+    );
+  }
+}
+
+export async function getThemeIdForThisCursus(cursusId: number): Promise<number> {
+  try {
+    const cursus = await Cursus.findByPk(cursusId, {
+      include: [
+        {
+          model: Theme,
+          as: 'IncludedInTheme',
+        }
+      ]
+    });
+
+    if(!cursus) throw new AppError(
+      404,
+      "getThemeIdForThisCursus function in cursus service failed : cursus not found with provided id",
+      "Cursus non trouvé avec l'identifiant fourni",
+    )
+    const themeId = cursus.IncludedInTheme.dataValues.id;
+    return themeId;
+  } catch (error: any) {
+    if (error instanceof AppError) throw error;
+    throw new AppError(
+      500,
+      "getThemeIdForThisCursus function in cursus service failed",
+      "La recherche de l'identifiant du thème du cursus a échoué, veuillez réessayer ultérieurement ou contacter le support.",
       { cause: error }
     );
   }

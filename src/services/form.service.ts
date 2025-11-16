@@ -486,3 +486,93 @@ export function validateUpdateImageForm(newSource: string, newAlternative: strin
     throw error;
   }
 }
+
+export function validateUpdateUserThemeForm(userThemeId: number, requestorId: number): void {
+  const error = new AppError(
+    422,
+    "validateUpdateUserThemeForm function in form service failed because of an invalid form field",
+    ""
+  );
+
+  // Test required validator
+  if(!userThemeId || Number.isNaN(userThemeId)) {
+    error.messageFront = `Le champ "Identifiant de l'association utilisateur / thème" est obligatoire et doit être un nombre.`;
+    throw error;
+  }
+
+  if(!requestorId || Number.isNaN(requestorId)) {
+    error.messageFront = 'Un problème est survenu, nous faisons tout pour le solutionner.';
+    throw error;
+  }
+
+  // Test minimal value validator
+  if (userThemeId < 1) {
+    error.messageFront = "L'identifiant de l'association utilisateur / thème doit être supérieur ou égal à 1.";
+    throw error;
+  }
+
+  if (requestorId < 1) {
+    error.messageFront = 'Un problème est survenu, nous faisons tout pour le solutionner.';
+    throw error;
+  }
+}
+
+export function validateUpdateUserCursusForm(userCursusId: number, requestorId: number): void {
+  const error = new AppError(
+    422,
+    "validateUpdateUserCursusForm function in form service failed because of an invalid form field",
+    ""
+  );
+
+  // Test required validator
+  if(!userCursusId || Number.isNaN(userCursusId)) {
+    error.messageFront = `Le champ "Identifiant de l'association utilisateur / cursus" est obligatoire et doit être un nombre.`;
+    throw error;
+  }
+
+  if(!requestorId || Number.isNaN(requestorId)) {
+    error.messageFront = "Un problème est survenu, nous mettons tout en oeuvre pour le solutionner au plus vite.";
+    throw error;
+  }
+
+  // Test minimal value validator
+  if (userCursusId < 1) {
+    error.messageFront = "L'identifiant de l'association utilisateur / cursus doit être supérieur ou égal à 1.";
+    throw error;
+  }
+
+  if (requestorId < 1) {
+    error.messageFront = "Un problème est survenu, nous mettons tout en oeuvre pour le solutionner au plus vite.";
+    throw error;
+  }
+}
+
+export function validateUpdateUserLessonForm(userLessonId: number, requestorId: number) {
+  const error = new AppError(
+    422,
+    "validateUpdateUserLessonForm function in form service failed because of an invalid form field",
+    ""
+  );
+
+  // Test required validator
+  if(!userLessonId || Number.isNaN(userLessonId)) {
+    error.messageFront = `Le champ "Identifiant de l'association utilisateur / leçon" est obligatoire et doit être un nombre.`;
+    throw error;
+  }
+
+  if(!requestorId || Number.isNaN(requestorId)) {
+    error.messageFront = "Un problème est survenu, nous mettons tout en oeuvre pour le solutionner.";
+    throw error;
+  }
+
+  // Test minimal value validator
+  if (userLessonId < 1) {
+    error.messageFront = "L'identifiant de l'association utilisateur / leçon doit être supérieur ou égal à 1.";
+    throw error;
+  }
+
+  if (requestorId < 1) {
+    error.messageFront = "Un problème est survenu, nous mettons tout en oeuvre pour le solutionner.";
+    throw error;
+  }
+}

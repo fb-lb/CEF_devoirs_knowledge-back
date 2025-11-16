@@ -6,6 +6,9 @@ import { Lesson } from "./Lesson.js";
 import { Element } from "./Element.js";
 import { Text } from "./Text.js";
 import { Image } from "./Image.js";
+import { UserTheme } from "./User-Theme.js";
+import { UserCursus } from "./User-Cursus.js";
+import { UserLesson } from "./User-Lesson.js";
 
 interface UserAttributes {
   id: number;
@@ -27,6 +30,15 @@ interface UserAttributes {
   UpdatedElements?: Element[];
   UpdatedText?: Text[];
   UpdatedImages?: Image[];
+  HasUserThemes?: UserTheme[];
+  CreatedUsersThemes?: UserTheme[];
+  UpdatedUsersThemes?: UserTheme[];
+  HasUserCursus?: UserCursus[];
+  CreatedUsersCursus?: UserCursus[];
+  UpdatedUsersCursus?: UserCursus[];
+  HasUserLessons?: UserLesson[];
+  CreatedUsersLessons?: UserLesson[];
+  UpdatedUsersLessons?: UserLesson[];
 }
 
 interface UserCreationAttributes
@@ -46,6 +58,15 @@ interface UserCreationAttributes
     | "UpdatedElements"
     | "UpdatedText"
     | "UpdatedImages"
+    | "HasUserThemes"
+    | "CreatedUsersThemes"
+    | "UpdatedUsersThemes"
+    | "HasUserCursus"
+    | "CreatedUsersCursus"
+    | "UpdatedUsersCursus"
+    | "HasUserLessons"
+    | "CreatedUsersLessons"
+    | "UpdatedUsersLessons"
   > {}
 
 export class User
@@ -72,6 +93,15 @@ export class User
   declare UpdatedElements: Element[];
   declare UpdatedText: Text[];
   declare UpdatedImages: Image[];
+  declare HasUserThemes: UserTheme[];
+  declare CreatedUsersThemes: UserTheme[];
+  declare UpdatedUsersThemes: UserTheme[];
+  declare HasUserCursus: UserCursus[];
+  declare CreatedUsersCursus: UserCursus[];
+  declare UpdatedUsersCursus: UserCursus[];
+  declare HasUserLessons: UserLesson[];
+  declare CreatedUsersLessons: UserLesson[];
+  declare UpdatedUsersLessons: UserLesson[];
 }
 
 // If you modify one of these conditions, make sure that back end validators (in form.service.ts) and front end validators are also modified

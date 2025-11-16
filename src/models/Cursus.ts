@@ -3,6 +3,7 @@ import { sequelize } from "../config/database.js";
 import { Theme } from "./Theme.js";
 import { User } from "./User.js";
 import { Lesson } from "./Lesson.js";
+import { UserCursus } from "./User-Cursus.js";
 
 interface CursusAttributes {
   id: number;
@@ -17,7 +18,8 @@ interface CursusAttributes {
 
   IncludedInTheme?: Theme;
   UpdatedByUser?: User | null;
-  InludesLessons?: Lesson[];
+  IncludesLessons?: Lesson[];
+  CursusPurchases?: UserCursus[];
 }
 
 interface CursusCreationAttributes
@@ -29,7 +31,8 @@ interface CursusCreationAttributes
     | "updatedBy"
     | "IncludedInTheme"
     | "UpdatedByUser"
-    | "InludesLessons"
+    | "IncludesLessons"
+    | "CursusPurchases"
   > {}
 
 export class Cursus
@@ -49,7 +52,8 @@ export class Cursus
 
   declare IncludedInTheme: Theme;
   declare UpdatedByUser: User | null;
-  declare InludesLessons: Lesson[];
+  declare IncludesLessons: Lesson[];
+  declare CursusPurchases: UserCursus[];
 }
 
 Cursus.init(

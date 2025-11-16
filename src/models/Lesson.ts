@@ -3,6 +3,7 @@ import { sequelize } from "../config/database.js";
 import { Cursus } from "./Cursus.js";
 import { User } from "./User.js";
 import { Element } from "./Element.js";
+import { UserLesson } from "./User-Lesson.js";
 
 interface LessonAttributes {
   id: number;
@@ -17,10 +18,11 @@ interface LessonAttributes {
 
   IncludedInCursus?: Cursus;
   UpdatedByUser?: User | null;
-  InludesElements?: Element[]
+  IncludesElements?: Element[];
+  LessonPurchases?: UserLesson[];
 }
 
-interface LessonCreationAttributes extends Optional<LessonAttributes, "id" | "createdAt" | "updatedAt" | "updatedBy" | "IncludedInCursus" | "UpdatedByUser" | "InludesElements"> {}
+interface LessonCreationAttributes extends Optional<LessonAttributes, "id" | "createdAt" | "updatedAt" | "updatedBy" | "IncludedInCursus" | "UpdatedByUser" | "IncludesElements" | "LessonPurchases"> {}
 
 export class Lesson extends Model<LessonAttributes, LessonCreationAttributes> implements LessonAttributes {
   declare id: number;
@@ -36,7 +38,8 @@ export class Lesson extends Model<LessonAttributes, LessonCreationAttributes> im
 
   declare IncludedInCursus: Cursus;
   declare UpdatedByUser: User | null;
-  declare InludesElements: Element[];
+  declare IncludesElements: Element[];
+  declare LessonPurchases: UserLesson[];
 }
 
 Lesson.init({

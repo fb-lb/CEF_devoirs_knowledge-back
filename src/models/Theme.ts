@@ -2,6 +2,7 @@ import { DataTypes, Model, Optional } from "sequelize";
 import { sequelize } from '../config/database.js';
 import { User } from "./User.js";
 import { Cursus } from "./Cursus.js";
+import { UserTheme } from "./User-Theme.js";
 
 interface ThemeAttributes {
   id: number;
@@ -14,9 +15,10 @@ interface ThemeAttributes {
   
   UpdatedByUser?: User | null;
   IncludesCursus?: Cursus[];
+  ThemePurchases?: UserTheme[];
 }
 
-interface ThemeCreationAttributes extends Optional<ThemeAttributes, "id" | "createdAt" | "updatedAt" | "updatedBy" | "UpdatedByUser" | "IncludesCursus"> {}
+interface ThemeCreationAttributes extends Optional<ThemeAttributes, "id" | "createdAt" | "updatedAt" | "updatedBy" | "UpdatedByUser" | "IncludesCursus" | "ThemePurchases"> {}
 
 export class Theme extends Model<ThemeAttributes, ThemeCreationAttributes> implements ThemeAttributes {
   declare id: number;
@@ -30,6 +32,7 @@ export class Theme extends Model<ThemeAttributes, ThemeCreationAttributes> imple
 
   declare UpdatedByUser: User | null;
   declare IncludesCursus: Cursus[];
+  declare ThemePurchases: UserTheme[];
 }
 
 Theme.init(
