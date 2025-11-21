@@ -1,6 +1,5 @@
 import { Cursus } from "../models/Cursus.js";
 import { Lesson } from "../models/Lesson.js";
-import { Theme } from "../models/Theme.js";
 import { UserCursus } from "../models/User-Cursus.js";
 import { UserLesson } from "../models/User-Lesson.js";
 import { UserTheme } from "../models/User-Theme.js";
@@ -11,6 +10,21 @@ import { getLesson } from "./lesson.service.js";
 import { checkUserCursusValidation } from "./user-cursus.service.js";
 import { checkUserThemeCertification } from "./user-theme.service.js";
 
+/**
+ * Adds a user-lesson association into the database.
+ * 
+ * @async
+ * @function addUserLesson
+ * 
+ * @param {number} userId - The ID of the user related to the lesson. 
+ * @param {number} lessonId - The ID of the lesson related to the user. 
+ * @param {number} requestorId - The ID of the user performing the creation.
+ *  
+ * @returns {Promise<number | null>} Returns the ID of the cursus containing the lesson if user-lesson creation is a success.
+ * Returns null if this user-lesson association already exists in the database.
+ * 
+ * @throws {AppError} If an unexpected error occurs during user-lesson creation.
+ */
 export async function addUserLesson(userId: number, lessonId: number, requestorId: number): Promise<number | null> {
   try {
     const userLesson = await UserLesson.findOne({where: { user_id: userId, lesson_id: lessonId }});
@@ -36,6 +50,15 @@ export async function addUserLesson(userId: number, lessonId: number, requestorI
   }
 }
 
+/**
+ * Retrieves all user-lesson associations in the database.
+ * @async
+ * @function getAllUserLessonData
+ * 
+ * @returns {Promise<UserLessonData[]>} Returns a list of objects containing the user-lesson associations retrieved.
+ * 
+ * @throws {AppError} If an unexpected error occurs during user-lesson associations retrieval. 
+ */
 export async function getAllUserLessonData(): Promise<UserLessonData[]> {
   try {
     const allUserLesson = await UserLesson.findAll();
@@ -66,6 +89,17 @@ export async function getAllUserLessonData(): Promise<UserLessonData[]> {
   }
 }
 
+/**
+ * Retrieves all user-lesson associations for a specific user in the database.
+ * @async
+ * @function getUsersLessonsForThisUser
+ * 
+ * @param {number} requestorId - The user ID used to retrieve the user-lesson associations.
+ * 
+ * @returns {Promise<UserLessonData[]>} Returns a list of objects containing the user-lesson associations retrieved for the specified user.
+ * 
+ * @throws {AppError} If an unexpected error occurs during user-lesson associations retrieval. 
+ */
 export async function getUsersLessonsForThisUser(requestorId: number): Promise<UserLessonData[]> {
   try {
     const usersLessonsForThisUser = await UserLesson.findAll({ where: { user_id: requestorId } });
@@ -96,6 +130,18 @@ export async function getUsersLessonsForThisUser(requestorId: number): Promise<U
   }
 }
 
+/**
+ * Retrieves all lessons available for a specific user in the database.
+ * 
+ * @async
+ * @function getAllLessonsAvailable
+ * 
+ * @param {number} userId - The user ID used to retrieve the lessons.
+ * 
+ * @returns {Promise<LessonData[]>} Returns a list of lessons retrieved for the specified user.
+ * 
+ * @throws {AppError} If an unexpected error occurs during lessons retrieval. 
+ */
 export async function getAllLessonsAvailable(userId: number): Promise<LessonData[]> {
   try {
     const allUserLessons = await UserLesson.findAll({ where: { user_id: userId } });
@@ -116,6 +162,22 @@ export async function getAllLessonsAvailable(userId: number): Promise<LessonData
   }
 }
 
+/**
+ * Updates a user-lesson informations.
+ * 
+ * @async
+ * @function updateUserLesson
+ * 
+ * @param {number} userLessonId - The user-lesson ID used to retrieve the user-lesson association.
+ * @param {boolean} isValidated - The new value of the user-lesson validation property.
+ * @param {number} requestorId - The ID of the user performing the update.
+ * 
+ * @returns {Promise<boolean>} Returns `true` user-lesson validation property is updated.
+ * Returns `false` if user-lesson validation property is already equals to isValidated parameter.
+ * 
+ * @throws {AppError} If the user-lesson association to update is not found whith the user-lesson assocation ID provided.
+ * @throws {AppError} If an unexpected error occurs during the update.
+ */
 export async function updateUserLesson(userLessonId: number, requestorId: number, isValidated: boolean): Promise<boolean> {
   try {
     const userLesson = await UserLesson.findByPk(userLessonId, {
@@ -157,6 +219,25 @@ export async function updateUserLesson(userLessonId: number, requestorId: number
   }
 }
 
+/**
+ * Deletes a user-lesson. Check if user-cursus related to the user-lesson has still user-lesson under it.
+ * If not it deletes the user-cursus, otherwise it checks its isValidated property.
+ * If user-cursus is deleted, it checks if user-theme related to the user-cursus has still user-cursus under it.
+ * If not it deletes the user-theme, otherwise it checks its isCertified property.
+ * 
+ * @async
+ * @function deleteUserLesson
+ * 
+ * @param {number} userLessonId - The ID of the user-lesson association to delete. 
+ * @param {number} requestorId - The ID of the user performing the deletion.
+ * 
+ * @returns {Promise{void}}
+ * 
+ * @throws {AppError} If user-lesson association is not found with the user-lesson ID provided.
+ * @throws {AppError} If user-cursus association related to the user-lesson association is not found.
+ * @throws {AppError} If user-theme association related to the user-cursus association is not found.
+ * @throws {AppError} If an unexpected error occurs during the deletion.
+ */
 export async function deleteUserLesson(userLessonId: number, requestorId: number): Promise<void> {
   try {
     const userLesson = await UserLesson.findByPk(userLessonId, {
@@ -249,6 +330,19 @@ export async function deleteUserLesson(userLessonId: number, requestorId: number
   }
 }
 
+/**
+ * Deletes all user-lesson associations related to a lesson.
+ * 
+ * @async
+ * @function deleteUserLessonForThisLesson
+ * 
+ * @param {number} lessonId - The ID of the lesson related to all user-lesson associations to delete.
+ * @param {number} requestorId  - The ID of the user performing the deletion.
+ * 
+ * @returns {Promise<void>}
+ * 
+ * @throws {AppError} If an expected error occurs during the user-lesson deletions.
+ */
 export async function deleteUserLessonForThisLesson(lessonId: number, requestorId: number): Promise<void> {
   try {
     const allUserLessonsForThisLesson = await UserLesson.findAll({where: { lesson_id: lessonId }});
@@ -265,6 +359,15 @@ export async function deleteUserLessonForThisLesson(lessonId: number, requestorI
   }
 }
 
+/**
+ * Retrieves the users who have a user-lesson association related to a specific cursus.
+ * 
+ * @param {number} cursusId - The ID of the cursus used to retrieve the user-lesson associations concerned.
+ * 
+ * @returns {Promise<User[]>} Returns a list of user.
+ * 
+ * @throws {AppError} If an unexpected error occurs during users retrieval.
+ */
 export async function getUsersWhoHaveUserLessonForThisCursus(cursusId: number): Promise<User[]> {
   try {
     const users = await User.findAll({

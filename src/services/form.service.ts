@@ -1,7 +1,34 @@
-import { RegistrationBody, RegistrationResponse, UpdateUserBody } from "../types/Interfaces.js";
+import { RegistrationBody, UpdateUserBody } from "../types/Interfaces.js";
 import { AppError } from "../utils/AppError.js";
 
-// If you modify one of these tests, make sure that User.ts (models) and front end validators are also modified
+/**
+ * Checks validity of the registration form fields.
+ * 
+ * @function validateRegistrationForm
+ * 
+ * @param {RegistrationBody} body - Object containing the user informations {
+ *   firstName: string;
+ *   lastName: string;
+ *   email: string;
+ *   password: string;
+ *   confirmPassword: string;
+ * } 
+ * 
+ * @returns {void}
+ * 
+ * @throws {AppError} If one of the body property is null.
+ * @throws {AppError} If first name length > 60.
+ * @throws {AppError} If last name length > 60.
+ * @throws {AppError} If first name contains unauthorized caracters.
+ * @throws {AppError} If last name contains unauthorized caracters.
+ * @throws {AppError} If email format is not followed.
+ * @throws {AppError} If email length > 80.
+ * @throws {AppError} If password length < 8.
+ * @throws {AppError} If password length > 100.
+ * @throws {AppError} If confirm password length < 8.
+ * @throws {AppError} If confirm password length > 100.
+ * @throws {AppError} If password and confirm password are not identical.
+ */
 export function validateRegistrationForm(body: RegistrationBody): void {
   const error = new AppError(
     422,
@@ -94,6 +121,32 @@ export function validateRegistrationForm(body: RegistrationBody): void {
   }
 }
 
+/**
+ * Checks validity of the update user form fields.
+ * 
+ * @function validateUpdateUserForm
+ * 
+ * @param {RegistrationBody} body - Object containing the user informations {
+ *   id: number;
+ *   firstName: string;
+ *   lastName: string;
+ *   email: string;
+ *   roles: ("user" | "admin")[];
+ *   isVerified: boolean;
+ * }
+ * 
+ * @returns {void}
+ * 
+ * @throws {AppError} If at least one of the id, firstname, lastname or email body properties is null.
+ * @throws {AppError} If id value < 1.
+ * @throws {AppError} If id length > 20.
+ * @throws {AppError} If first name length > 60.
+ * @throws {AppError} If last name length > 60.
+ * @throws {AppError} If first name contains unauthorized caracters.
+ * @throws {AppError} If last name contains unauthorized caracters.
+ * @throws {AppError} If email format is not followed.
+ * @throws {AppError} If email length > 80.
+ */
 export function validateUpdateUserForm(body: UpdateUserBody): void {
   const error = new AppError(
     422,
@@ -169,6 +222,19 @@ export function validateUpdateUserForm(body: UpdateUserBody): void {
   }
 }
 
+/**
+ * Checks validity of the add theme form fields.
+ * 
+ * @function validateAddThemeForm
+ * 
+ * @param {string} themeName - The name of the new theme.
+ * 
+ * @returns {void}
+ * 
+ * @throws {AppError} If theme name is null.
+ * @throws {AppError} If theme name length > 255.
+ * @throws {AppError} If theme name contains unauthorized caracters.
+ */
 export function validateAddThemeForm(themeName: string): void {
   const error = new AppError(
     422,
@@ -196,6 +262,23 @@ export function validateAddThemeForm(themeName: string): void {
   }
 }
 
+/**
+ * Checks validity of the add cursus form fields.
+ * 
+ * @function validateAddCursusForm
+ * 
+ * @param {string} cursusName - The name of the new cursus.
+ * @param {number} themeId - The ID of the theme containing the cursus.
+ * @param {number} price - The price of the cursus.
+ * 
+ * @returns {void}
+ * 
+ * @throws {AppError} If cursus name or price is null.
+ * @throws {AppError} If theme id is null.
+ * @throws {AppError} If cursus name length > 255.
+ * @throws {AppError} If cursus name contains unauthorized caracters.
+ * @throws {AppError} If price value < 0.
+ */
 export function validateAddCursusForm(cursusName: string, themeId: number, price: number): void {
   const error = new AppError(
     422,
@@ -234,6 +317,23 @@ export function validateAddCursusForm(cursusName: string, themeId: number, price
   }
 }
 
+/**
+ * Checks validity of the add lesson form fields.
+ * 
+ * @function validateAddLessonForm
+ * 
+ * @param {string} lessonName - The lesson name.
+ * @param {number} cursusId - The ID of the cursus containing the lesson.
+ * @param {number} price - The price of the lesson.
+ * 
+ * @returns {void}
+ * 
+ * @throws {AppError} If lesson name or price is null.
+ * @throws {AppError} If cursus id is null.
+ * @throws {AppError} If lesson name length > 255.
+ * @throws {AppError} If lesson name contains unauthorized caracters.
+ * @throws {AppError} If price value < 0.
+ */
 export function validateAddLessonForm(lessonName: string, cursusId: number, price: number): void {
   const error = new AppError(
     422,
@@ -272,6 +372,23 @@ export function validateAddLessonForm(lessonName: string, cursusId: number, pric
   }
 }
 
+/**
+ * Checks validity of the add image form fields.
+ * 
+ * @function validateAddImageForm
+ * 
+ * @param {string} source - The file name.
+ * @param {string} alternative - The alternative text used for the image alternative attribut.
+ * @param {number} lessonId - The ID of the lesson containing the image.
+ * 
+ * @returns {void}
+ * 
+ * @throws {AppError} If alternative is null.
+ * @throws {AppError} If source is null.
+ * @throws {AppError} If lesson id is null.
+ * @throws {AppError} If source length > 255.
+ * @throws {AppError} If alternative length > 255.
+ */
 export function validateAddImageForm(source: string, alternative: string, lessonId: number): void {
   const error = new AppError(
     422,
@@ -308,6 +425,22 @@ export function validateAddImageForm(source: string, alternative: string, lesson
   }
 }
 
+/**
+ * Checks validity of the add text form fields.
+ * 
+ * @function validateAddTextForm
+ * 
+ * @param {string} textType - The type of the text.
+ * @param {string} content - The text displayed on front-end.
+ * @param {number} lessonId - The ID of the lesson containing the text.
+ * 
+ * @returns {void}
+ * 
+ * @throws {AppError} If content is null.
+ * @throws {AppError} If text type is null.
+ * @throws {AppError} If lesson id is null.
+ * @throws {AppError} If text type is not an allowed value : 'title1' || 'title2' || 'title3' || 'paragraph'.
+ */
 export function validateAddTextForm(textType: string, content: string, lessonId: number): void {
   const error = new AppError(
     422,
@@ -338,6 +471,19 @@ export function validateAddTextForm(textType: string, content: string, lessonId:
   }
 }
 
+/**
+ * Checks validity of the update theme form.
+ * 
+ * @function validateUpdateThemeForm
+ * 
+ * @param {string} newThemeName - The new name of the theme.
+ * 
+ * @returns {void}
+ * 
+ * @throws {AppError} If new theme name is null.
+ * @throws {AppError} If theme name length > 255.
+ * @throws {AppError} If theme name contains a caracter not allowed.
+ */
 export function validateUpdateThemeForm(newThemeName: string): void {
   const error = new AppError(
     422,
@@ -365,6 +511,21 @@ export function validateUpdateThemeForm(newThemeName: string): void {
   }
 }
 
+/**
+ * Checks validity of the update cursus form.
+ * 
+ * @function validateUpdateCursusForm
+ * 
+ * @param {string} newCursusName - The new name of the cursus.
+ * @param {number} newCursusPrice - The new price of the cursus.
+ * 
+ * @returns {void}
+ * 
+ * @throws {AppError} If new cursus name or new cursus price is null.
+ * @throws {AppError} If cursus name length > 255.
+ * @throws {AppError} If cursus name contains a caracter not allowed.
+ * @throws {AppError} If cursus price value < 0. 
+ */
 export function validateUpdateCursusForm(newCursusName: string, newCursusPrice: number): void {
   const error = new AppError(
     422,
@@ -398,6 +559,21 @@ export function validateUpdateCursusForm(newCursusName: string, newCursusPrice: 
   }
 }
 
+/**
+ * Checks validity of the update lesson form.
+ * 
+ * @function validateUpdateLessonForm
+ * 
+ * @param {string} newLessonName - The new name of the lesson.
+ * @param {number} newLessonPrice - The new price of the lesson.
+ * 
+ * @returns {void}
+ * 
+ * @throws {AppError} If new lesson name or new lesson price is null.
+ * @throws {AppError} If lesson name length > 255.
+ * @throws {AppError} If lesson name contains a caracter not allowed.
+ * @throws {AppError} If lesson price value < 0. 
+ */
 export function validateUpdateLessonForm(newLessonName: string, newLessonPrice: number): void {
   const error = new AppError(
     422,
@@ -431,6 +607,20 @@ export function validateUpdateLessonForm(newLessonName: string, newLessonPrice: 
   }
 }
 
+/**
+ * Checks validity of the update text form.
+ * 
+ * @function validateUpdateTextForm
+ * 
+ * @param {string} newTextType - The new type  of the text.
+ * @param {string} newContent - The new content of the text.
+ * 
+ * @returns {void}
+ * 
+ * @throws {AppError} If new text type is null.
+ * @throws {AppError} If new text content is null.
+ * @throws {AppError} If new text type value is not allowed : 'title1' | 'title2' | 'title3' | 'paragraph'.
+ */
 export function validateUpdateTextForm(newTextType: string, newContent: string): void {
   const error = new AppError(
     422,
@@ -456,6 +646,21 @@ export function validateUpdateTextForm(newTextType: string, newContent: string):
   }
 }
 
+/**
+ * Checks validity of the update image form.
+ * 
+ * @function validateUpdateImageForm
+ * 
+ * @param {string} newSource - The new file name of the image.
+ * @param {string} newAlternative - The new alternative text for the image alternative attribut.
+ * 
+ * @returns {void}
+ * 
+ * @throws {AppError} If new alternative of the image is null.
+ * @throws {AppError} If new source of the image is null.
+ * @throws {AppError} If new source length > 255.
+ * @throws {AppError} If new alternative length > 255.
+ */
 export function validateUpdateImageForm(newSource: string, newAlternative: string): void {
   const error = new AppError(
     422,
@@ -487,6 +692,21 @@ export function validateUpdateImageForm(newSource: string, newAlternative: strin
   }
 }
 
+/**
+ * Checks validity of the update user-theme form.
+ * 
+ * @function validateUpdateUserThemeForm
+ * 
+ * @param {number} userThemeId - The ID of the user-theme to update.
+ * @param {number} requestorId - The ID of the user performing the update.
+ * 
+ * @returns {void}
+ * 
+ * @throws {AppError} If the user-theme ID is null or not a number.
+ * @throws {AppError} If the requestor ID is null or not a number.
+ * @throws {AppError} If the user-theme ID value < 1.
+ * @throws {AppError} If the requestor ID value < 1.
+ */
 export function validateUpdateUserThemeForm(userThemeId: number, requestorId: number): void {
   const error = new AppError(
     422,
@@ -517,6 +737,21 @@ export function validateUpdateUserThemeForm(userThemeId: number, requestorId: nu
   }
 }
 
+/**
+ * Checks validity of the update user-cursus form.
+ * 
+ * @function validateUpdateUserCursusForm
+ * 
+ * @param {number} userCursusId - The ID of the user-cursus to update.
+ * @param {number} requestorId - The ID of the user performing the update.
+ * 
+ * @returns {void}
+ * 
+ * @throws {AppError} If the user-cursus ID is null or not a number.
+ * @throws {AppError} If the requestor ID is null or not a number.
+ * @throws {AppError} If the user-cursus ID value < 1.
+ * @throws {AppError} If the requestor ID value < 1.
+ */
 export function validateUpdateUserCursusForm(userCursusId: number, requestorId: number): void {
   const error = new AppError(
     422,
@@ -547,6 +782,21 @@ export function validateUpdateUserCursusForm(userCursusId: number, requestorId: 
   }
 }
 
+/**
+ * Checks validity of the update user-lesson form.
+ * 
+ * @function validateUpdateUserLessonForm
+ * 
+ * @param {number} userLessonId - The ID of the user-lesson to update.
+ * @param {number} requestorId - The ID of the user performing the update.
+ * 
+ * @returns {void}
+ * 
+ * @throws {AppError} If the user-lesson ID is null or not a number.
+ * @throws {AppError} If the requestor ID is null or not a number.
+ * @throws {AppError} If the user-lesson ID value < 1.
+ * @throws {AppError} If the requestor ID value < 1.
+ */
 export function validateUpdateUserLessonForm(userLessonId: number, requestorId: number) {
   const error = new AppError(
     422,

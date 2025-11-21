@@ -2,14 +2,45 @@ import bcrypt from "bcrypt";
 import {
   RegistrationBody,
   AddUser,
-  RegistrationResponse,
   MyCheckingPayload,
   UpdateUserBody,
+  ApiResponse,
 } from "../types/Interfaces.js";
 import { User } from "../models/databaseAssociations.js";
 import { AppError } from "../utils/AppError.js";
 import { Request } from "express";
 
+/**
+ * Creates a user in the database.
+ * 
+ * @async
+ * @function addUser
+ * 
+ * @param {RegistrationBody} body - Object containing user informations :
+ * {
+ *   firstName: string;
+ *   lastName: string;
+ *   email: string;
+ *   password: string;
+ *   confirmPassword: string;
+ * }
+ *  
+ * @returns {Promise<MyCheckingPayload['user']>} Returns an object containing the user informations.
+ * {
+ *   id: number;
+ *   firstName: string;
+ *   lastName: string;
+ *   email: string;
+ *   roles: ("user" | "admin")[];
+ *   isVerified: boolean;
+ *   createdAt: string;
+ *   updatedAt: string;
+ *   updatedBy: number | null;
+ * }
+ * 
+ * @throws {AppError} If the email address is already used by a registered user.
+ * @throws {AppError} If an unexpected error occurs during the creation.
+ */
 export async function addUser(body: RegistrationBody): Promise<MyCheckingPayload['user']> {
   try {
     const { confirmPassword, ...userData } = body;
@@ -49,7 +80,20 @@ export async function addUser(body: RegistrationBody): Promise<MyCheckingPayload
   }
 }
 
-export async function setIsVerified(id: number): Promise<RegistrationResponse> {
+/**
+ * Sets user isVerified property to true.
+ * 
+ * @async
+ * @function setIsVerified
+ * 
+ * @param {number} id - The ID of the user to update.
+ * 
+ * @returns {Promise<ApiResponse>} Returns success: true if user isVerfied is successfully set to true.
+ * 
+ * @throws {AppError} If user to update is not found with provided ID.
+ * @throws {AppError} If an unexpected error occurs during the update.
+ */
+export async function setIsVerified(id: number): Promise<ApiResponse> {
   try {
     const user = await User.findByPk(id);
     if (!user) {
@@ -78,6 +122,16 @@ export async function setIsVerified(id: number): Promise<RegistrationResponse> {
   }
 }
 
+/**
+ * Retrieves all user informations from the database.
+ * 
+ * @async
+ * @function getAllUsers
+ * 
+ * @returns {Promise<MyCheckingPayload['user'][]>} Return a list of object containing informations on all users in the database.
+ * 
+ * @throws {AppError} If an unexpected error occurs during users retrieval.
+ */
 export async function getAllUsers(): Promise<MyCheckingPayload['user'][]> {
   try {
     const allUsers = await User.findAll({attributes: ['id', 'email', 'firstName', 'lastName', 'roles', 'isVerified', 'createdAt', 'updatedAt', 'updatedBy']});
@@ -108,6 +162,27 @@ export async function getAllUsers(): Promise<MyCheckingPayload['user'][]> {
   }
 }
 
+/**
+ * Update informations of a user.
+ * 
+ * @async
+ * @function updateUser
+ * 
+ * @param {number} requestorId - The ID of the user performing the update. 
+ * @param {UpdateUserBody} userData - Object containing the new informations :
+ * {
+ *   id: number;
+ *   firstName: string;
+ *   lastName: string;
+ *   email: string;
+ *   roles: ("user" | "admin")[];
+ *   isVerified: boolean;
+ * }
+ * 
+ * @return {Promise<void>}
+ * 
+ * @throws {AppError} If an unexpected error occurs during the update.
+ */
 export async function updateUser(requestorId: number, userData: UpdateUserBody): Promise<void> {
   try {
     const user = await User.findByPk(userData.id);
@@ -130,6 +205,19 @@ export async function updateUser(requestorId: number, userData: UpdateUserBody):
   }
 }
 
+/**
+ * Deletes a user.
+ * 
+ * @async
+ * @function deleteUser
+ * 
+ * @param {number} userId - The ID of the user to delete.
+ * 
+ * @returns {Promise<void>}
+ * 
+ * @throws {AppError} If the user to delete is not found in the database with the provided ID.
+ * @throws {AppError} If an unexpected error occurs during the deletion.
+ */
 export async function deleteUser(userId: number): Promise<void> {
   try {
     const userToDelete = await User.findByPk(userId, {include: ['UpdatedUsers']});
@@ -146,6 +234,17 @@ export async function deleteUser(userId: number): Promise<void> {
   }
 }
 
+/**
+ * Checks if user property on the request object is not null. If not, it returns the ID of the user who made the request.
+ * 
+ * @function getUserIdInRequest
+ * 
+ * @param {Request} req - The request sent by the front-end, containing a user property whose value is the user ID. 
+ * 
+ * @returns {number} Returns the ID of the user who made the request.
+ * 
+ * @throws {AppError} If user property on the request object is null.
+ */
 export function getUserIdInRequest(req: Request): number {
   if(!req.user) throw new AppError(
     404,

@@ -4,6 +4,21 @@ import { Response } from "express";
 import bcrypt from 'bcrypt';
 import { MyCheckingPayload } from "../types/Interfaces.js";
 
+/**
+ * Login test. Retrieves a user whith the provided email and check if password provided and password of the retrieved user are the same.
+ * 
+ * @async
+ * @function testLoginRequest
+ * 
+ * @param {string} email - Email used to retrieve user trying to login.
+ * @param {string} password - Password compared to password of retrieved user to check user authentication.
+ *  
+ * @returns {Promise<MyCheckingPayload['user']|string>}
+ * Returns Promise<string> if no user retrieved with the provided email
+ * and Promise<MyCheckingPayload['user']> if email and password match with a user in the database.
+ * 
+ * @throws {AppError} If an unexpected error occurs during the login test.
+ */
 export async function testLoginRequest(email: string, password: string): Promise<MyCheckingPayload['user']|string> {
   try {
     const user = await User.findOne(
@@ -40,6 +55,18 @@ export async function testLoginRequest(email: string, password: string): Promise
   }
 }
 
+/**
+ * Set new cookies in the response. An admin cookie is set if isAdmin is true.
+ * 
+ * @async
+ * @function setCookies
+ * 
+ * @param {Response} res - Http Response where cookies are setting.
+ * @param {string} token - JsonWebToken stored in the cookie. 
+ * @param {boolean} isAdmin - True if the user is an admin, otherwise false
+ *  
+ * @returns {Response} The Http Response with stored cookies. 
+ */
 export function setCookies(res: Response, token: string, isAdmin: boolean): Response {
   res.cookie('token', token, {
     sameSite: 'lax',
@@ -65,6 +92,20 @@ export function setCookies(res: Response, token: string, isAdmin: boolean): Resp
   return res;
 }
 
+/**
+ * Retrieves a user whith provided ID and check if user has the desired role.
+ * 
+ * @async
+ * @function checkAuthorization
+ * 
+ * @param {number} userId - The ID of the user to retrieve. 
+ * @param {'user' | 'admin'} role - 'user' to check if user is a user and 'admin' to check if user is an admin.
+ * 
+ * @returns {Promise<boolean>} True if user has the desired role, false otherwise.
+ * 
+ * @throws {AppError} If user is not found with provided ID.
+ * @throws {AppError} If an unexpected error occurs during role verification. 
+ */
 export async function checkAuthorization(userId: number, role: 'user' | 'admin'): Promise<boolean> {
   try {
     const user = await User.findByPk(userId);

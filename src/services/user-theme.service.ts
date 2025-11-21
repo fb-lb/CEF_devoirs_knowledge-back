@@ -1,4 +1,4 @@
-import { Op, where } from "sequelize";
+import { Op } from "sequelize";
 import { Cursus } from "../models/Cursus.js";
 import { UserCursus } from "../models/User-Cursus.js";
 import { UserTheme } from "../models/User-Theme.js";
@@ -8,6 +8,20 @@ import { getTheme } from "./theme.service.js";
 import { UserLesson } from "../models/User-Lesson.js";
 import { Lesson } from "../models/Lesson.js";
 
+/**
+ * Adds a user-theme association into the database.
+ * 
+ * @async
+ * @function addUserTheme
+ * 
+ * @param {number} userId - The ID of the user related to the theme. 
+ * @param {number} themeId - The ID of the theme related to the user. 
+ * @param {number} requestorId - The ID of the user performing the creation.
+ *  
+ * @returns {Promise<void>}
+ * 
+ * @throws {AppError} If an unexpected error occurs during user-theme creation.
+ */
 export async function addUserTheme(userId: number, themeId: number, requestorId: number): Promise<void> {
   try {
     const userTheme = await UserTheme.findOne({where: { user_id: userId, theme_id: themeId }});
@@ -29,6 +43,15 @@ export async function addUserTheme(userId: number, themeId: number, requestorId:
   }
 }
 
+/**
+ * Retrieves all user-themes associations in the database.
+ * @async
+ * @function getAllUserThemeData
+ * 
+ * @returns {Promise<UserThemeData[]>} Returns a list of objects containing the user-theme associations retrieved.
+ * 
+ * @throws {AppError} If an unexpected error occurs during user-theme associations retrieval. 
+ */
 export async function getAllUserThemeData(): Promise<UserThemeData[]> {
   try {
     const allUserTheme = await UserTheme.findAll();
@@ -59,6 +82,17 @@ export async function getAllUserThemeData(): Promise<UserThemeData[]> {
   }
 }
 
+/**
+ * Retrieves all user-theme associations for a specific user in the database.
+ * @async
+ * @function getUsersThemesForThisUser
+ * 
+ * @param {number} requestorId - The user ID used to retrieve the user-theme associations.
+ * 
+ * @returns {Promise<UserThemeData[]>} Returns a list of objects containing the user-theme associations retrieved for the specified user.
+ * 
+ * @throws {AppError} If an unexpected error occurs during user-theme associations retrieval. 
+ */
 export async function getUsersThemesForThisUser(requestorId: number): Promise<UserThemeData[]> {
   try {
     const usersThemesForThisUser = await UserTheme.findAll({ where: { user_id: requestorId } });
@@ -89,6 +123,18 @@ export async function getUsersThemesForThisUser(requestorId: number): Promise<Us
   }
 }
 
+/**
+ * Retrieves all themes available for a specific user in the database.
+ * 
+ * @async
+ * @function getAllThemesAvailable
+ * 
+ * @param {number} userId - The user ID used to retrieve the theme.
+ * 
+ * @returns {Promise<ThemeData[]>} Returns a list of themes retrieved for the specified user.
+ * 
+ * @throws {AppError} If an unexpected error occurs during themes retrieval. 
+ */
 export async function getAllThemesAvailable(userId: number): Promise<ThemeData[]> {
   try {
     const allUserThemes = await UserTheme.findAll({ where: { user_id: userId } });
@@ -109,6 +155,23 @@ export async function getAllThemesAvailable(userId: number): Promise<ThemeData[]
   }
 }
 
+/**
+ * Updates user-theme certification. First, it checks if a user has access to all cursus in the theme concerned.
+ * If not user-theme certification is updated false but if true, it checks if all user-cursus related to this theme are validated.
+ * If not user-theme certification is updated false but if true, user-theme certification is updated true.
+ * 
+ * @async
+ * @function checkUserThemeCertification
+ * 
+ * @param {number} themeId - The ID of the theme related to user-theme association to check.
+ * @param {number} userId - The ID of the user related to user-theme association to check.
+ * @param {number} requestorId - The ID of the user performing this update.
+ * 
+ * @returns {Promise<void>}
+ * 
+ * @throws {AppError} If user-theme assocation is not retrieved width theme ID and user ID provided.
+ * @throws {AppError} If an unexpected error occurs during the checking.
+ */
 export async function checkUserThemeCertification(themeId: number, userId: number, requestorId: number): Promise<void> {
   try {
     const userCursusInThemeForThisUser = await UserCursus.findAll({
@@ -159,6 +222,20 @@ export async function checkUserThemeCertification(themeId: number, userId: numbe
   }
 }
 
+/**
+ * Checks if a user has access to all lessons in a theme.
+ * 
+ * @async
+ * @function checkUserAccessAllLessonsInTheme
+ * 
+ * @param {number} userThemeId - The user-theme association ID used to retrieve the theme to check.
+ * 
+ * @returns {Promise<boolean>} Returns `true` if the user of the user-theme association has access to all lessons in the theme related
+ * to the user-theme association. Otherwise, it returns `false`.
+ * 
+ * @throws {AppError} If user-theme association is not retrieved width theme ID and user ID provided.
+ * @throws {AppError} If an unexpected error occurs during the checking.
+ */
 export async function checkUserAccessAllLessonsInTheme(userThemeId: number): Promise<boolean> {
   try {
     const userTheme = await UserTheme.findByPk(userThemeId);
@@ -215,6 +292,22 @@ export async function checkUserAccessAllLessonsInTheme(userThemeId: number): Pro
   }
 }
 
+/**
+ * Updates a user-theme informations.
+ * 
+ * @async
+ * @function updateUserTheme
+ * 
+ * @param {number} userThemeId - The user-theme ID used to retrieve the user-theme association.
+ * @param {boolean} isCertified - The new value of the user-theme certification property.
+ * @param {number} requestorId - The ID of the user performing the update.
+ * 
+ * @returns {Promise<boolean>} Returns `true` user-theme certification property is updated.
+ * Returns `false` if user-cursus certification property is already equals to isCertified parameter.
+ * 
+ * @throws {AppError} If the user-theme association to update is not found whith the user-theme assocation ID provided.
+ * @throws {AppError} If an unexpected error occurs during the update.
+ */
 export async function updateUserTheme(userThemeId: number, isCertified: boolean, requestorId: number): Promise<boolean> {
   try {
     const userTheme = await UserTheme.findByPk(userThemeId);
@@ -266,6 +359,19 @@ export async function updateUserTheme(userThemeId: number, isCertified: boolean,
   }
 }
 
+/**
+ * Deletes a user-theme and related user-cursus.
+ * 
+ * @async
+ * @function deleteUserTheme
+ * 
+ * @param {number} userThemeId - The ID of the user-theme association to delete. 
+ * 
+ * @returns {Promise{void}}
+ * 
+ * @throws {AppError} If user-theme association is not found with the user-theme ID provided.
+ * @throws {AppError} If an unexpected error occurs during the deletion.
+ */
 export async function deleteUserTheme(userThemeId: number): Promise<void> {
   try {
     const userTheme = await UserTheme.findByPk(userThemeId);
@@ -322,6 +428,18 @@ export async function deleteUserTheme(userThemeId: number): Promise<void> {
   }
 }
 
+/**
+ * Deletes all user-theme associations related to a theme.
+ * 
+ * @async
+ * @function deleteUserThemeForThisTheme
+ * 
+ * @param {number} themeId - The ID of the theme related to all user-theme associations to delete.
+ * 
+ * @returns {Promise<void>}
+ * 
+ * @throws {AppError} If an expected error occurs during the user-theme deletions.
+ */
 export async function deleteUserThemeForThisTheme(themeId: number): Promise<void> {
   try {
     const allUserThemeForThisTheme = await UserTheme.findAll({where: { theme_id: themeId }});

@@ -5,9 +5,23 @@ import { AppError } from '../utils/AppError.js';
 import { getUserIdInRequest } from '../services/user.service.js';
 import { getRequestorId } from '../services/token.service.js';
 import { validateAddCursusForm, validateUpdateCursusForm } from '../services/form.service.js';
-import { deleteUserCursus, deleteUserCursusForThisCursus, getUsersWhoHaveUserCursusForThisTheme } from '../services/user-cursus.service.js';
+import { deleteUserCursusForThisCursus, getUsersWhoHaveUserCursusForThisTheme } from '../services/user-cursus.service.js';
 import { checkUserThemeCertification } from '../services/user-theme.service.js';
 
+/**
+ * Handle all cursus retrieval.
+ *
+ * @route GET /api/content/cursus/all
+ * @param {Request} req - Express request.
+ * @param {Response} res - Express response containing all cursus informations.
+ * 
+ * @returns {Promise<Response<ApiResponse<CursusData[]>>>} Returns:
+ * - 200 with a list of objects containing cursus in data property.
+ *
+ * @description
+ * Steps:
+ * - Retrieves all cursus informations.
+ */
 export async function getAllCursusController(req: Request, res: Response): Promise<Response<ApiResponse<CursusData[]>>> {
   const allCursus: CursusData[] = await getAllCursus();
   return res.status(200).json({
@@ -17,6 +31,20 @@ export async function getAllCursusController(req: Request, res: Response): Promi
   });
 }
 
+/**
+ * Handle one cursus retrieval.
+ *
+ * @route GET /api/content/cursus/:id
+ * @param {Request} req - Express request containing the ID of the cursus to retrieve in URL parameter.
+ * @param {Response} res - Express response containing the informations of the cursus.
+ * 
+ * @returns {Promise<Response<ApiResponse<CursusData>>>} Returns:
+ * - 200 with an object containing the cursus informations in data property.
+ *
+ * @description
+ * Steps:
+ * - Retrieves the cursus informations with the provided ID.
+ */
 export async function getCursusController(req: Request, res: Response): Promise<Response<ApiResponse<CursusData>>> {
   const cursusId = Number(req.params.id);
   const cursus: CursusData = await getCursus(cursusId);
@@ -26,6 +54,7 @@ export async function getCursusController(req: Request, res: Response): Promise<
     data: cursus,
   });
 }
+
 
 export async function changeOrderCursusController(req: Request, res: Response) {
   if (!req.params.id) throw new AppError(
