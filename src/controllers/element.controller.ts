@@ -9,6 +9,20 @@ import { validateAddImageForm, validateAddTextForm, validateUpdateImageForm, val
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+/**
+ * Handle all elements retrieval.
+ *
+ * @route GET /api/content/element/all
+ * @param {Request} req - Express request.
+ * @param {Response} res - Express response containing all cursus informations.
+ * 
+ * @returns {Promise<Response<ApiResponse<ElementData[]>>>} Returns:
+ * - 200 with a list of objects containing all element informations in data property.
+ *
+ * @description
+ * Steps:
+ * - Retrieves all elements informations.
+ */
 export async function getAllElementsController(req: Request, res: Response): Promise<Response<ApiResponse<ElementData[]>>> {
   const allElements: ElementData[] = await getAllElements();
   return res.status(200).json({
@@ -18,7 +32,28 @@ export async function getAllElementsController(req: Request, res: Response): Pro
   });
 }
 
-export async function changeOrderElementsController(req: Request, res: Response) {
+/**
+ * Handle element order update.
+ *
+ * @route GET /api/content/element/:id/:move
+ * @param {Request} req - Express request containing the ID of the element to move and the movement ('up' | 'down') in URL parameters.
+ * @param {Response} res - Express response containing the informations of all the elements.
+ * 
+ * @returns {Promise<Response<ApiResponse<ElementData[] | any>>>} Returns:
+ * - 200 with an object containing all the element informations in data property.
+ * - 400 if movement is 'up' and element is at first position or if movement is 'down' with element at the last position.
+ *
+ * @description
+ * Steps:
+ * - Checks that element ID is provided in URL params,
+ * - Checks that move is provided in URL params and equals to 'up' | 'down',
+ * - Change the order of the target element,
+ * - Get all element informations.
+ * 
+ * @throws {AppError} If no id provided in URL params.
+ * @throws {AppError} If move in URL param is not provided or different from 'up' | 'down'.
+ */
+export async function changeOrderElementsController(req: Request, res: Response): Promise<Response<ApiResponse<ElementData[] | any>>> {
   if (!req.params.id) throw new AppError(
     400,
     'changeOrderElementsController function in element controller failed : no id provided in url params',
@@ -43,6 +78,25 @@ export async function changeOrderElementsController(req: Request, res: Response)
   });
 }
 
+/**
+ * Handle image element creation.
+ *
+ * @route POST /api/content/element/image/add
+ * @param {Request} req - Express request containing the image element informations in the body.
+ * @param {Response} res - Express response containing the informations of all the elements.
+ * 
+ * @returns {Promise<Response<ApiResponse<ElementData[]>>>} Returns:
+ * - 200 with an object containing all the element informations in data property.
+ *
+ * @description
+ * Steps:
+ * - Validates the image element informations,
+ * - Gets the requestor ID,
+ * - Creates the new image element,
+ * - Get all elements informations.
+ * 
+ * @throws {AppError} If req.file.filename is null or undefined, meaning that file saving failed.
+ */
 export async function addImageController(req: Request, res: Response): Promise<Response<ApiResponse<ElementData[]>>> {
   try {
     let allElements = await getAllElements();
@@ -93,6 +147,23 @@ export async function addImageController(req: Request, res: Response): Promise<R
   }
 }
 
+/**
+ * Handle text element creation.
+ *
+ * @route POST /api/content/element/text/add
+ * @param {Request} req - Express request containing the text element informations in the body.
+ * @param {Response} res - Express response containing the informations of all the elements.
+ * 
+ * @returns {Promise<Response<ApiResponse<ElementData[]>>>} Returns:
+ * - 200 with an object containing all the element informations in data property.
+ *
+ * @description
+ * Steps:
+ * - Validates the text element informations,
+ * - Gets the requestor ID,
+ * - Creates the new text element,
+ * - Get all elements informations.
+ */
 export async function addTextController(req: Request, res: Response): Promise<Response<ApiResponse<ElementData[]>>> {
   try {
     let allElements = await getAllElements();
@@ -125,6 +196,23 @@ export async function addTextController(req: Request, res: Response): Promise<Re
   }
 }
 
+/**
+ * Handle element deletion.
+ *
+ * @route DELETE /api/content/element/:id
+ * @param {Request} req - Express request containing the ID of the element to delete in URL parameter.
+ * @param {Response} res - Express response containing the informations of all the element.
+ * 
+ * @returns {Promise<Response<ApiResponse<ElementData[]>>>} Returns:
+ * - 200 with an object containing all the element informations in data property.
+ *
+ * @description
+ * Steps:
+ * - Deletes the target element,
+ * - Get all element informations.
+ * 
+ * @throws {AppError} If element ID URL parameter is not provided.
+ */
 export async function deleteElementController(req: Request, res: Response): Promise<Response<ApiResponse<ElementData[]>>> {
   if(!req.params.id) throw new AppError(
     422,
@@ -143,6 +231,23 @@ export async function deleteElementController(req: Request, res: Response): Prom
   });
 }
 
+/**
+ * Handle one image retrieval.
+ *
+ * @route GET /api/content/element/image/public/:filename
+ * @route GET /api/content/element/image/private/:filename
+ * @param {Request} req - Express request containing the file name of the image to retrieve in URL parameter.
+ * @param {Response} res - Express response, sending the file.
+ * 
+ * @returns {void}
+ *
+ * @description
+ * Steps:
+ * - Retrieves the image file with the provided file name.
+ * 
+ * @throws {AppError} If file name is not provided in url parameter.
+ * @throws {AppError} If file is not found with provided file name.
+ */
 export function getImageController(req: Request, res: Response): void {
   const fileName = req.params.fileName;
   if(!fileName) throw new AppError(
@@ -164,6 +269,24 @@ export function getImageController(req: Request, res: Response): void {
   res.sendFile(filePath);
 }
 
+/**
+ * Handle text element update.
+ *
+ * @route PATCH /api/content/element/text/:id
+ * @param {Request} req - Express request containing the ID of the text element to update in URL parameter.
+ * @param {Response} res - Express response containing the informations of all the ekements.
+ * 
+ * @returns {Promise<Response<ApiResponse<ElementData[]>>>} Returns:
+ * - 200 with an object containing all the element informations in data property.
+ *
+ * @description
+ * Steps:
+ * - Validates the text element informations,
+ * - Updates the targeted text element,
+ * - Get all element informations.
+ * 
+ * @throws {AppError} If element ID URL parameter is not provided.
+ */
 export async function updateTextController(req: Request, res: Response): Promise<Response<ApiResponse<ElementData[]>>> {
   if(!req.params.id) throw new AppError(
     422,
@@ -192,6 +315,30 @@ export async function updateTextController(req: Request, res: Response): Promise
   });
 }
 
+/**
+ * Handle image element update.
+ *
+ * @route PATCH /api/content/element/image/:id
+ * @param {Request} req - Express request containing the ID of the image element to update in URL parameter.
+ * @param {Response} res - Express response containing the informations of all the ekements.
+ * 
+ * @returns {Promise<Response<ApiResponse<ElementData[]>>>} Returns:
+ * - 200 with an object containing all the element informations in data property.
+ *
+ * @description
+ * Steps:
+ * - Retrieve the image element to update,
+ * - Validates the image element informations,
+ * - Replace the saved file by the file sent if file name has changed,
+ * - Updates the targeted image element,
+ * - Get all element informations.
+ * 
+ * @throws {AppError} If req.file.filename is null or undefined, meaning that file saving failed.
+ * @throws {AppError} If image element is not found with the provided ID.
+ * @throws {AppError} If element found is not an image.
+ * @throws {AppError} If a file deletion failed.
+ * @throws {AppError} If an unpexcted error occurs during the update.
+ */
 export async function updateImageController(req: Request, res: Response): Promise<Response<ApiResponse<ElementData[]>>> {
   try {
     if (!req.file?.filename) throw new AppError(
@@ -273,6 +420,21 @@ export async function updateImageController(req: Request, res: Response): Promis
   }
 }
 
+/**
+ * Handle the retrieval of the elements available for the user who made the request.
+ *
+ * @route GET /api/content/element/user/all
+ * @param {Request} req - Express request the ID of the user concerned in the token cookie.
+ * @param {Response} res - Express response containing the informations of the available elements for the requestor.
+ * 
+ * @returns {Promise<Response<ApiResponse<ElementData>>>} Returns:
+ * - 200 with an object containing the informations of the elements concerned in data property.
+ *
+ * @description
+ * Steps:
+ * - Gets the ID of the requestor.
+ * - Finds the available elements for the requestor.
+ */
 export async function getAllElementsAvailableController(req: Request, res: Response): Promise<Response<ApiResponse<ElementData[]>>> {
   const requestorId = getRequestorId(req.cookies.token);
   

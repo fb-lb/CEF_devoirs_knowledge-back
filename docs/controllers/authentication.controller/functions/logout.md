@@ -1,0 +1,43 @@
+[**knowledge-back v0.0.0**](../../../README.md)
+
+***
+
+[knowledge-back](../../../modules.md) / [controllers/authentication.controller](../README.md) / logout
+
+# Function: logout()
+
+> **logout**(`req`, `res`): `Response`\<[`ApiResponse`](../../../types/Interfaces/interfaces/ApiResponse.md)\<`undefined`\>\>
+
+Defined in: [src/controllers/authentication.controller.ts:61](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/c8c533ab6fd4749c61887011f2eaf102002dd722/src/controllers/authentication.controller.ts#L61)
+
+Handle user logout request.
+
+## Parameters
+
+### req
+
+`Request`
+
+Express request.
+
+### res
+
+`Response`
+
+Express response.
+
+## Returns
+
+`Response`\<[`ApiResponse`](../../../types/Interfaces/interfaces/ApiResponse.md)\<`undefined`\>\>
+
+Returns :
+- 200 if logout is successful (token, isAuth, isAdmin cookies are cleared).
+
+## Route
+
+GET /api/authentification/deconnexion
+
+## Description
+
+Steps :
+- Clear token, isAuth, isAdmin cookies.

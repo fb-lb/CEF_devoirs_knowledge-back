@@ -9,6 +9,20 @@ import { deleteUserLessonForThisLesson, getUsersWhoHaveUserLessonForThisCursus }
 import { checkUserCursusValidation } from '../services/user-cursus.service.js';
 import { checkUserThemeCertification } from '../services/user-theme.service.js';
 
+/**
+ * Handle all lessons retrieval.
+ *
+ * @route GET /api/content/lesson/all
+ * @param {Request} req - Express request.
+ * @param {Response} res - Express response containing all lesson informations.
+ * 
+ * @returns {Promise<Response<ApiResponse<LessonData[]>>>} Returns:
+ * - 200 with a list of objects containing lesson informations in data property.
+ *
+ * @description
+ * Steps:
+ * - Retrieves all lesson informations.
+ */
 export async function getAllLessonsController(req: Request, res: Response): Promise<Response<ApiResponse<LessonData[]>>> {
   const allLessons: LessonData[] = await getAllLessons();
   return res.status(200).json({
@@ -18,7 +32,28 @@ export async function getAllLessonsController(req: Request, res: Response): Prom
   });
 }
 
-export async function changeOrderLessonsController(req: Request, res: Response) {
+/**
+ * Handle lesson order update.
+ *
+ * @route GET /api/content/lesson/:id/:move
+ * @param {Request} req - Express request containing the ID of the lesson to move and the movement ('up' | 'down') in URL parameters.
+ * @param {Response} res - Express response containing the informations of all the lessons.
+ * 
+ * @returns {Promise<Response<ApiResponse<LessonData[] | any>>>} Returns:
+ * - 200 with an object containing all the lesson informations in data property.
+ * - 400 if movement is 'up' and lesson is at first position or if movement is 'down' with lesson at the last position.
+ *
+ * @description
+ * Steps:
+ * - Checks that lesson ID is provided in URL params,
+ * - Checks that move is provided in URL params and equals to 'up' | 'down',
+ * - Change the order of the target lesson,
+ * - Get all lesson informations.
+ * 
+ * @throws {AppError} If no id provided in URL params.
+ * @throws {AppError} If move in URL param is not provided or different from 'up' | 'down'.
+ */
+export async function changeOrderLessonsController(req: Request, res: Response): Promise<Response<ApiResponse<LessonData[] | any>>> {
   if (!req.params.id) throw new AppError(
     400,
     'changeOrderLessonsController function in lesson controller failed : no id provided in url params',
@@ -43,6 +78,24 @@ export async function changeOrderLessonsController(req: Request, res: Response) 
   });
 }
 
+/**
+ * Handle lesson creation.
+ *
+ * @route POST /api/content/lesson/add
+ * @param {Request} req - Express request containing the lesson informations in the body.
+ * @param {Response} res - Express response containing the informations of all the lessons.
+ * 
+ * @returns {Promise<Response<ApiResponse<LessonData[]>>>} Returns:
+ * - 200 with an object containing all the lesson informations in data property.
+ *
+ * @description
+ * Steps:
+ * - Validates the lesson informations,
+ * - Gets the requestor ID,
+ * - Creates the new lesson,
+ * - Get all lesson informations,
+ * - Updates cursus validation and theme certification for users who have access to this lesson.
+ */
 export async function addLessonController(req: Request, res: Response): Promise<Response<ApiResponse<LessonData[]>>> {
   const lessonName: string = req.body.name;
   const cursusIdForThisLesson: number = req.body.cursusId;
@@ -59,7 +112,7 @@ export async function addLessonController(req: Request, res: Response): Promise<
   
   const lessonId = await addLesson(lessonName, price, selectedLessons, requestorId, cursusIdForThisLesson);
 
-  // Check cursus validation and theme certification for user who have access to this lesson
+  // Check cursus validation and theme certification for users who have access to this lesson
   const { themeId, cursusId } = await getCursusIdAndThemeIdForThisLesson(lessonId);
   const users = await getUsersWhoHaveUserLessonForThisCursus(cursusId);
   for(const user of users) {
@@ -76,6 +129,29 @@ export async function addLessonController(req: Request, res: Response): Promise<
   });
 }
 
+/**
+ * Handle lesson deletion.
+ *
+ * @route DELETE /api/content/lesson/:id
+ * @param {Request} req - Express request containing the ID of the lesson to delete in URL parameter.
+ * @param {Response} res - Express response containing the informations of all the lessons.
+ * 
+ * @returns {Promise<Response<ApiResponse<LessonData[]>>>} Returns:
+ * - 200 with an object containing all the lesson informations in data property.
+ *
+ * @description
+ * Steps:
+ * - Gets the ID of the theme containing the cursus which contains the lesson,
+ * - Gets the ID of the cursus containing the lesson,
+ * - Gets a list of users who have user-lesson associations related to this cursus,
+ * - Deletes the user-lessons related to the lesson to delete,
+ * - Deletes the target lesson,
+ * - Updates users' validation for the cursus containing this lesson,
+ * - Updates users' certification for the theme containing this cursus,
+ * - Get all lesson informations.
+ * 
+ * @throws {AppError} If cursus ID URL parameter is not provided.
+ */
 export async function deleteLessonController(req: Request, res: Response): Promise<Response<ApiResponse<LessonData[]>>> {
     if(!req.params.id) throw new AppError(
     422,
@@ -106,6 +182,24 @@ export async function deleteLessonController(req: Request, res: Response): Promi
   });
 }
 
+/**
+ * Handle lesson update.
+ *
+ * @route PATCH /api/content/lesson/:id
+ * @param {Request} req - Express request containing the ID of the lesson to update in URL parameter.
+ * @param {Response} res - Express response containing the informations of all the lessons.
+ * 
+ * @returns {Promise<Response<ApiResponse<LessonData[]>>>} Returns:
+ * - 200 with an object containing all the lesson informations in data property.
+ *
+ * @description
+ * Steps:
+ * - Validates the lesson informations,
+ * - Updates the target lesson,
+ * - Get all lesson informations.
+ * 
+ * @throws {AppError} If lesson ID URL parameter is not provided.
+ */
 export async function updateLessonController(req: Request, res: Response): Promise<Response<ApiResponse<LessonData[]>>> {
   if(!req.params.id) throw new AppError(
     422,

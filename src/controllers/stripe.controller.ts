@@ -9,6 +9,23 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2025-10-29.clover',
 });
 
+/**
+ * Handle stripe payment intent creation.
+ *
+ * @route POST /api/stripe/create-payment-intent
+ * @param {Request} req - Express request containing the purchase informations in the body.
+ * @param {Response} res - Express response.
+ * 
+ * @returns {Promise<Response<ApiResponse<any>>>} Returns: 200
+ *
+ * @description
+ * Steps:
+ * - Sets the price to pay,
+ * - Creates the stripe payment intent.
+ * 
+ * @throws {AppError} If the lesson or the cursus to pay is not found.
+ * @throws {AppError} If an unexpected error occurs during the stripe payment intent creation.
+ */
 export async function createPaymentIntentController(req: Request, res: Response): Promise<Response<ApiResponse<any>>> {
   try {
     const type: 'cursus' | 'lesson' = req.body.type;

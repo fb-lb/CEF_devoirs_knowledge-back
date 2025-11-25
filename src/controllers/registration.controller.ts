@@ -6,14 +6,21 @@ import { sendEmail } from "../services/email.service.js";
 import { isTokenValid, generateToken } from "../services/token.service.js";
 
 /**
- * User Registration
- * @async@function userRegistration
- * @param {Request} req
- * @param {Response} res
- * @returns
+ * Handle user creation.
  *
- * A compléter
+ * @route POST /api/inscription
+ * @param {Request} req - Express request containing the user informations in the body.
+ * @param {Response} res - Express response containing the informations of the new user.
+ * 
+ * @returns {Promise<Response<ApiResponse<MyCheckingPayload['user']>>>} Returns:
+ * - 200 with an object containing the new user informations in data property.
  *
+ * @description
+ * Steps:
+ * - Validates the user informations,
+ * - Creates the new user,
+ * - Generate a token,
+ * - Send an email to the user email address with a link containing the token to validate his email address and his account.
  */
 export async function userRegistration(
   req: Request<{}, {}, RegistrationBody>,
@@ -39,6 +46,20 @@ export async function userRegistration(
   });
 }
 
+/**
+ * Handle the user email address verification.
+ *
+ * @route POST /api/inscription/check-email
+ * @param {Request} req - Express request containing the user informations in the body.
+ * @param {Response} res - Express response containing the informations of the new user.
+ * 
+ * @returns {Promise<Response<ApiResponse>>} Returns: 200.
+ *
+ * @description
+ * Steps:
+ * - Checks token validity,
+ * - Sets isVerified property to true for the user related to the token.
+ */
 export async function checkEmail(
   req: Request,
   res: Response

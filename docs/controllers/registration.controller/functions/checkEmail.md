@@ -1,0 +1,43 @@
+[**knowledge-back v0.0.0**](../../../README.md)
+
+***
+
+[knowledge-back](../../../modules.md) / [controllers/registration.controller](../README.md) / checkEmail
+
+# Function: checkEmail()
+
+> **checkEmail**(`req`, `res`): `Promise`\<`Response`\<[`ApiResponse`](../../../types/Interfaces/interfaces/ApiResponse.md)\<`undefined`\>, `Record`\<`string`, `any`\>\>\>
+
+Defined in: [src/controllers/registration.controller.ts:63](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/c8c533ab6fd4749c61887011f2eaf102002dd722/src/controllers/registration.controller.ts#L63)
+
+Handle the user email address verification.
+
+## Parameters
+
+### req
+
+`Request`
+
+Express request containing the user informations in the body.
+
+### res
+
+`Response`
+
+Express response containing the informations of the new user.
+
+## Returns
+
+`Promise`\<`Response`\<[`ApiResponse`](../../../types/Interfaces/interfaces/ApiResponse.md)\<`undefined`\>, `Record`\<`string`, `any`\>\>\>
+
+Returns: 200.
+
+## Route
+
+POST /api/inscription/check-email
+
+## Description
+
+Steps:
+- Checks token validity,
+- Sets isVerified property to true for the user related to the token.
