@@ -11,6 +11,17 @@ import { Lesson } from "../models/Lesson.js";
 import fs, { promises as fsPromises } from "fs";
 import { UserLesson } from "../models/User-Lesson.js";
 
+/**
+ * Retrieves all elements from the database with relative informations if its type is 'text' or 'image'.
+ * 
+ * @async
+ * @function getAllElements
+ * 
+ * @returns {Promise<ElementData[]>} A list of objects containing informations of all elements.
+ * 
+ * @throws {AppError} If a text or an image is not found in the database.
+ * @throws {AppError} If an unexpected error occurs during elements retrieval.
+ */
 export async function getAllElements(): Promise<ElementData[]> {
   try {
     const allElements = await Element.findAll();
@@ -74,6 +85,18 @@ export async function getAllElements(): Promise<ElementData[]> {
   }
 }
 
+/**
+ * Retrieves all elements available for a specific user from the database with relative informations if element's type is 'text' or 'image'.
+ * 
+ * @async
+ * @function getAllElementsAvailable
+ * 
+ * @param {number} userId - The ID the user used to find accessible lessons for this user and then know accessible elements.
+ * 
+ * @returns {Promise<ElementData[]>} A list of objects containing informations of all elements avaible for this user.
+ * 
+ * @throws {AppError} If an unexpected error occurs during elements retrieval.
+ */
 export async function getAllElementsAvailable(userId: number): Promise<ElementData[]> {
   try {
     const allUserLessons = await UserLesson.findAll({ where: { user_id: userId } });
@@ -150,6 +173,24 @@ export async function getAllElementsAvailable(userId: number): Promise<ElementDa
   }
 }
 
+/**
+ * Updates an element order property and swap with an element according to the move.
+ * 
+ * @async
+ * @function changeOrderElements
+ * 
+ * @param {number} elementId - The ID used to retrieve the element whose order must be updated.
+ * @param {'up' | 'down'} move - Direction of the movement : 'up' decreases the order by 1 and 'down' increases it by 1.
+ * @param {number} userId - The ID of the user performing the update.
+ * 
+ * @returns {Promise<ApiResponse>} 
+ * Returns `{ success: false }` if the order update is not possible (first or last position)
+ * and `{ success: true }` when the order has been successfully updated.
+ * 
+ * @throws {AppError} If the target element is not found with provided ID.
+ * @throws {AppError} If element to swap is not found in the database.
+ * @throws {AppError} If an unexpected error occurs during the update.
+ */
 export async function  changeOrderElements(elementId: number, move: 'up' | 'down', userId: number): Promise<ApiResponse> {
   try {
     const targetElement = await Element.findOne({ where: { id: elementId } });
@@ -204,10 +245,24 @@ export async function  changeOrderElements(elementId: number, move: 'up' | 'down
   }
 }
 
-// An element is always associated with a text or image so this function
-// updates the updatedBy attribut of the associated element
-// If you are updated an element, it will update the text/image updatedBy attribut
-// If you are updated a text/image, it will update the element updatedBy attribut
+/**
+ * Update the updatedBy property of an element, a text or an image.
+ * An element is always associated with a text or image so this function updates the updatedBy attribut of the associated element.
+ * If you are updated an element, use this function to update the text/image updatedBy attribut.
+ * If you are updated a text/image, use this function to update the element updatedBy attribut.
+ * 
+ * @async
+ * @function updateUpdatedBy
+ * 
+ * @param {'element' | 'text' | 'image'} type - The model of the saving who has to be updated.
+ * @param {number} elementId - The ID of the element used to retrieve the element, text or image.
+ * @param {number} userId - The ID of the user performing the update.
+ * 
+ * @returns {Promise<void>}
+ * 
+ * @throws {AppError} If the element, text or image is not found.
+ * @throws {AppError} If an unexpected error occurs during the update. 
+ */
 async function updateUpdatedBy(type: 'element' | 'text' | 'image', elementId: number, userId: number): Promise<void> {
   try {
     if (type === 'element') {
@@ -253,6 +308,23 @@ async function updateUpdatedBy(type: 'element' | 'text' | 'image', elementId: nu
   }
 }
 
+/**
+ * Creates a new image element.
+ * 
+ * @async
+ * @function addImage
+ * 
+ * @param {number} lessonId - The ID of the lesson containing the image element.
+ * @param {number} requestorId - The ID of the user who creates the image element.
+ * @param {string | null} legend - The legend of the image to create, displaying on front-end.
+ * @param {string} source - The image file name.
+ * @param {string} alternative - The text used for the alternative attribut of the image on front-end.
+ * @param {ElementData[]} allElements - List of object containing all elements informations.
+ * 
+ * @returns {Promise<void>}
+ * 
+ * @throws {AppError} If an unexpected error occurs during image element creation.
+ */
 export async function addImage(lessonId: number, requestorId: number, legend: string | null, source: string, alternative: string, allElements: ElementData[]): Promise<void> {
   try {
     const elementsInSameLesson = allElements.filter(element => element.lessonId === lessonId);
@@ -283,6 +355,22 @@ export async function addImage(lessonId: number, requestorId: number, legend: st
   }
 }
 
+/**
+ * Creates a new text element.
+ * 
+ * @async
+ * @function addText
+ * 
+ * @param {number} lessonId - The ID of the lesson containing the text element.
+ * @param {number} requestorId - The ID of the user who creates the text element.
+ * @param {'title1' | 'title2' | 'title3' | 'paragraph'} textType - The type of the text element.
+ * @param {string} content - The content of the text element, displayed on front-end.
+ * @param {ElementData[]} allElements - List of object containing all elements informations.
+ * 
+ * @returns {Promise<void>}
+ * 
+ * @throws {AppError} If an unexpected error occurs during text element creation.
+ */
 export async function addText(lessonId: number, requestorId: number, textType: 'title1' | 'title2' | 'title3' | 'paragraph', content: string, allElements: ElementData[]): Promise<void> {
   try {
     const elementsInSameLesson = allElements.filter(element => element.lessonId === lessonId);
@@ -312,6 +400,21 @@ export async function addText(lessonId: number, requestorId: number, textType: '
   }
 }
 
+/**
+ * Deletes an element in the database and the text or the image according to type element.
+ * Decreases by one other element order in the same lesson if it is higher than the order of the element to delete.
+ * If it is an image, it calls deleteImageFiles() function to delete file too.
+ * 
+ * @async
+ * @function deleteElement
+ * 
+ * @param {number} elementId - ID used to retrieve the element to delete.
+ * 
+ * @returns {Promise<void>}
+ * 
+ * @throws {AppError} If the element to delete is not found with the provided ID.
+ * @throws {AppError} If an unexpected error occurs during the theme deletion.
+ */
 export async function deleteElement(elementId: number): Promise<void> {
   try {
     const elementToDelete = await Element.findByPk(elementId);
@@ -346,6 +449,20 @@ export async function deleteElement(elementId: number): Promise<void> {
   }
 }
 
+/**
+ * Deletes image files related to the elements contained in a course ('theme' | 'cursus' | 'lesson' | 'element') retrieved with provided ID.
+ * 
+ * @async 
+ * @function deleteImageFiles
+ * 
+ * @param {'theme' | 'cursus' | 'lesson' | 'element'} type - The type of course which contains files to delete.
+ * @param {number} id - The ID of the course used to retrieve the course ('theme' | 'cursus' | 'lesson' | 'element').
+ * 
+ * @returns {Promise<void>} 
+ * 
+ * @throws {AppError} If file to delete is not found with the source property of the element retrieved.
+ * @throws {AppError} If an unexpected error occurs during file deletion.
+ */
 export async function deleteImageFiles(type: 'theme' | 'cursus' | 'lesson' | 'element', id: number): Promise<void> {
   try {
     let imageFileNames: string[] = [];
@@ -446,6 +563,23 @@ export async function deleteImageFiles(type: 'theme' | 'cursus' | 'lesson' | 'el
   }
 }
 
+/**
+ * Updates a text and relative element retrieved with the provided ID.
+ * 
+ * @async
+ * @function updateText
+ * 
+ * @param {number} elementId - The Id of the element used to retrieve element and text.
+ * @param {'title1' | 'title2' | 'title3' | 'paragraph'} newTextType - The new type of the text.
+ * @param {string} newContent - The new content of the text.
+ * @param {number} requestorId - The ID of the user performing the update.
+ * 
+ * @returns {Promise<void>}
+ * 
+ * @throws {AppError} If the element is not found with the provided ID.
+ * @throws {AppError} If the text to update is not found with the provided ID.
+ * @throws {AppError} If an unexecpted error occurs during the update.
+ */
 export async function updateText(elementId: number, newTextType: 'title1' | 'title2' | 'title3' | 'paragraph', newContent: string, requestorId: number): Promise<void> {
   try {
     const elementToUpdate = await Element.findByPk(elementId);
@@ -482,6 +616,24 @@ export async function updateText(elementId: number, newTextType: 'title1' | 'tit
   }
 }
 
+/**
+ * Updates an image and relative element retrieved with the provided ID.
+ * 
+ * @async
+ * @function updateImage
+ * 
+ * @param {number} elementId - The ID of the element used to retrieve the element and the image.
+ * @param {string} newAlternative - The new alternative text of the image.
+ * @param {string | null} newLegend - The new legend of the image.
+ * @param {string} newSource - The new file name of the image.
+ * @param {number} requestorId - The ID of the user performing the update.
+ * 
+ * @returns {Promise<void>}
+ * 
+ * @throws {AppError} If the element is not found with the provided ID.
+ * @throws {AppError} If the image to update is not found with the provided ID.
+ * @throws {AppError} If an unexecpted error occurs during the update.
+ */
 export async function updateImage(elementId: number, newAlternative: string, newLegend: string | null, newSource: string, requestorId: number): Promise<void> {
   try {
     const elementToUpdate = await Element.findByPk(elementId);

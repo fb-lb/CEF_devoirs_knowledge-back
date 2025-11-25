@@ -5,9 +5,23 @@ import { AppError } from '../utils/AppError.js';
 import { getUserIdInRequest } from '../services/user.service.js';
 import { getRequestorId } from '../services/token.service.js';
 import { validateAddCursusForm, validateUpdateCursusForm } from '../services/form.service.js';
-import { deleteUserCursus, deleteUserCursusForThisCursus, getUsersWhoHaveUserCursusForThisTheme } from '../services/user-cursus.service.js';
+import { deleteUserCursusForThisCursus, getUsersWhoHaveUserCursusForThisTheme } from '../services/user-cursus.service.js';
 import { checkUserThemeCertification } from '../services/user-theme.service.js';
 
+/**
+ * Handle all cursus retrieval.
+ *
+ * @route GET /api/content/cursus/all
+ * @param {Request} req - Express request.
+ * @param {Response} res - Express response containing all cursus informations.
+ * 
+ * @returns {Promise<Response<ApiResponse<CursusData[]>>>} Returns:
+ * - 200 with a list of objects containing cursus informations in data property.
+ *
+ * @description
+ * Steps:
+ * - Retrieves all cursus informations.
+ */
 export async function getAllCursusController(req: Request, res: Response): Promise<Response<ApiResponse<CursusData[]>>> {
   const allCursus: CursusData[] = await getAllCursus();
   return res.status(200).json({
@@ -17,6 +31,20 @@ export async function getAllCursusController(req: Request, res: Response): Promi
   });
 }
 
+/**
+ * Handle one cursus retrieval.
+ *
+ * @route GET /api/content/cursus/:id
+ * @param {Request} req - Express request containing the ID of the cursus to retrieve in URL parameter.
+ * @param {Response} res - Express response containing the informations of the cursus.
+ * 
+ * @returns {Promise<Response<ApiResponse<CursusData>>>} Returns:
+ * - 200 with an object containing the cursus informations in data property.
+ *
+ * @description
+ * Steps:
+ * - Retrieves the cursus informations with the provided ID.
+ */
 export async function getCursusController(req: Request, res: Response): Promise<Response<ApiResponse<CursusData>>> {
   const cursusId = Number(req.params.id);
   const cursus: CursusData = await getCursus(cursusId);
@@ -27,7 +55,28 @@ export async function getCursusController(req: Request, res: Response): Promise<
   });
 }
 
-export async function changeOrderCursusController(req: Request, res: Response) {
+/**
+ * Handle cursus order update.
+ *
+ * @route GET /api/content/cursus/:id/:move
+ * @param {Request} req - Express request containing the ID of the cursus to move and the movement ('up' | 'down') in URL parameters.
+ * @param {Response} res - Express response containing the informations of all the cursus.
+ * 
+ * @returns {Promise<Response<ApiResponse<CursusData[] | any>>>} Returns:
+ * - 200 with an object containing all the cursus informations in data property.
+ * - 400 if movement is 'up' and cursus is at first position or if movement is 'down' with cursus at the last position.
+ *
+ * @description
+ * Steps:
+ * - Checks that cursus ID is provided in URL params,
+ * - Checks that move is provided in URL params and equals to 'up' | 'down',
+ * - Change the order of the target cursus,
+ * - Get all cursus informations.
+ * 
+ * @throws {AppError} If no id provided in URL params.
+ * @throws {AppError} If move in URL param is not provided or different from 'up' | 'down'.
+ */
+export async function changeOrderCursusController(req: Request, res: Response): Promise<Response<ApiResponse<CursusData[] | any>>> {
   if (!req.params.id) throw new AppError(
     400,
     'changeOrderCrususController function in cursus controller failed : no id provided in url params',
@@ -52,6 +101,24 @@ export async function changeOrderCursusController(req: Request, res: Response) {
   });
 }
 
+/**
+ * Handle cursus creation.
+ *
+ * @route POST /api/content/cursus/add
+ * @param {Request} req - Express request containing the cursus informations in the body.
+ * @param {Response} res - Express response containing the informations of all the cursus.
+ * 
+ * @returns {Promise<Response<ApiResponse<CursusData[]>>>} Returns:
+ * - 200 with an object containing all the cursus informations in data property.
+ *
+ * @description
+ * Steps:
+ * - Validates the cursus informations,
+ * - Gets the requestor ID,
+ * - Creates the new cursus,
+ * - Get all cursus informations,
+ * - Updates users' certification for the theme containing this new cursus.
+ */
 export async function addCursusController(req: Request, res: Response): Promise<Response<ApiResponse<CursusData[]>>> {
   const cursusName: string = req.body.name;
   const themeId: number = req.body.themeId;
@@ -83,6 +150,27 @@ export async function addCursusController(req: Request, res: Response): Promise<
   });
 }
 
+/**
+ * Handle cursus deletion.
+ *
+ * @route DELETE /api/content/cursus/:id
+ * @param {Request} req - Express request containing the ID of the cursus to delete in URL parameter.
+ * @param {Response} res - Express response containing the informations of all the cursus.
+ * 
+ * @returns {Promise<Response<ApiResponse<CursusData[]>>>} Returns:
+ * - 200 with an object containing all the cursus informations in data property.
+ *
+ * @description
+ * Steps:
+ * - Gets the ID of the theme containing the cursus,
+ * - Gets a list of users who have user-cursus associations related to this theme,
+ * - Deletes the user-cursus related to the cursus to delete,
+ * - Deletes the targeted cursus,
+ * - Updates users' certification for the theme containing this cursus,
+ * - Get all cursus informations.
+ * 
+ * @throws {AppError} If cursus ID URL parameter is not provided.
+ */
 export async function deleteCursusController(req: Request, res: Response): Promise<Response<ApiResponse<CursusData[]>>> {
   if(!req.params.id) throw new AppError(
     422,
@@ -112,6 +200,24 @@ export async function deleteCursusController(req: Request, res: Response): Promi
   });
 }
 
+/**
+ * Handle cursus update.
+ *
+ * @route PATCH /api/content/cursus/:id
+ * @param {Request} req - Express request containing the ID of the cursus to update in URL parameter.
+ * @param {Response} res - Express response containing the informations of all the cursus.
+ * 
+ * @returns {Promise<Response<ApiResponse<CursusData[]>>>} Returns:
+ * - 200 with an object containing all the cursus informations in data property.
+ *
+ * @description
+ * Steps:
+ * - Validates the cursus informations,
+ * - Updates the target cursus,
+ * - Get all cursus informations.
+ * 
+ * @throws {AppError} If cursus ID URL parameter is not provided.
+ */
 export async function updateCursusController(req: Request, res: Response): Promise<Response<ApiResponse<CursusData[]>>> {
   if(!req.params.id) throw new AppError(
     422,

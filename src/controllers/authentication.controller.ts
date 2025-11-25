@@ -3,6 +3,24 @@ import { ApiResponse, LoginBody, MyCheckingPayload } from "../types/Interfaces.j
 import { setCookies, testLoginRequest } from "../services/authentication.service.js";
 import { generateToken } from "../services/token.service.js";
 
+/**
+ * Handle user login request.
+ *
+ * @route POST /api/authentification/connexion
+ * @param {Request} req - Express request containing email and password in the body.
+ * @param {Response} res - Express response.
+ * 
+ * @returns {Promise<Response<ApiResponse>>} Returns:
+ * - 200 if login is successful (token + cookies set).
+ * - 401 if credentials are invalid or user email is not verified.
+ *
+ * @description
+ * Steps:
+ * - Validate credentials via `testLoginRequest`,
+ * - Ensure the user's email is verified,
+ * - Generate a JWT token,
+ * - Set cookies (token + role flag).
+ */
 export async function login(req: Request<{}, {}, LoginBody>, res: Response): Promise<Response<ApiResponse>> {
   const body: LoginBody = {
     email: req.body.email,
@@ -26,6 +44,20 @@ export async function login(req: Request<{}, {}, LoginBody>, res: Response): Pro
   return res.status(200).json({success: true, message: ""});
 }
 
+/**
+ * Handle user logout request.
+ * 
+ * @route GET /api/authentification/deconnexion
+ * @param {Request} req - Express request. 
+ * @param {Response} res - Express response.
+ *  
+ * @returns {Response<ApiResponse>} Returns :
+ * - 200 if logout is successful (token, isAuth, isAdmin cookies are cleared).
+ * 
+ * @description
+ * Steps :
+ * - Clear token, isAuth, isAdmin cookies.
+ */
 export function logout(req: Request, res: Response): Response<ApiResponse> {
   res.clearCookie('token');
   res.clearCookie('isAuth');

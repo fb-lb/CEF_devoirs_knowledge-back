@@ -7,6 +7,21 @@ import { addUserLesson, deleteUserLesson, getAllLessonsAvailable, getAllUserLess
 import { AppError } from "../utils/AppError.js";
 import { validateUpdateUserLessonForm } from "../services/form.service.js";
 
+/**
+ * Handle user-lesson creation.
+ *
+ * @route POST /api/user-lesson/add
+ * @param {Request} req - Express request containing the user-lesson informations in the body.
+ * @param {Response} res - Express response.
+ * 
+ * @returns {Promise<Response<ApiResponse>>} Returns express response with 200 status code.
+ *
+ * @description
+ * Steps:
+ * - Create the user-lesson if not already created,
+ * - Create a user-cursus for the cursus containing the lesson if not already created,
+ * - Create a user-theme for the theme containing the cursus if not already created.
+ */
 export async function addUserLessonController(req: Request, res: Response): Promise<Response<ApiResponse>> {
   const lessonId: number = Number(req.body.courseId);
   const requestorId = getRequestorId(req.cookies.token);
@@ -35,7 +50,21 @@ export async function addUserLessonController(req: Request, res: Response): Prom
   });
 }
 
-export async function getAllUserLessonController(req: Request, res: Response): Promise<Response<ApiResponse<UserLessonData>>> {
+/**
+ * Handle all user-lesson retrieval.
+ *
+ * @route GET /api/user-lesson/all
+ * @param {Request} req - Express request.
+ * @param {Response} res - Express response containing all user-lesson informations.
+ * 
+ * @returns {Promise<Response<ApiResponse<UserLessonData[]>>>} Returns:
+ * - 200 with a list of objects containing user-lesson informations in data property.
+ *
+ * @description
+ * Steps:
+ * - Retrieves all user-lesson informations.
+ */
+export async function getAllUserLessonController(req: Request, res: Response): Promise<Response<ApiResponse<UserLessonData[]>>> {
   const allUserLessonData = await getAllUserLessonData(); 
   
   return res.status(200).json({
@@ -45,6 +74,21 @@ export async function getAllUserLessonController(req: Request, res: Response): P
   });
 }
 
+/**
+ * Handle all user-lessons retrieval for a specific user.
+ *
+ * @route GET /api/user-lesson/some
+ * @param {Request} req - Express request.
+ * @param {Response} res - Express response containing all user-lesson informations for a specific user.
+ * 
+ * @returns {Promise<Response<ApiResponse<UserLessonData[]>>>} Returns:
+ * - 200 with a list of objects containing user-lesson informations for a specific user in data property.
+ *
+ * @description
+ * Steps:
+ * - Gets the ID of the requestor who is the user related to user-lesson to retrieve,
+ * - Retrieves all user-lesson informations for a specific user.
+ */
 export async function getSomeUserLessonController(req: Request, res: Response): Promise<Response<ApiResponse<UserLessonData[]>>> {
   const requestorId = getRequestorId(req.cookies.token);
   const userLessonsForThisUser = await getUsersLessonsForThisUser(requestorId);
@@ -56,6 +100,21 @@ export async function getSomeUserLessonController(req: Request, res: Response): 
   });
 }
 
+/**
+ * Handle retrieval of all available lesson for a specific user.
+ *
+ * @route GET /api/user-lesson/lesson/all
+ * @param {Request} req - Express request.
+ * @param {Response} res - Express response containing all lessons available for a specific user.
+ * 
+ * @returns {Promise<Response<ApiResponse<LessonData[]>>>} Returns:
+ * - 200 with a list of objects containing informations on available lessons for a specific user in data property.
+ *
+ * @description
+ * Steps:
+ * - Gets the ID of the requestor who is the user related to the lessons to retrieve,
+ * - Retrieves informations on all available lessons for a specific user.
+ */
 export async function getAllLessonsAvailableController(req: Request, res: Response): Promise<Response<ApiResponse<LessonData[]>>> {
   const requestorId = getRequestorId(req.cookies.token);
   
@@ -68,6 +127,20 @@ export async function getAllLessonsAvailableController(req: Request, res: Respon
   });
 }
 
+/**
+ * Handle user-lesson update.
+ *
+ * @route PATCH /api/user-lesson/:userLessonId
+ * @param {Request} req - Express request containing the user-lesson informations in the body.
+ * @param {Response} res - Express response.
+ * 
+ * @returns {Promise<Response<ApiResponse>>} Returns express response with 200 status code.
+ *
+ * @description
+ * Steps:
+ * - Validate update user-lesson informations,
+ * - Updates the user-lesson isVerified property.
+ */
 export async function updateUserLessonController(req: Request, res: Response): Promise<Response<ApiResponse>> {  
   const userLessonId = Number(req.params.userLessonId);
   const isValidated = req.body.updateUserLessonValidation === true || req.body.updateUserLessonValidation === 'true' ? true : false;
@@ -90,6 +163,21 @@ export async function updateUserLessonController(req: Request, res: Response): P
   }
 }
 
+/**
+ * Handle user-lesson deletion.
+ *
+ * @route DELETE /api/user-lesson/:userLessonId
+ * @param {Request} req - Express request containing the ID of the user-lesson to delete in URL parameter.
+ * @param {Response} res - Express response.
+ * 
+ * @returns {Promise<Response<ApiResponse>>} Returns express response with 200 status code.
+ *
+ * @description
+ * Steps:
+ * - Deletes the targeted user-lesson.
+ * 
+ * @throws {AppError} If user-lesson relation is not found with the provided ID.
+ */
 export async function deleteUserLessonController(req: Request, res: Response): Promise<Response<ApiResponse>> {
   const userLessonId = Number(req.params.userLessonId);
   if (!userLessonId || Number.isNaN(userLessonId)) throw new AppError(

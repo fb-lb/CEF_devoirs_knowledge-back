@@ -2,6 +2,25 @@ import emailjs from "@emailjs/nodejs";
 import { RegistrationBody } from "../types/Interfaces.js";
 import { AppError } from "../utils/AppError.js";
 
+/**
+ * Send an email to a user to verify his email address and his account.
+ * 
+ * @async
+ * @function sendEmail
+ * 
+ * @param {RegistrationBody} body - Object containing the user informations {
+ *   firstName: string;
+ *   lastName: string;
+ *   email: string;
+ *   password: string;
+ *   confirmPassword: string;
+ * }
+ * @param {string} token - The token which will be added to a link to verify the email address.
+ * 
+ * @returns {Promise<void>}
+ * 
+ * @throws {AppError} If an unexpected error occurs during email sending. 
+ */
 export async function sendEmail(
   body: RegistrationBody,
   token: string

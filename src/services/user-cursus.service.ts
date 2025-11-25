@@ -1,6 +1,5 @@
 import { Cursus } from "../models/Cursus.js";
 import { Lesson } from "../models/Lesson.js";
-import { Theme } from "../models/Theme.js";
 import { UserCursus } from "../models/User-Cursus.js";
 import { UserLesson } from "../models/User-Lesson.js";
 import { UserTheme } from "../models/User-Theme.js";
@@ -10,6 +9,21 @@ import { AppError } from "../utils/AppError.js";
 import { getCursus } from "./cursus.service.js";
 import { checkUserThemeCertification } from "./user-theme.service.js";
 
+/**
+ * Adds a user-cursus association into the database.
+ * 
+ * @async
+ * @function addUserCursus
+ * 
+ * @param {number} userId - The ID of the user related to the cursus. 
+ * @param {number} cursusId - The ID of the cursus related to the user. 
+ * @param {number} requestorId - The ID of the user performing the creation.
+ *  
+ * @returns {Promise<number | null>} Returns the ID of the theme containing the cursus if user-cursus creation is a success.
+ * Returns null if this user-cursus association already exists in the database.
+ * 
+ * @throws {AppError} If an unexpected error occurs during user-cursus creation.
+ */
 export async function addUserCursus(userId: number, cursusId: number, requestorId: number): Promise<number | null> {
   try {
     const userCursus = await UserCursus.findOne({where: { user_id: userId, cursus_id: cursusId }});
@@ -35,6 +49,15 @@ export async function addUserCursus(userId: number, cursusId: number, requestorI
   }
 }
 
+/**
+ * Retrieves all user-cursus associations in the database.
+ * @async
+ * @function getAllUserCursusData
+ * 
+ * @returns {Promise<UserCursusData[]>} Returns a list of objects containing the user-cursus associations retrieved.
+ * 
+ * @throws {AppError} If an unexpected error occurs during user-cursus associations retrieval. 
+ */
 export async function getAllUserCursusData(): Promise<UserCursusData[]> {
   try {
     const allUserCursus = await UserCursus.findAll();
@@ -65,6 +88,17 @@ export async function getAllUserCursusData(): Promise<UserCursusData[]> {
   }
 }
 
+/**
+ * Retrieves all user-cursus associations for a specific user in the database.
+ * @async
+ * @function getUsersCursusForThisUser
+ * 
+ * @param {number} requestorId - The user ID used to retrieve the user-cursus associations.
+ * 
+ * @returns {Promise<UserCursusData[]>} Returns a list of objects containing the user-cursus associations retrieved for the specified user.
+ * 
+ * @throws {AppError} If an unexpected error occurs during user-cursus associations retrieval. 
+ */
 export async function getUsersCursusForThisUser(requestorId: number): Promise<UserCursusData[]> {
   try {
     const usersCursusForThisUser = await UserCursus.findAll({ where: { user_id: requestorId } });
@@ -95,6 +129,18 @@ export async function getUsersCursusForThisUser(requestorId: number): Promise<Us
   }
 }
 
+/**
+ * Retrieves all cursus available for a specific user in the database.
+ * 
+ * @async
+ * @function getAllCursusAvailable
+ * 
+ * @param {number} userId - The user ID used to retrieve the cursus.
+ * 
+ * @returns {Promise<CursusData[]>} Returns a list of cursus retrieved for the specified user.
+ * 
+ * @throws {AppError} If an unexpected error occurs during cursus retrieval. 
+ */
 export async function getAllCursusAvailable(userId: number): Promise<CursusData[]> {
   try {
     const allUserCursus = await UserCursus.findAll({ where: { user_id: userId } });
@@ -116,6 +162,23 @@ export async function getAllCursusAvailable(userId: number): Promise<CursusData[
   }
 }
 
+/**
+ * Updates user-cursus validation. First, it checks if a user has access to all lessons in the cursus concerned.
+ * If not user-cursus validation is updated false but if true, it checks if all user-lessons related to this cursus are validated.
+ * If not user-cursus validation is updated false but if true, user-cursus validation is updated true.
+ * 
+ * @async
+ * @function checkUserCursusValidation
+ * 
+ * @param {number} cursusId - The ID of the cursus related to user-cursus association to check.
+ * @param {number} userId - The ID of the user related to user-cursus association to check.
+ * @param {number} requestorId - The ID of the user performing this update.
+ * 
+ * @returns {Promise<void>}
+ * 
+ * @throws {AppError} If user-cursus assocation is not retrieved width cursus ID and user ID provided.
+ * @throws {AppError} If an unexpected error occurs during the checking.
+ */
 export async function checkUserCursusValidation(cursusId: number, userId: number, requestorId: number): Promise<void> {
   try {
     const userLessonsInCursusForThisUser = await UserLesson.findAll({
@@ -167,6 +230,20 @@ export async function checkUserCursusValidation(cursusId: number, userId: number
   }
 }
 
+/**
+ * Checks if a user has access to all lessons in a cursus.
+ * 
+ * @async
+ * @function checkUserAccessAllLessonsInCursus
+ * 
+ * @param {number} userCursusId - The user-cursus association ID used to retrieve the cursus to check.
+ * 
+ * @returns {Promise<boolean>} Returns `true` if the user of the user-cursus association has access to all lessons in th cursus related
+ * to the user-cursus association. Otherwise, it returns `false`.
+ * 
+ * @throws {AppError} If user-cursus association is not retrieved width cursus ID and user ID provided.
+ * @throws {AppError} If an unexpected error occurs during the checking.
+ */
 export async function checkUserAccessAllLessonsInCursus(userCursusId: number): Promise<boolean> {
   try {
     const userCursus = await UserCursus.findByPk(userCursusId);
@@ -204,6 +281,22 @@ export async function checkUserAccessAllLessonsInCursus(userCursusId: number): P
   }
 }
 
+/**
+ * Updates a user-cursus informations.
+ * 
+ * @async
+ * @function updateUserCursus
+ * 
+ * @param {number} userCursusId - The user-cursus ID used to retrieve the user-cursus association.
+ * @param {boolean} isValidated - The new value of the user-cursus validation property.
+ * @param {number} requestorId - The ID of the user performing the update.
+ * 
+ * @returns {Promise<boolean>} Returns `true` user-cursus validation property is updated.
+ * Returns `false` if user-cursus validation property is already equals to isValidated parameter.
+ * 
+ * @throws {AppError} If the user-cursus association to update is not found whith the user-cursus assocation ID provided.
+ * @throws {AppError} If an unexpected error occurs during the update.
+ */
 export async function updateUserCursus(userCursusId: number, isValidated: boolean, requestorId: number): Promise<boolean> {
   try {
     const userCursus = await UserCursus.findByPk(userCursusId, {
@@ -249,6 +342,22 @@ export async function updateUserCursus(userCursusId: number, isValidated: boolea
   }
 }
 
+/**
+ * Deletes a user-cursus and related user-lessons. Check if user-theme related to the user-cursus has still user-cursus under it.
+ * If not it deletes the user-theme, otherwise it checks its isCertified property.
+ * 
+ * @async
+ * @function deleteUserCursus
+ * 
+ * @param {number} userCursusId - The ID of the user-cursus association to delete. 
+ * @param {number} requestorId - The ID of the user performing the deletion.
+ * 
+ * @returns {Promise{void}}
+ * 
+ * @throws {AppError} If user-cursus association is not found with the user-cursus ID provided.
+ * @throws {AppError} If user-theme association related to the user-cursus association is not found.
+ * @throws {AppError} If an unexpected error occurs during the deletion.
+ */
 export async function deleteUserCursus(userCursusId: number, requestorId: number): Promise<void> {
   try {
     // Find user-cursus and delete it
@@ -322,6 +431,19 @@ export async function deleteUserCursus(userCursusId: number, requestorId: number
   }
 }
 
+/**
+ * Deletes all user-cursus associations related to a cursus.
+ * 
+ * @async
+ * @function deleteUserCursusForThisCursus
+ * 
+ * @param {number} cursusId - The ID of the cursus related to all user-cursus associations to delete.
+ * @param {number} requestorId  - The ID of the user performing the deletion.
+ * 
+ * @returns {Promise<void>}
+ * 
+ * @throws {AppError} If an expected error occurs during the user-cursus deletions.
+ */
 export async function deleteUserCursusForThisCursus(cursusId: number, requestorId: number): Promise<void> {
   try {
     const allUserCursusForThisCursus = await UserCursus.findAll({where: { cursus_id: cursusId }});
@@ -339,6 +461,15 @@ export async function deleteUserCursusForThisCursus(cursusId: number, requestorI
   }
 }
 
+/**
+ * Retrieves the users who have a user-cursus association related to a specific theme.
+ * 
+ * @param {number} themeId - The ID of the theme used to retrieve the user-cursus associations concerned.
+ * 
+ * @returns {Promise<User[]>} Returns a list of user.
+ * 
+ * @throws {AppError} If an unexpected error occurs during users retrieval.
+ */
 export async function getUsersWhoHaveUserCursusForThisTheme(themeId: number): Promise<User[]> {
   try {
     const users = await User.findAll({

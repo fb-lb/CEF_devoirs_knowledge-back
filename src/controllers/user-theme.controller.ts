@@ -5,7 +5,21 @@ import { checkUserAccessAllLessonsInTheme, deleteUserTheme, getAllThemesAvailabl
 import { AppError } from "../utils/AppError.js";
 import { validateUpdateUserThemeForm } from "../services/form.service.js";
 
-export async function getAllUserThemeController(req: Request, res: Response): Promise<Response<ApiResponse<UserThemeData>>> {
+/**
+ * Handle all user-themes retrieval.
+ *
+ * @route GET /api/user-theme/all
+ * @param {Request} req - Express request.
+ * @param {Response} res - Express response containing all user-theme informations.
+ * 
+ * @returns {Promise<Response<ApiResponse<UserThemeData[]>>>} Returns:
+ * - 200 with a list of objects containing user-theme informations in data property.
+ *
+ * @description
+ * Steps:
+ * - Retrieves all user-theme informations.
+ */
+export async function getAllUserThemeController(req: Request, res: Response): Promise<Response<ApiResponse<UserThemeData[]>>> {
   const allUserThemeData = await getAllUserThemeData(); 
   
   return res.status(200).json({
@@ -15,6 +29,21 @@ export async function getAllUserThemeController(req: Request, res: Response): Pr
   });
 }
 
+/**
+ * Handle retrieval of all available themes for a specific user.
+ *
+ * @route GET /api/user-theme/theme/all
+ * @param {Request} req - Express request.
+ * @param {Response} res - Express response containing all available themes for a specific user.
+ * 
+ * @returns {Promise<Response<ApiResponse<ThemeData[]>>>} Returns:
+ * - 200 with a list of objects containing informations on available themes for a specific user in data property.
+ *
+ * @description
+ * Steps:
+ * - Gets the ID of the requestor who is the user related to the themes to retrieve,
+ * - Retrieves informations on all available themes for a specific user.
+ */
 export async function getAllThemesAvailableController(req: Request, res: Response): Promise<Response<ApiResponse<ThemeData[]>>> {
   const requestorId = getRequestorId(req.cookies.token);
   
@@ -27,6 +56,21 @@ export async function getAllThemesAvailableController(req: Request, res: Respons
   });
 }
 
+/**
+ * Handle all user-themes retrieval for a specific user.
+ *
+ * @route GET /api/user-theme/some
+ * @param {Request} req - Express request.
+ * @param {Response} res - Express response containing all user-theme informations for a specific user.
+ * 
+ * @returns {Promise<Response<ApiResponse<UserThemeData[]>>>} Returns:
+ * - 200 with a list of objects containing user-theme informations for a specific user in data property.
+ *
+ * @description
+ * Steps:
+ * - Gets the ID of the requestor who is the user related to user-themes to retrieve,
+ * - Retrieves all user-theme informations for a specific user.
+ */
 export async function getSomeUserThemeController(req: Request, res: Response): Promise<Response<ApiResponse<UserThemeData[]>>> {
   const requestorId = getRequestorId(req.cookies.token);
   const userThemesForThisUser = await getUsersThemesForThisUser(requestorId);
@@ -38,6 +82,21 @@ export async function getSomeUserThemeController(req: Request, res: Response): P
   });
 }
 
+/**
+ * Handle user-theme update.
+ *
+ * @route PATCH /api/user-theme/:userThemeId
+ * @param {Request} req - Express request containing the user-theme informations in the body.
+ * @param {Response} res - Express response.
+ * 
+ * @returns {Promise<Response<ApiResponse>>} Returns express response with 200 status code.
+ *
+ * @description
+ * Steps:
+ * - Validates update user-theme informations,
+ * - Checks that the user has access to all lessons in the theme, otherwise he can't certify his theme,
+ * - Updates the user-theme isCertified property.
+ */
 export async function updateUserThemeController(req: Request, res: Response): Promise<Response<ApiResponse>> {  
   const userThemeId = Number(req.params.userThemeId);
   const isCertified = req.body.updateUserThemeCertification === true || req.body.updateUserThemeCertification === 'true' ? true : false;
@@ -71,6 +130,21 @@ export async function updateUserThemeController(req: Request, res: Response): Pr
   }
 }
 
+/**
+ * Handle user-theme deletion.
+ *
+ * @route DELETE /api/user-theme/:userThemeId
+ * @param {Request} req - Express request containing the ID of the user-theme to delete in URL parameter.
+ * @param {Response} res - Express response.
+ * 
+ * @returns {Promise<Response<ApiResponse>>} Returns express response with 200 status code.
+ *
+ * @description
+ * Steps:
+ * - Deletes the targeted user-theme.
+ * 
+ * @throws {AppError} If user-theme relation is not found with the provided ID.
+ */
 export async function deleteUserThemeController(req: Request, res: Response): Promise<Response<ApiResponse>> {
   const userThemeId = Number(req.params.userThemeId);
   if (!userThemeId || Number.isNaN(userThemeId)) throw new AppError(

@@ -5,6 +5,16 @@ import { AppError } from "../utils/AppError.js";
 import { deleteImageFiles } from "./element.service.js";
 import { Theme } from "../models/Theme.js";
 
+/**
+ * Retrieves all cursus from the database.
+ * 
+ * @async
+ * @function getAllCursus
+ * 
+ * @returns {Promise<CursusData[]>} A list of objects containing informations of all cursus.
+ * 
+ * @throws {AppError} If an unexpected error occurs during cursus retrieval.
+ */
 export async function getAllCursus(): Promise<CursusData[]> {
   try {
     const allCursus = await Cursus.findAll();
@@ -34,6 +44,19 @@ export async function getAllCursus(): Promise<CursusData[]> {
   }
 }
 
+/**
+ * Retrieves a cursus in the database with its ID.
+ * 
+ * @async
+ * @function getCursus
+ * 
+ * @param {number} cursusId - The ID used to retrieve the cursus.
+ * 
+ * @returns {Promise<CursusData>} An object containing the cursus informations.
+ * 
+ * @throws {AppError} If the cursus is not found with provided ID.
+ * @throws {AppError} If an error occurs during cursus retrieval.
+ */
 export async function getCursus(cursusId: number): Promise<CursusData> {
   try {
     const cursus = await Cursus.findByPk(cursusId);
@@ -67,6 +90,24 @@ export async function getCursus(cursusId: number): Promise<CursusData> {
   }
 }
 
+/**
+ * Updates a cursus order property and swap with a cursus according to the move.
+ * 
+ * @async
+ * @function changeOrderCursus
+ * 
+ * @param {number} cursusId - The ID used to retrieve the cursus whose order must be updated.
+ * @param {'up' | 'down'} move - Direction of the movement : 'up' decreases the order by 1 and 'down' increases it by 1.
+ * @param {number} userId - The ID of the user performing the update.
+ * 
+ * @returns {Promise<ApiResponse>} 
+ * Returns `{ success: false }` if the order update is not possible (first or last position)
+ * and `{ success: true }` when the order has been successfully updated.
+ * 
+ * @throws {AppError} If the target cursus is not found with provided ID.
+ * @throws {AppError} If cursus to swap is not found in the database.
+ * @throws {AppError} If an unexpected error occurs during the update.
+ */
 export async function  changeOrderCursus(cursusId: number, move: 'up' | 'down', userId: number): Promise<ApiResponse> {
   try {
     const targetCursus = await Cursus.findOne({ where: { id: cursusId } });
@@ -115,6 +156,23 @@ export async function  changeOrderCursus(cursusId: number, move: 'up' | 'down', 
   }
 }
 
+/**
+ * Creates a new cursus after verifying that the name is unique between cursus in the same theme.
+ * 
+ * @async
+ * @function addCursus
+ * 
+ * @param {string} cursusName - The name of the cursus to add.
+ * @param {string} price - Price of the new cursus.
+ * @param {CursusData[]} cursusInSameTheme - The list of existing cursus (in the same theme) used to ensure name uniqueness.
+ * @param {number} requestorId - The ID of the user who creates the cursus.
+ * @param {number} themeId - The ID of the theme containing the new cursus. 
+ * 
+ * @returns {Promise<void>}
+ * 
+ * @throws {AppError} If a curus with the same name already exists.
+ * @throws {AppError} If an unexpected error occurs during cursus creation.
+ */
 export async function addCursus(cursusName: string, price: number, cursusInSameTheme: CursusData[], requestorId: number, themeId: number): Promise<void> {
   for (const cursus of cursusInSameTheme) {
     if (cursus.name === cursusName) throw new AppError(
@@ -143,6 +201,19 @@ export async function addCursus(cursusName: string, price: number, cursusInSameT
   }
 }
 
+/**
+ * Deletes a cursus in the database with its ID, image files of lessons in this cursus and decreases by one order of the other cursus in the same theme.
+ * 
+ * @async
+ * @function deleteCursus
+ * 
+ * @param {number} cursusId - ID used to retrieve the cursus to delete.
+ * 
+ * @returns {Promise<void>}
+ * 
+ * @throws {AppError} If the cursus to delete is not found with the provided ID.
+ * @throws {AppError} If an unexpected error occurs during the cursus deletion.
+ */
 export async function deleteCursus(cursusId: number): Promise<void> {
   try {
     const cursusToDelete = await Cursus.findByPk(cursusId);
@@ -177,6 +248,22 @@ export async function deleteCursus(cursusId: number): Promise<void> {
   }
 }
 
+/**
+ * Update a cursus retrieved by its ID.
+ * 
+ * @async
+ * @function updateCursus
+ * 
+ * @param {number} cursusId - The ID of the cursus to update.
+ * @param {string} newCursusName - The new name of the cursus to update.
+ * @param {number} newCursusPrice - The new price of the cursus to update.
+ * @param {number} requestorId - The ID of the user performing the update.
+ * 
+ * @returns {Promise<void>}
+ * 
+ * @throws {AppError} If the cursus to update is not found with the provided ID.
+ * @throws {AppError} If an unexpected error occurs during the update.
+ */
 export async function updateCursus(cursusId: number, newCursusName: string, newCursusPrice: number, requestorId: number): Promise<void> {
   try {
     const cursusToUpdate = await Cursus.findByPk(cursusId);
@@ -198,6 +285,19 @@ export async function updateCursus(cursusId: number, newCursusName: string, newC
   }
 }
 
+/**
+ * Retrieves the theme ID of the theme containing a specific cursus.
+ * 
+ * @async
+ * @function getThemeIdForThisCursus
+ * 
+ * @param {number} cursusId - The ID of the cursus used to know which theme ID is wanted.
+ *  
+ * @returns {Promise<number>} The ID of the theme containing the cursus. 
+ * 
+ * @throws {AppError} If cursus is not found with the provided ID.
+ * @throws {AppError} If an unexpected error occurs during theme ID retrieval.
+ */
 export async function getThemeIdForThisCursus(cursusId: number): Promise<number> {
   try {
     const cursus = await Cursus.findByPk(cursusId, {
