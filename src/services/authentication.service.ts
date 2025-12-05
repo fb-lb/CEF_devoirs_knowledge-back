@@ -33,16 +33,16 @@ export async function testLoginRequest(email: string, password: string): Promise
     if (!checkPassword) return 'Email et/ou mot de passe invalide.';
 
     const cleanUser = {
-        id: user.id,
-        email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        roles: user.roles,
-        isVerified: user.isVerified,
-        createdAt: user.createdAt.toLocaleString('fr-FR', {timeZone: 'Europe/Paris'}),
-        updatedAt: user.updatedAt.toLocaleString('fr-FR', {timeZone: 'Europe/Paris'}),
-        updatedBy: user.updatedBy,
-      };
+      id: user.id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      roles: user.roles,
+      isVerified: user.isVerified,
+      createdAt: user.createdAt.toLocaleString('fr-FR', {timeZone: 'Europe/Paris'}),
+      updatedAt: user.updatedAt.toLocaleString('fr-FR', {timeZone: 'Europe/Paris'}),
+      updatedBy: user.updatedBy,
+    };
 
     return cleanUser;  
   } catch (error: any) {

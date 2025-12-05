@@ -66,10 +66,8 @@ export async function createPaymentIntentController(req: Request, res: Response)
     throw new AppError(
       500,
       'createPaymentIntentController in stripe controller failed',
-      "L'achat n'est disponible pour le moment, nous mettons tout en ouvre pour solutionner le problème au plus vite.",
+      "L'achat n'est pas disponible pour le moment, nous mettons tout en ouvre pour solutionner le problème au plus vite.",
       { cause: error},
     )
   }
-  
-  
 }

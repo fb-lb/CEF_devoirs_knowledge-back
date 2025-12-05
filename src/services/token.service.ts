@@ -8,7 +8,6 @@ import {
 /**
  * Generate a Json Web Token.
  * 
- * @async
  * @function generateToken
  * 
  * @param {MyCheckingPayload['user']} user - The token payload.
@@ -23,7 +22,6 @@ export function generateToken(user: MyCheckingPayload['user']): string {
 /**
  * Checks if a Json Web Token is valid by verifying the signature.
  * 
- * @async
  * @function isTokenValid
  * 
  * @param {string} token - The Json Web Token to check.
@@ -57,7 +55,6 @@ export function isTokenValid(token: string): ApiResponse<MyCheckingPayload['user
 /**
  * Get the id of the user who sent a token, by checking payload informations.
  * 
- * @async
  * @function getRequestorId
  * 
  * @param {string} token - The token sotring the user ID.
