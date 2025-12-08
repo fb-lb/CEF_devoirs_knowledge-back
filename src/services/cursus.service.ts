@@ -67,15 +67,15 @@ export async function getCursus(cursusId: number): Promise<CursusData> {
     )
 
     const cursusData = {
-        id: cursus.id,
-        themeId: cursus.theme_id,
-        name: cursus.name,
-        price: cursus.price,
-        order: cursus.order,
-        createdAt: cursus.createdAt.toLocaleString('fr-FR', { timeZone: 'Europe/Paris' }),
-        updatedAt: cursus.updatedAt.toLocaleString('fr-FR', { timeZone: 'Europe/Paris' }),
-        createdBy: cursus.createdBy,
-        updatedBy: cursus.updatedBy,
+      id: cursus.id,
+      themeId: cursus.theme_id,
+      name: cursus.name,
+      price: cursus.price,
+      order: cursus.order,
+      createdAt: cursus.createdAt.toLocaleString('fr-FR', { timeZone: 'Europe/Paris' }),
+      updatedAt: cursus.updatedAt.toLocaleString('fr-FR', { timeZone: 'Europe/Paris' }),
+      createdBy: cursus.createdBy,
+      updatedBy: cursus.updatedBy,
     };
     
     return cursusData;
