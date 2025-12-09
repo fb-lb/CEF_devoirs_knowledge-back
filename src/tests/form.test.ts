@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { validateRegistrationForm } from '../services/form.service.js';
+import { validateLoginForm, validateRegistrationForm } from '../services/form.service.js';
 import { AppError } from '../utils/AppError.js';
 
 describe('Form service - validateRegistrationForm', () => {
@@ -16,8 +16,8 @@ describe('Form service - validateRegistrationForm', () => {
       firstName: 'John',
       lastName: 'Doe',
       email: 'john.doe@test.test',
-      password: 'K5f8v45R2s36E8f5',
-      confirmPassword: 'K5f8v45R2s36E8f5',
+      password: 'K5f8v45R2s36E8f5!',
+      confirmPassword: 'K5f8v45R2s36E8f5!',
     };
   });
 
@@ -151,7 +151,7 @@ describe('Form service - validateRegistrationForm', () => {
     expect(thrownError!.messageFront).toBe('Le format email doit être respecté.');
   });
 
-  it("should throw an error if last name length is higher than 80 characters", () => {
+  it("should throw an error if email length is higher than 80 characters", () => {
     const firstEmailPart = 'A'.repeat(81);
     const secondEmailPart= '.doe@test.com';
     body.email = firstEmailPart + secondEmailPart;
@@ -166,7 +166,7 @@ describe('Form service - validateRegistrationForm', () => {
   });
 
   it("should throw an error if password length is lower than 8 characters", () => {
-    body.password = 'A'.repeat(7);
+    body.password = 'Gh4!';
     let thrownError: AppError;
     try {
       validateRegistrationForm(body);
@@ -178,7 +178,7 @@ describe('Form service - validateRegistrationForm', () => {
   });
 
   it("should throw an error if password length is higher than 100 characters", () => {
-    body.password = 'A'.repeat(101);
+    body.password += 'A'.repeat(101);
     let thrownError: AppError;
     try {
       validateRegistrationForm(body);
@@ -189,8 +189,20 @@ describe('Form service - validateRegistrationForm', () => {
     expect(thrownError!.messageFront).toBe('Le champ "Mot de passe" doit contenir au maximum 100 caractères.');
   });
 
+  it('should throw an error if password contains an unauthorized character', () => {
+    body.password += '{';
+    let thrownError: AppError;
+    try {
+      validateRegistrationForm(body);
+    } catch (error) {
+      if (error instanceof AppError) thrownError = error;
+    }
+    expect(() => validateRegistrationForm(body)).toThrow(AppError);
+    expect(thrownError!.messageFront).toBe('Le champ "Mot de passe" contient des caractères non autorisés.');
+  });
+
   it("should throw an error if confirm password length is lower than 8 characters", () => {
-    body.confirmPassword = 'A'.repeat(7);
+    body.confirmPassword = 'Gh4!';
     let thrownError: AppError;
     try {
       validateRegistrationForm(body);
@@ -202,7 +214,7 @@ describe('Form service - validateRegistrationForm', () => {
   });
 
   it("should throw an error if confirm password length is higher than 100 characters", () => {
-    body.confirmPassword = 'A'.repeat(101);
+    body.confirmPassword += 'A'.repeat(101);
     let thrownError: AppError;
     try {
       validateRegistrationForm(body);
@@ -213,9 +225,21 @@ describe('Form service - validateRegistrationForm', () => {
     expect(thrownError!.messageFront).toBe('Le champ "Confirmation du mot de passe" doit contenir au maximum 100 caractères.');
   });
 
+  it('should throw an error if confirm password contains an unauthorized character', () => {
+    body.confirmPassword += '{';
+    let thrownError: AppError;
+    try {
+      validateRegistrationForm(body);
+    } catch (error) {
+      if (error instanceof AppError) thrownError = error;
+    }
+    expect(() => validateRegistrationForm(body)).toThrow(AppError);
+    expect(thrownError!.messageFront).toBe('Le champ "Confirmation du mot de passe" contient des caractères non autorisés.');
+  });
+
   it("should throw an error if password and confirm password are differents", () => {
-    body.password = 'A'.repeat(15);
-    body.confirmPassword = 'B'.repeat(15);
+    body.password += 'g';
+    body.confirmPassword += 't';
     let thrownError: AppError;
     try {
       validateRegistrationForm(body);
@@ -224,5 +248,115 @@ describe('Form service - validateRegistrationForm', () => {
     }
     expect(() => validateRegistrationForm(body)).toThrow(AppError);
     expect(thrownError!.messageFront).toBe('Les champs "Mot de passe" et "Confirmation du mot de passe" doivent être identiques.');
+  });
+});
+
+describe('Form service - validateLoginForm', () => {
+  let body: {
+    email: string,
+    password: string,
+  };
+  
+  beforeEach(() => {
+    body = {
+      email: 'john.doe@test.test',
+      password: 'K5f8v45R2s36E8f5!',
+    };
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  })
+
+  it('should not throw an error for a valid registration form', () => {
+    validateLoginForm(body);
+    expect(() => validateLoginForm(body)).not.toThrow(AppError);
+    expect(() => validateLoginForm(body)).not.toThrow(Error);
+  });
+
+  it('should throw an error if email is missing', () => {
+    body.email = '';
+    let thrownError: AppError;
+    try {
+      validateLoginForm(body);
+    } catch (error) {
+      if (error instanceof AppError) thrownError = error;
+    }
+    expect(() => validateLoginForm(body)).toThrow(AppError);
+    expect(thrownError!.messageFront).toBe('Les champs "Email" et "Mot de passe" sont obligatoires.');
+  });
+
+  it('should throw an error if password is missing', () => {
+    body.password = '';
+    let thrownError: AppError;
+    try {
+      validateLoginForm(body);
+    } catch (error) {
+      if (error instanceof AppError) thrownError = error;
+    }
+    expect(() => validateLoginForm(body)).toThrow(AppError);
+    expect(thrownError!.messageFront).toBe('Les champs "Email" et "Mot de passe" sont obligatoires.');
+  });
+
+  it("should throw an error if email doesn't respect email format", () => {
+    body.email = 'john.doe.gmail.com';
+    let thrownError: AppError;
+    try {
+      validateLoginForm(body);
+    } catch (error) {
+      if (error instanceof AppError) thrownError = error;
+    }
+    expect(() => validateLoginForm(body)).toThrow(AppError);
+    expect(thrownError!.messageFront).toBe('Le format email doit être respecté.');
+  });
+
+  it("should throw an error if email length is higher than 80 characters", () => {
+    const firstEmailPart = 'A'.repeat(81);
+    const secondEmailPart= '.doe@test.com';
+    body.email = firstEmailPart + secondEmailPart;
+    let thrownError: AppError;
+    try {
+      validateLoginForm(body);
+    } catch (error) {
+      if (error instanceof AppError) thrownError = error;
+    }
+    expect(() => validateLoginForm(body)).toThrow(AppError);
+    expect(thrownError!.messageFront).toBe('Le champ "Email" doit contenir au maximum 80 caractères.');
+  });
+
+  it("should throw an error if password length is lower than 8 characters", () => {
+    body.password = 'Gh4!';
+    let thrownError: AppError;
+    try {
+      validateLoginForm(body);
+    } catch (error) {
+      if (error instanceof AppError) thrownError = error;
+    }
+    expect(() => validateLoginForm(body)).toThrow(AppError);
+    expect(thrownError!.messageFront).toBe('Le champ "Mot de passe" doit contenir au moins 8 caractères.');
+  });
+
+  it("should throw an error if password length is higher than 100 characters", () => {
+    body.password += 'A'.repeat(101);
+    let thrownError: AppError;
+    try {
+      validateLoginForm(body);
+    } catch (error) {
+      if (error instanceof AppError) thrownError = error;
+    }
+    expect(() => validateLoginForm(body)).toThrow(AppError);
+    expect(thrownError!.messageFront).toBe('Le champ "Mot de passe" doit contenir au maximum 100 caractères.');
+  });
+
+  it('should throw an error if password contains an unauthorized character', () => {
+    body.password += '{';
+    let thrownError: AppError;
+    try {
+      validateLoginForm(body);
+    } catch (error) {
+      if (error instanceof AppError) thrownError = error;
+    }
+    expect(() => validateLoginForm(body)).toThrow(AppError);
+    expect(thrownError!.messageFront).toBe('Le champ "Mot de passe" contient des caractères non autorisés.');
   });
 });

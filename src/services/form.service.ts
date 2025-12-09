@@ -25,8 +25,10 @@ import { AppError } from "../utils/AppError.js";
  * @throws {AppError} If email length > 80.
  * @throws {AppError} If password length < 8.
  * @throws {AppError} If password length > 100.
+ * @throws {AppError} If password contains unauthorized caracters.
  * @throws {AppError} If confirm password length < 8.
  * @throws {AppError} If confirm password length > 100.
+ * @throws {AppError} If confirm password contains unauthorized caracters.
  * @throws {AppError} If password and confirm password are not identical.
  */
 export function validateRegistrationForm(body: RegistrationBody): void {
@@ -61,7 +63,7 @@ export function validateRegistrationForm(body: RegistrationBody): void {
   }
 
   // Test firstName special caracters
-  const regex = /^[a-zA-Zéèêàîùôçïäâëüöœ '\-\.]*$/;
+  const regex = /^[a-zA-ZÀ-ÖØ-öø-ÿŒœ '\-\.]*$/;
   if (!regex.test(body.firstName)) {
     error.messageFront = 'Le champ "Prénom" contient des caractères non autorisés.';
     throw error;
@@ -103,6 +105,13 @@ export function validateRegistrationForm(body: RegistrationBody): void {
     throw error;
   }
 
+  // Test password special caracters
+  const passwordRegex = /^[a-zA-Z0-9À-ÖØ-öø-ÿŒœ*$%!§\-+&#]*$/;
+  if (!passwordRegex.test(body.password)) {
+    error.messageFront = 'Le champ "Mot de passe" contient des caractères non autorisés.';
+    throw error;
+  }
+
   // Test confirmPassword length
   if (body.confirmPassword.length < 8) {
     error.messageFront = 'Le champ "Confirmation du mot de passe" doit contenir au moins 8 caractères.';
@@ -114,9 +123,85 @@ export function validateRegistrationForm(body: RegistrationBody): void {
     throw error;
   }
 
+  // Test confirmPassword special caracters
+  if (!passwordRegex.test(body.confirmPassword)) {
+    error.messageFront = 'Le champ "Confirmation du mot de passe" contient des caractères non autorisés.';
+    throw error;
+  }
+
   // Test equality between password and confirm password
   if (body.password !== body.confirmPassword) {
     error.messageFront = 'Les champs "Mot de passe" et "Confirmation du mot de passe" doivent être identiques.';
+    throw error;
+  }
+}
+
+/**
+ * Checks validity of the login form fields.
+ * 
+ * @function validateLoginForm
+ * 
+ * @param {RegistrationBody} body - Object containing the user informations {
+ *   email: string;
+ *   password: string;
+ * } 
+ * 
+ * @returns {void}
+ * 
+ * @throws {AppError} If one of the body property is null.
+ * @throws {AppError} If email format is not followed.
+ * @throws {AppError} If email length > 80.
+ * @throws {AppError} If password length < 8.
+ * @throws {AppError} If password length > 100.
+ * @throws {AppError} If password contains unauthorized character.
+ */
+export function validateLoginForm(body: { email: string; password: string; }): void {
+  const error = new AppError(
+    422,
+    "validateLoginForm function in form service failed because of an invalid form field",
+    ""
+  );
+
+  // Test required validator
+  if (!body.email || !body.password) {
+    error.messageFront = 'Les champs "Email" et "Mot de passe" sont obligatoires.';
+    throw error;
+  }
+
+  // Test email format
+  const email = body.email;
+  if (
+    !email.includes("@") ||
+    !(email.indexOf("@") > 0) ||
+    !email.includes(".") ||
+    !(email.lastIndexOf(".") > email.indexOf("@") + 1) ||
+    !(email.lastIndexOf(".") < email.length - 1)
+  ) {
+    error.messageFront = "Le format email doit être respecté.";
+    throw error;
+  }
+
+  // Test email length
+  if (body.email.length > 80) {
+    error.messageFront = 'Le champ "Email" doit contenir au maximum 80 caractères.';
+    throw error;
+  }
+
+  // Test password length
+  if (body.password.length < 8) {
+    error.messageFront= 'Le champ "Mot de passe" doit contenir au moins 8 caractères.';
+    throw error;
+  }
+
+  if (body.password.length > 100) {
+    error.messageFront = 'Le champ "Mot de passe" doit contenir au maximum 100 caractères.';
+    throw error;
+  }
+
+  // Test password special caracters
+  const passwordRegex = /^[a-zA-Z0-9À-ÖØ-öø-ÿŒœ*$%!§\-+&#]*$/;
+  if (!passwordRegex.test(body.password)) {
+    error.messageFront = 'Le champ "Mot de passe" contient des caractères non autorisés.';
     throw error;
   }
 }
@@ -190,7 +275,7 @@ export function validateUpdateUserForm(body: UpdateUserBody): void {
   }
 
   // Test firstName special caracters
-  const regex = /^[a-zA-Zéèêàîùôçïäâëüöœ '\-\.]*$/;
+  const regex = /^[a-zA-ZÀ-ÖØ-öø-ÿŒœ '\-\.]*$/;
   if (!regex.test(body.firstName)) {
     error.messageFront = 'Le champ "Prénom" contient des caractères non autorisés.';
     throw error;
@@ -255,7 +340,7 @@ export function validateAddThemeForm(themeName: string): void {
   }
 
   // Test themeName special caracters
-  const regex = /^[a-zA-ZÀ-ÖØ-öø-ÿ0-9 ?!\/:'"(),.\-]*$/;
+  const regex = /^[a-zA-ZÀ-ÖØ-öø-ÿŒœ0-9 ?!\/:'"(),\.\-]*$/;
   if (!regex.test(themeName)) {
     error.messageFront = 'Le champ "Nom du thème" contient des caractères non autorisés.';
     throw error;
@@ -304,7 +389,7 @@ export function validateAddCursusForm(cursusName: string, themeId: number, price
   }
 
   // Test cursusName special caracters
-  const regex = /^[a-zA-ZÀ-ÖØ-öø-ÿ0-9 ?!\/:'"(),.\-]*$/;
+  const regex = /^[a-zA-ZÀ-ÖØ-öø-ÿŒœ0-9 ?!\/:'"(),\.\-]*$/;
   if (!regex.test(cursusName)) {
     error.messageFront = 'Le champ "Nom du cursus" contient des caractères non autorisés.';
     throw error;
@@ -359,7 +444,7 @@ export function validateAddLessonForm(lessonName: string, cursusId: number, pric
   }
 
   // Test lessonName special caracters
-  const regex = /^[a-zA-ZÀ-ÖØ-öø-ÿ0-9 ?!\/:'"(),.\-]*$/;
+  const regex = /^[a-zA-ZÀ-ÖØ-öø-ÿŒœ0-9 ?!\/:'"(),\.\-]*$/;
   if (!regex.test(lessonName)) {
     error.messageFront = 'Le champ "Nom de la leçon" contient des caractères non autorisés.';
     throw error;
@@ -504,7 +589,7 @@ export function validateUpdateThemeForm(newThemeName: string): void {
   }
 
   // Test newThemeName special caracters
-  const regex = /^[a-zA-ZÀ-ÖØ-öø-ÿ0-9 ?!\/:'"(),.\-]*$/;
+  const regex = /^[a-zA-ZÀ-ÖØ-öø-ÿŒœ0-9 ?!\/:'"(),\.\-]*$/;
   if (!regex.test(newThemeName)) {
     error.messageFront = 'Le champ "Nom du thème" contient des caractères non autorisés.';
     throw error;
@@ -546,7 +631,7 @@ export function validateUpdateCursusForm(newCursusName: string, newCursusPrice: 
   }
 
   // Test newCursusName special caracters
-  const regex = /^[a-zA-ZÀ-ÖØ-öø-ÿ0-9 ?!\/:'"(),.\-]*$/;
+  const regex = /^[a-zA-ZÀ-ÖØ-öø-ÿŒœ0-9 ?!\/:'"(),\.\-]*$/;
   if (!regex.test(newCursusName)) {
     error.messageFront = 'Le champ "Nom du cursus" contient des caractères non autorisés.';
     throw error;
@@ -594,7 +679,7 @@ export function validateUpdateLessonForm(newLessonName: string, newLessonPrice: 
   }
 
   // Test newLessonName special caracters
-  const regex = /^[a-zA-ZÀ-ÖØ-öø-ÿ0-9 ?!\/:'"(),.\-]*$/;
+  const regex = /^[a-zA-ZÀ-ÖØ-öø-ÿŒœ0-9 ?!\/:'"(),\.\-]*$/;
   if (!regex.test(newLessonName)) {
     error.messageFront = 'Le champ "Nom de la leçon" contient des caractères non autorisés.';
     throw error;

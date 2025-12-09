@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { ApiResponse, LoginBody, MyCheckingPayload } from "../types/Interfaces.js";
 import { setCookies, testLoginRequest } from "../services/authentication.service.js";
 import { generateToken } from "../services/token.service.js";
+import { validateLoginForm } from "../services/form.service.js";
 
 /**
  * Handle user login request.
@@ -26,6 +27,8 @@ export async function login(req: Request<{}, {}, LoginBody>, res: Response): Pro
     email: req.body.email,
     password: req.body.password
   };
+
+  validateLoginForm(body);
 
   // Check that email and password are valid
   const user: MyCheckingPayload['user']|string = await testLoginRequest(body.email, body.password);

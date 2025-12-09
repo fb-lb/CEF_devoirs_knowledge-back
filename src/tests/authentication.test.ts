@@ -3,11 +3,11 @@ import { Request, Response } from "express";
 import { login } from "../controllers/authentication.controller.js";
 import { LoginBody, MyCheckingPayload } from "../types/Interfaces.js";
 import { MockResponse } from "../types/types.js";
+import * as formService from '../services/form.service.js';
 import * as authenticationService from '../services/authentication.service.js';
 import * as tokenService from "../services/token.service.js";
 import { User } from "../models/User.js";
 import bcrypt from 'bcrypt';
-import { after } from "node:test";
 
 function createMockResponse(): MockResponse {
   const res = {} as MockResponse ;
@@ -19,6 +19,7 @@ function createMockResponse(): MockResponse {
 describe('Authentication controller - login', () => {
   let req: Partial<Request<{}, {}, LoginBody>>;
   let res: MockResponse;
+  let validateLoginFormSpy: Mock;
   let testLoginRequestSpy: Mock;
   let generateTokenSpy: Mock;
   let setCookiesSpy: Mock;
@@ -35,6 +36,7 @@ describe('Authentication controller - login', () => {
 
     res = createMockResponse();
 
+    validateLoginFormSpy = vi.spyOn(formService, 'validateLoginForm');
     testLoginRequestSpy = vi.spyOn(authenticationService, 'testLoginRequest');
     generateTokenSpy = vi.spyOn(tokenService, 'generateToken');
     setCookiesSpy = vi.spyOn(authenticationService, 'setCookies');
@@ -58,12 +60,14 @@ describe('Authentication controller - login', () => {
   });
 
   it('should return response object with 200 status code', async () => {
+    validateLoginFormSpy.mockReturnValue(undefined);
     testLoginRequestSpy.mockResolvedValue(user);
     generateTokenSpy.mockReturnValue(token);
     setCookiesSpy.mockReturnValue(res);
 
     await login(req as Request<{}, {}, LoginBody>, res as unknown as Response);
   
+    expect(validateLoginFormSpy).toHaveBeenCalledWith(req.body);
     expect(testLoginRequestSpy).toHaveBeenCalledWith(req.body?.email, req.body?.password);
     expect(generateTokenSpy).toHaveBeenCalledWith(user);
     expect(setCookiesSpy).toHaveBeenCalledWith(res, token, false);
@@ -72,12 +76,14 @@ describe('Authentication controller - login', () => {
   });
 
   it('should return a response with 401 status because testLoginRequest did not found a user', async () => {
+    validateLoginFormSpy.mockReturnValue(undefined);
     testLoginRequestSpy.mockResolvedValue('Cet email ne correspond à aucun compte enregistré.');
     generateTokenSpy.mockReturnValue(undefined);
     setCookiesSpy.mockReturnValue(undefined);
 
     await login(req as Request<{}, {}, LoginBody>, res as unknown as Response);
   
+    expect(validateLoginFormSpy).toHaveBeenCalledWith(req.body);
     expect(testLoginRequestSpy).toHaveBeenCalledWith(req.body?.email, req.body?.password);
     expect(generateTokenSpy).toHaveBeenCalledTimes(0);
     expect(setCookiesSpy).toHaveBeenCalledTimes(0);
@@ -87,12 +93,14 @@ describe('Authentication controller - login', () => {
 
   it('should return a response with 401 status because the user does not validate his email address', async () => {
     user.isVerified = false;
+    validateLoginFormSpy.mockReturnValue(undefined);
     testLoginRequestSpy.mockResolvedValue(user);
     generateTokenSpy.mockReturnValue(undefined);
     setCookiesSpy.mockReturnValue(undefined);
 
     await login(req as Request<{}, {}, LoginBody>, res as unknown as Response);
   
+    expect(validateLoginFormSpy).toHaveBeenCalledWith(req.body);
     expect(testLoginRequestSpy).toHaveBeenCalledWith(req.body?.email, req.body?.password);
     expect(generateTokenSpy).toHaveBeenCalledTimes(0);
     expect(setCookiesSpy).toHaveBeenCalledTimes(0);
@@ -207,13 +215,13 @@ describe('Authentication service - setCookies', () => {
     expect(response).toBe(res);
     expect(cookieSpy).toHaveBeenCalledTimes(2);
     expect(cookieSpy).toHaveBeenNthCalledWith(1, 'token', token, expect.objectContaining({
-      sameSite: 'lax',
+      sameSite: 'none',
       httpOnly: true,
       maxAge: expect.any(Number)
     }));
 
     expect(cookieSpy).toHaveBeenNthCalledWith(2, 'isAuth', true, expect.objectContaining({
-      sameSite: 'lax',
+      sameSite: 'none',
       httpOnly: false,
       maxAge: expect.any(Number)
     }));
@@ -225,19 +233,19 @@ describe('Authentication service - setCookies', () => {
     expect(response).toBe(res);
     expect(cookieSpy).toHaveBeenCalledTimes(3);
     expect(cookieSpy).toHaveBeenNthCalledWith(1, 'token', token, expect.objectContaining({
-      sameSite: 'lax',
+      sameSite: 'none',
       httpOnly: true,
       maxAge: expect.any(Number)
     }));
 
     expect(cookieSpy).toHaveBeenNthCalledWith(2, 'isAuth', true, expect.objectContaining({
-      sameSite: 'lax',
+      sameSite: 'none',
       httpOnly: false,
       maxAge: expect.any(Number)
     }));
 
     expect(cookieSpy).toHaveBeenNthCalledWith(3, 'isAdmin', true, expect.objectContaining({
-      sameSite: 'lax',
+      sameSite: 'none',
       httpOnly: false,
       maxAge: expect.any(Number)
     }));
