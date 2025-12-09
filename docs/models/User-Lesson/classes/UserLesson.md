@@ -6,7 +6,7 @@
 
 # Class: UserLesson
 
-Defined in: [src/models/User-Lesson.ts:35](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/c8c533ab6fd4749c61887011f2eaf102002dd722/src/models/User-Lesson.ts#L35)
+Defined in: [src/models/User-Lesson.ts:35](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/ee7c1c461a940a1b958617819327f544dba91c27/src/models/User-Lesson.ts#L35)
 
 ## Extends
 
@@ -52,7 +52,7 @@ an object of key value pairs
 
 > `readonly` **createdAt**: `Date`
 
-Defined in: [src/models/User-Lesson.ts:44](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/c8c533ab6fd4749c61887011f2eaf102002dd722/src/models/User-Lesson.ts#L44)
+Defined in: [src/models/User-Lesson.ts:44](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/ee7c1c461a940a1b958617819327f544dba91c27/src/models/User-Lesson.ts#L44)
 
 #### Implementation of
 
@@ -64,7 +64,7 @@ Defined in: [src/models/User-Lesson.ts:44](https://github.com/fb-lb/CEF_devoirs_
 
 > **createdBy**: `number` \| `null`
 
-Defined in: [src/models/User-Lesson.ts:46](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/c8c533ab6fd4749c61887011f2eaf102002dd722/src/models/User-Lesson.ts#L46)
+Defined in: [src/models/User-Lesson.ts:46](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/ee7c1c461a940a1b958617819327f544dba91c27/src/models/User-Lesson.ts#L46)
 
 #### Implementation of
 
@@ -76,7 +76,7 @@ Defined in: [src/models/User-Lesson.ts:46](https://github.com/fb-lb/CEF_devoirs_
 
 > **CreatedByUser**: [`User`](../../User/classes/User.md)
 
-Defined in: [src/models/User-Lesson.ts:50](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/c8c533ab6fd4749c61887011f2eaf102002dd722/src/models/User-Lesson.ts#L50)
+Defined in: [src/models/User-Lesson.ts:50](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/ee7c1c461a940a1b958617819327f544dba91c27/src/models/User-Lesson.ts#L50)
 
 #### Implementation of
 
@@ -88,7 +88,7 @@ Defined in: [src/models/User-Lesson.ts:50](https://github.com/fb-lb/CEF_devoirs_
 
 > **id**: `number`
 
-Defined in: [src/models/User-Lesson.ts:39](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/c8c533ab6fd4749c61887011f2eaf102002dd722/src/models/User-Lesson.ts#L39)
+Defined in: [src/models/User-Lesson.ts:39](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/ee7c1c461a940a1b958617819327f544dba91c27/src/models/User-Lesson.ts#L39)
 
 #### Implementation of
 
@@ -100,7 +100,7 @@ Defined in: [src/models/User-Lesson.ts:39](https://github.com/fb-lb/CEF_devoirs_
 
 > **isValidated**: `boolean`
 
-Defined in: [src/models/User-Lesson.ts:42](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/c8c533ab6fd4749c61887011f2eaf102002dd722/src/models/User-Lesson.ts#L42)
+Defined in: [src/models/User-Lesson.ts:42](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/ee7c1c461a940a1b958617819327f544dba91c27/src/models/User-Lesson.ts#L42)
 
 #### Implementation of
 
@@ -112,7 +112,7 @@ Defined in: [src/models/User-Lesson.ts:42](https://github.com/fb-lb/CEF_devoirs_
 
 > **lesson\_id**: `number`
 
-Defined in: [src/models/User-Lesson.ts:41](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/c8c533ab6fd4749c61887011f2eaf102002dd722/src/models/User-Lesson.ts#L41)
+Defined in: [src/models/User-Lesson.ts:41](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/ee7c1c461a940a1b958617819327f544dba91c27/src/models/User-Lesson.ts#L41)
 
 #### Implementation of
 
@@ -124,7 +124,7 @@ Defined in: [src/models/User-Lesson.ts:41](https://github.com/fb-lb/CEF_devoirs_
 
 > **PurchasedByUser**: [`User`](../../User/classes/User.md)
 
-Defined in: [src/models/User-Lesson.ts:49](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/c8c533ab6fd4749c61887011f2eaf102002dd722/src/models/User-Lesson.ts#L49)
+Defined in: [src/models/User-Lesson.ts:49](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/ee7c1c461a940a1b958617819327f544dba91c27/src/models/User-Lesson.ts#L49)
 
 #### Implementation of
 
@@ -136,7 +136,7 @@ Defined in: [src/models/User-Lesson.ts:49](https://github.com/fb-lb/CEF_devoirs_
 
 > **RelatedToLesson**: [`Lesson`](../../Lesson/classes/Lesson.md)
 
-Defined in: [src/models/User-Lesson.ts:52](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/c8c533ab6fd4749c61887011f2eaf102002dd722/src/models/User-Lesson.ts#L52)
+Defined in: [src/models/User-Lesson.ts:52](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/ee7c1c461a940a1b958617819327f544dba91c27/src/models/User-Lesson.ts#L52)
 
 #### Implementation of
 
@@ -148,7 +148,7 @@ Defined in: [src/models/User-Lesson.ts:52](https://github.com/fb-lb/CEF_devoirs_
 
 > `readonly` **updatedAt**: `Date`
 
-Defined in: [src/models/User-Lesson.ts:45](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/c8c533ab6fd4749c61887011f2eaf102002dd722/src/models/User-Lesson.ts#L45)
+Defined in: [src/models/User-Lesson.ts:45](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/ee7c1c461a940a1b958617819327f544dba91c27/src/models/User-Lesson.ts#L45)
 
 #### Implementation of
 
@@ -160,7 +160,7 @@ Defined in: [src/models/User-Lesson.ts:45](https://github.com/fb-lb/CEF_devoirs_
 
 > **updatedBy**: `number` \| `null`
 
-Defined in: [src/models/User-Lesson.ts:47](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/c8c533ab6fd4749c61887011f2eaf102002dd722/src/models/User-Lesson.ts#L47)
+Defined in: [src/models/User-Lesson.ts:47](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/ee7c1c461a940a1b958617819327f544dba91c27/src/models/User-Lesson.ts#L47)
 
 #### Implementation of
 
@@ -172,7 +172,7 @@ Defined in: [src/models/User-Lesson.ts:47](https://github.com/fb-lb/CEF_devoirs_
 
 > **UpdatedByUser**: [`User`](../../User/classes/User.md)
 
-Defined in: [src/models/User-Lesson.ts:51](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/c8c533ab6fd4749c61887011f2eaf102002dd722/src/models/User-Lesson.ts#L51)
+Defined in: [src/models/User-Lesson.ts:51](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/ee7c1c461a940a1b958617819327f544dba91c27/src/models/User-Lesson.ts#L51)
 
 #### Implementation of
 
@@ -184,7 +184,7 @@ Defined in: [src/models/User-Lesson.ts:51](https://github.com/fb-lb/CEF_devoirs_
 
 > **user\_id**: `number`
 
-Defined in: [src/models/User-Lesson.ts:40](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/c8c533ab6fd4749c61887011f2eaf102002dd722/src/models/User-Lesson.ts#L40)
+Defined in: [src/models/User-Lesson.ts:40](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/ee7c1c461a940a1b958617819327f544dba91c27/src/models/User-Lesson.ts#L40)
 
 #### Implementation of
 

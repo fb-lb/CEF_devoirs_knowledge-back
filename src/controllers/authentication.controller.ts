@@ -18,7 +18,6 @@ import { validateLoginForm } from "../services/form.service.js";
  * @description
  * Steps:
  * - Validate credentials via `testLoginRequest`,
- * - Ensure the user's email is verified,
  * - Generate a JWT token,
  * - Set cookies (token + role flag).
  */
@@ -33,9 +32,6 @@ export async function login(req: Request<{}, {}, LoginBody>, res: Response): Pro
   // Check that email and password are valid
   const user: MyCheckingPayload['user']|string = await testLoginRequest(body.email, body.password);
   if (typeof(user) === 'string') return res.status(401).json({ success: false, message: user });
-
-  // Check user is verfied
-  if(!user.isVerified) return res.status(401).json({ success: false, message: "Veuillez confirmer votre adresse mail avant de vous connecter" });
 
   // Generate a token
   const token = generateToken(user);

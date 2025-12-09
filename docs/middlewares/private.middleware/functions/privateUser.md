@@ -6,9 +6,9 @@
 
 # Function: privateUser()
 
-> **privateUser**(`req`, `res`, `next`): `Promise`\<`void` \| `Promise`\<`Response`\<[`ApiResponse`](../../../types/Interfaces/interfaces/ApiResponse.md)\<`undefined`\>, `Record`\<`string`, `any`\>\>\>\>
+> **privateUser**(`req`, `res`, `next`): `Promise`\<`void`\>
 
-Defined in: [src/middlewares/private.middleware.ts:19](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/c8c533ab6fd4749c61887011f2eaf102002dd722/src/middlewares/private.middleware.ts#L19)
+Defined in: [src/middlewares/private.middleware.ts:21](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/ee7c1c461a940a1b958617819327f544dba91c27/src/middlewares/private.middleware.ts#L21)
 
 **`Function`**
 
@@ -26,7 +26,7 @@ Request received from the front-end, where the token is stored.
 
 `Response`
 
-Response to send to the front-end in case the user is not a user.
+Response where cookies are saved if user is connected.
 
 ### next
 
@@ -36,11 +36,12 @@ Used to go on the next middleware.
 
 ## Returns
 
-`Promise`\<`void` \| `Promise`\<`Response`\<[`ApiResponse`](../../../types/Interfaces/interfaces/ApiResponse.md)\<`undefined`\>, `Record`\<`string`, `any`\>\>\>\>
-
-Returns `Promise<void>` if requestor has `user` in his roles property.
-Returns `Promise<Promise<Response<ApiResponse>>>` user has not `user` in his roles property.
+`Promise`\<`void`\>
 
 ## Async
 
 privateUser
+
+## Throws
+
+If requestor is not connected as a user.

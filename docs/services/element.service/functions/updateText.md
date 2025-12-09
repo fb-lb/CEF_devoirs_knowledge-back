@@ -8,7 +8,7 @@
 
 > **updateText**(`elementId`, `newTextType`, `newContent`, `requestorId`): `Promise`\<`void`\>
 
-Defined in: [src/services/element.service.ts:583](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/c8c533ab6fd4749c61887011f2eaf102002dd722/src/services/element.service.ts#L583)
+Defined in: [src/services/element.service.ts:583](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/ee7c1c461a940a1b958617819327f544dba91c27/src/services/element.service.ts#L583)
 
 **`Function`**
 

@@ -8,7 +8,7 @@
 
 > **allUsers**(`req`, `res`): `Promise`\<`Response`\<[`ApiResponse`](../../../types/Interfaces/interfaces/ApiResponse.md)\<`object`[]\>, `Record`\<`string`, `any`\>\>\>
 
-Defined in: [src/controllers/users.controller.ts:23](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/c8c533ab6fd4749c61887011f2eaf102002dd722/src/controllers/users.controller.ts#L23)
+Defined in: [src/controllers/users.controller.ts:22](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/ee7c1c461a940a1b958617819327f544dba91c27/src/controllers/users.controller.ts#L22)
 
 Handle all users retrieval.
 

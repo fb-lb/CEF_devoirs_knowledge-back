@@ -8,7 +8,7 @@
 
 > **addTextController**(`req`, `res`): `Promise`\<`Response`\<[`ApiResponse`](../../../types/Interfaces/interfaces/ApiResponse.md)\<[`ElementData`](../../../types/Interfaces/type-aliases/ElementData.md)[]\>, `Record`\<`string`, `any`\>\>\>
 
-Defined in: [src/controllers/element.controller.ts:167](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/c8c533ab6fd4749c61887011f2eaf102002dd722/src/controllers/element.controller.ts#L167)
+Defined in: [src/controllers/element.controller.ts:167](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/ee7c1c461a940a1b958617819327f544dba91c27/src/controllers/element.controller.ts#L167)
 
 Handle text element creation.
 

@@ -6,7 +6,7 @@
 
 # Interface: ApiResponse\<T\>
 
-Defined in: [src/types/Interfaces.ts:11](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/c8c533ab6fd4749c61887011f2eaf102002dd722/src/types/Interfaces.ts#L11)
+Defined in: [src/types/Interfaces.ts:11](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/ee7c1c461a940a1b958617819327f544dba91c27/src/types/Interfaces.ts#L11)
 
 ## Type Parameters
 
@@ -20,7 +20,7 @@ Defined in: [src/types/Interfaces.ts:11](https://github.com/fb-lb/CEF_devoirs_kn
 
 > `optional` **data**: `T`
 
-Defined in: [src/types/Interfaces.ts:14](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/c8c533ab6fd4749c61887011f2eaf102002dd722/src/types/Interfaces.ts#L14)
+Defined in: [src/types/Interfaces.ts:14](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/ee7c1c461a940a1b958617819327f544dba91c27/src/types/Interfaces.ts#L14)
 
 ***
 
@@ -28,7 +28,7 @@ Defined in: [src/types/Interfaces.ts:14](https://github.com/fb-lb/CEF_devoirs_kn
 
 > **message**: `string`
 
-Defined in: [src/types/Interfaces.ts:13](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/c8c533ab6fd4749c61887011f2eaf102002dd722/src/types/Interfaces.ts#L13)
+Defined in: [src/types/Interfaces.ts:13](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/ee7c1c461a940a1b958617819327f544dba91c27/src/types/Interfaces.ts#L13)
 
 ***
 
@@ -36,4 +36,4 @@ Defined in: [src/types/Interfaces.ts:13](https://github.com/fb-lb/CEF_devoirs_kn
 
 > **success**: `boolean`
 
-Defined in: [src/types/Interfaces.ts:12](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/c8c533ab6fd4749c61887011f2eaf102002dd722/src/types/Interfaces.ts#L12)
+Defined in: [src/types/Interfaces.ts:12](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/ee7c1c461a940a1b958617819327f544dba91c27/src/types/Interfaces.ts#L12)

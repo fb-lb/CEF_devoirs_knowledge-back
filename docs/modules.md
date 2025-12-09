@@ -78,4 +78,5 @@
 - [types/env](types/env/README.md)
 - [types/express](types/express/README.md)
 - [types/Interfaces](types/Interfaces/README.md)
+- [types/types](types/types/README.md)
 - [utils/AppError](utils/AppError/README.md)

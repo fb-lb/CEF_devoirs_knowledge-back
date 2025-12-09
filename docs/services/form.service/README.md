@@ -13,6 +13,7 @@
 - [validateAddLessonForm](functions/validateAddLessonForm.md)
 - [validateAddTextForm](functions/validateAddTextForm.md)
 - [validateAddThemeForm](functions/validateAddThemeForm.md)
+- [validateLoginForm](functions/validateLoginForm.md)
 - [validateRegistrationForm](functions/validateRegistrationForm.md)
 - [validateUpdateCursusForm](functions/validateUpdateCursusForm.md)
 - [validateUpdateImageForm](functions/validateUpdateImageForm.md)
