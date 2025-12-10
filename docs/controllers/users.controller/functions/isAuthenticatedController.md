@@ -6,9 +6,9 @@
 
 # Function: isAuthenticatedController()
 
-> **isAuthenticatedController**(`req`, `res`, `next`): `Promise`\<`Response`\<[`ApiResponse`](../../../types/Interfaces/interfaces/ApiResponse.md)\<`undefined`\>, `Record`\<`string`, `any`\>\>\>
+> **isAuthenticatedController**(`req`, `res`, `next`): `Promise`\<`void` \| `Response`\<[`ApiResponse`](../../../types/Interfaces/interfaces/ApiResponse.md)\<`undefined`\>, `Record`\<`string`, `any`\>\>\>
 
-Defined in: [src/controllers/users.controller.ts:99](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/c8c533ab6fd4749c61887011f2eaf102002dd722/src/controllers/users.controller.ts#L99)
+Defined in: [src/controllers/users.controller.ts:98](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/ee7c1c461a940a1b958617819327f544dba91c27/src/controllers/users.controller.ts#L98)
 
 Handle user authenticate verification.
 
@@ -32,9 +32,11 @@ Express response.
 
 ## Returns
 
-`Promise`\<`Response`\<[`ApiResponse`](../../../types/Interfaces/interfaces/ApiResponse.md)\<`undefined`\>, `Record`\<`string`, `any`\>\>\>
+`Promise`\<`void` \| `Response`\<[`ApiResponse`](../../../types/Interfaces/interfaces/ApiResponse.md)\<`undefined`\>, `Record`\<`string`, `any`\>\>\>
 
-Returns express response with 200 status code.
+Returns express response with 200 status code. For success property :
+- returns true if requestor is connected to his account.
+- returns false if requestor is not connect to an account.
 
 ## Route
 
@@ -44,7 +46,3 @@ GET /api/utilisateurs/isAuthenticated
 
 Steps:
 - Verifies that the requestor is connected as a user.
-
-## Throws
-
-If an unexpected error occurs.

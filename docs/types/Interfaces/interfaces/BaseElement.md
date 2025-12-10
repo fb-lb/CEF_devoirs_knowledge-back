@@ -6,7 +6,7 @@
 
 # Interface: BaseElement
 
-Defined in: [src/types/Interfaces.ts:86](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/c8c533ab6fd4749c61887011f2eaf102002dd722/src/types/Interfaces.ts#L86)
+Defined in: [src/types/Interfaces.ts:86](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/ee7c1c461a940a1b958617819327f544dba91c27/src/types/Interfaces.ts#L86)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/types/Interfaces.ts:86](https://github.com/fb-lb/CEF_devoirs_kn
 
 > **createdAt**: `string`
 
-Defined in: [src/types/Interfaces.ts:90](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/c8c533ab6fd4749c61887011f2eaf102002dd722/src/types/Interfaces.ts#L90)
+Defined in: [src/types/Interfaces.ts:90](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/ee7c1c461a940a1b958617819327f544dba91c27/src/types/Interfaces.ts#L90)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/types/Interfaces.ts:90](https://github.com/fb-lb/CEF_devoirs_kn
 
 > **createdBy**: `number` \| `null`
 
-Defined in: [src/types/Interfaces.ts:92](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/c8c533ab6fd4749c61887011f2eaf102002dd722/src/types/Interfaces.ts#L92)
+Defined in: [src/types/Interfaces.ts:92](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/ee7c1c461a940a1b958617819327f544dba91c27/src/types/Interfaces.ts#L92)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/types/Interfaces.ts:92](https://github.com/fb-lb/CEF_devoirs_kn
 
 > **id**: `number`
 
-Defined in: [src/types/Interfaces.ts:87](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/c8c533ab6fd4749c61887011f2eaf102002dd722/src/types/Interfaces.ts#L87)
+Defined in: [src/types/Interfaces.ts:87](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/ee7c1c461a940a1b958617819327f544dba91c27/src/types/Interfaces.ts#L87)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [src/types/Interfaces.ts:87](https://github.com/fb-lb/CEF_devoirs_kn
 
 > **lessonId**: `number`
 
-Defined in: [src/types/Interfaces.ts:88](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/c8c533ab6fd4749c61887011f2eaf102002dd722/src/types/Interfaces.ts#L88)
+Defined in: [src/types/Interfaces.ts:88](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/ee7c1c461a940a1b958617819327f544dba91c27/src/types/Interfaces.ts#L88)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [src/types/Interfaces.ts:88](https://github.com/fb-lb/CEF_devoirs_kn
 
 > **order**: `number`
 
-Defined in: [src/types/Interfaces.ts:89](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/c8c533ab6fd4749c61887011f2eaf102002dd722/src/types/Interfaces.ts#L89)
+Defined in: [src/types/Interfaces.ts:89](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/ee7c1c461a940a1b958617819327f544dba91c27/src/types/Interfaces.ts#L89)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: [src/types/Interfaces.ts:89](https://github.com/fb-lb/CEF_devoirs_kn
 
 > **updatedAt**: `string`
 
-Defined in: [src/types/Interfaces.ts:91](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/c8c533ab6fd4749c61887011f2eaf102002dd722/src/types/Interfaces.ts#L91)
+Defined in: [src/types/Interfaces.ts:91](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/ee7c1c461a940a1b958617819327f544dba91c27/src/types/Interfaces.ts#L91)
 
 ***
 
@@ -62,4 +62,4 @@ Defined in: [src/types/Interfaces.ts:91](https://github.com/fb-lb/CEF_devoirs_kn
 
 > **updatedBy**: `number` \| `null`
 
-Defined in: [src/types/Interfaces.ts:93](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/c8c533ab6fd4749c61887011f2eaf102002dd722/src/types/Interfaces.ts#L93)
+Defined in: [src/types/Interfaces.ts:93](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/ee7c1c461a940a1b958617819327f544dba91c27/src/types/Interfaces.ts#L93)

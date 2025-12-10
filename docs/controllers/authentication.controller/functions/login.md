@@ -8,7 +8,7 @@
 
 > **login**(`req`, `res`): `Promise`\<`Response`\<[`ApiResponse`](../../../types/Interfaces/interfaces/ApiResponse.md)\<`undefined`\>, `Record`\<`string`, `any`\>\>\>
 
-Defined in: [src/controllers/authentication.controller.ts:24](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/c8c533ab6fd4749c61887011f2eaf102002dd722/src/controllers/authentication.controller.ts#L24)
+Defined in: [src/controllers/authentication.controller.ts:24](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/ee7c1c461a940a1b958617819327f544dba91c27/src/controllers/authentication.controller.ts#L24)
 
 Handle user login request.
 
@@ -42,6 +42,5 @@ POST /api/authentification/connexion
 
 Steps:
 - Validate credentials via `testLoginRequest`,
-- Ensure the user's email is verified,
 - Generate a JWT token,
 - Set cookies (token + role flag).

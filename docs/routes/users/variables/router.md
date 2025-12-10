@@ -8,4 +8,4 @@
 
 > `const` **router**: `Router`
 
-Defined in: [src/routes/users.ts:5](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/c8c533ab6fd4749c61887011f2eaf102002dd722/src/routes/users.ts#L5)
+Defined in: [src/routes/users.ts:5](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/ee7c1c461a940a1b958617819327f544dba91c27/src/routes/users.ts#L5)

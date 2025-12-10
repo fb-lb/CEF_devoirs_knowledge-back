@@ -8,7 +8,7 @@
 
 > **validateUpdateLessonForm**(`newLessonName`, `newLessonPrice`): `void`
 
-Defined in: [src/services/form.service.ts:577](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/c8c533ab6fd4749c61887011f2eaf102002dd722/src/services/form.service.ts#L577)
+Defined in: [src/services/form.service.ts:662](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/ee7c1c461a940a1b958617819327f544dba91c27/src/services/form.service.ts#L662)
 
 **`Function`**
 

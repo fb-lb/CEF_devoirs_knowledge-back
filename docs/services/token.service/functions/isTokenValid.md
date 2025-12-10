@@ -8,11 +8,13 @@
 
 > **isTokenValid**(`token`): [`ApiResponse`](../../../types/Interfaces/interfaces/ApiResponse.md)\<\{ `createdAt`: `string`; `email`: `string`; `firstName`: `string`; `id`: `number`; `isVerified`: `boolean`; `lastName`: `string`; `roles`: (`"user"` \| `"admin"`)[]; `updatedAt`: `string`; `updatedBy`: `number` \| `null`; \}\>
 
-Defined in: [src/services/token.service.ts:35](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/c8c533ab6fd4749c61887011f2eaf102002dd722/src/services/token.service.ts#L35)
+Defined in: [src/services/token.service.ts:33](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/ee7c1c461a940a1b958617819327f544dba91c27/src/services/token.service.ts#L33)
 
 **`Function`**
 
 Checks if a Json Web Token is valid by verifying the signature.
+
+ isTokenValid
 
 ## Parameters
 
@@ -27,10 +29,6 @@ The Json Web Token to check.
 [`ApiResponse`](../../../types/Interfaces/interfaces/ApiResponse.md)\<\{ `createdAt`: `string`; `email`: `string`; `firstName`: `string`; `id`: `number`; `isVerified`: `boolean`; `lastName`: `string`; `roles`: (`"user"` \| `"admin"`)[]; `updatedAt`: `string`; `updatedBy`: `number` \| `null`; \}\>
 
 Success: true, message: "", data: the token payload containing the user informations.
-
-## Async
-
-isTokenValid
 
 ## Throws
 

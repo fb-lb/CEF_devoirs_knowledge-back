@@ -25,7 +25,7 @@ const __dirname = path.dirname(__filename);
 // -----------------------
 const app = express();
 
-// Authorize front-end url to make request to the back-end
+// Allow the FRONT_URL only to read responses from the backend
 app.use(
   cors({
     origin: process.env.FRONT_URL,
@@ -33,6 +33,22 @@ app.use(
     credentials: true,
   })
 );
+
+// CSRF protection
+app.use((req: Request, res: Response, next: NextFunction) => {
+  const origin = req.headers.origin;
+  const allowed = process.env.FRONT_URL;
+  const method = req.method;
+
+  if (origin !== allowed && method !== 'GET') {
+    return res.status(403).json({
+      success: false,
+      message: "Request not authorized, CSRF detected",
+    });
+  }
+
+  next();
+});
 
 app.use(logger("dev"));
 app.use(express.json());

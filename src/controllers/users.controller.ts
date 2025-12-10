@@ -1,10 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import { ApiResponse, MyCheckingPayload } from "../types/Interfaces.js";
-import { deleteUser, getAllUsers, updateUser } from '../services/user.service.js';
+import { deleteUser, getAllUsers, getUser, updateUser } from '../services/user.service.js';
 import { validateUpdateUserForm } from '../services/form.service.js';
-import { getRequestorId } from '../services/token.service.js';
+import { getRequestorId, isTokenValid } from '../services/token.service.js';
 import { AppError } from '../utils/AppError.js';
-import { privateUser } from '../middlewares/private.middleware.js';
 
 /**
  * Handle all users retrieval.
@@ -88,29 +87,51 @@ export function deleteUserController(req: Request, res: Response): Response<ApiR
  * @param {Request} req - Express request.
  * @param {Response} res - Express response.
  * 
- * @returns {Promise<Response<ApiResponse>>} Returns express response with 200 status code.
+ * @returns {Promise<Response<ApiResponse>>} Returns express response with 200 status code. For success property :
+ * - returns true if requestor is connected to his account.
+ * - returns false if requestor is not connect to an account.
  *
  * @description
  * Steps:
  * - Verifies that the requestor is connected as a user.
+ */
+export async function isAuthenticatedController(req: Request, res: Response, next: NextFunction): Promise<Response<ApiResponse> | void>{
+  const token = req.cookies.token;
+  if(!token) return res.status(200).json({ success: false, message: ''});
+
+  isTokenValid(token).data as MyCheckingPayload['user'];
+
+  return res.status(200).json({
+    success: true,
+    message: '',
+  });
+}
+
+/**
+ * Check that has verified or not his email address.
+ *
+ * @route GET /api/utilisateurs/isVerified
+ * @param {Request} req - Express request.
+ * @param {Response} res - Express response.
+ * 
+ * @returns {Promise<Response<ApiResponse>>} Returns express response with 200 status code. For data :
+ * - returns true if user is verified
+ * - returns false if user is not verified
+ *
+ * @description
+ * Steps:
+ * - Verifies that the requestor has verified his email address.
  * 
  * @throws {AppError} If an unexpected error occurs.
  */
-export async function isAuthenticatedController(req: Request, res: Response, next: NextFunction): Promise<Response<ApiResponse>>{
-  try {
-    await privateUser(req, res, next);
-    return res.status(200).json({
-      success: true,
-      message: '',
-    });
-  } catch (error: any) {
-    if (error instanceof AppError && (error.cause as any).message === "jwt must be provided") return res.status(200).json({ success: false, message: '' });
-    if (error instanceof AppError) throw error;
-    throw new AppError(
-      500,
-      "isAuthenticatedController function in user controller failed",
-      "La vérification l'authentification de l'utilisateur a échoué, veuillez réessayer ultérieurement ou contacter le support.",
-      { cause: error }
-    );
-  }
+export async function isVerifiedController(req: Request, res: Response): Promise<Response<ApiResponse<boolean>>> {
+  const requestorId = getRequestorId(req.cookies.token);
+  const user = await getUser(requestorId);
+  const isVerified = user.isVerified;
+
+  return res.status(200).json({
+    success: true,
+    message: '',
+    data: isVerified,
+  });
 }

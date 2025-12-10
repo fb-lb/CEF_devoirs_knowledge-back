@@ -11,6 +11,7 @@
 - [addUser](functions/addUser.md)
 - [deleteUser](functions/deleteUser.md)
 - [getAllUsers](functions/getAllUsers.md)
+- [getUser](functions/getUser.md)
 - [getUserIdInRequest](functions/getUserIdInRequest.md)
 - [setIsVerified](functions/setIsVerified.md)
 - [updateUser](functions/updateUser.md)

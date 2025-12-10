@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { ApiResponse, LoginBody, MyCheckingPayload } from "../types/Interfaces.js";
 import { setCookies, testLoginRequest } from "../services/authentication.service.js";
 import { generateToken } from "../services/token.service.js";
+import { validateLoginForm } from "../services/form.service.js";
 
 /**
  * Handle user login request.
@@ -17,7 +18,6 @@ import { generateToken } from "../services/token.service.js";
  * @description
  * Steps:
  * - Validate credentials via `testLoginRequest`,
- * - Ensure the user's email is verified,
  * - Generate a JWT token,
  * - Set cookies (token + role flag).
  */
@@ -27,12 +27,11 @@ export async function login(req: Request<{}, {}, LoginBody>, res: Response): Pro
     password: req.body.password
   };
 
+  validateLoginForm(body);
+
   // Check that email and password are valid
   const user: MyCheckingPayload['user']|string = await testLoginRequest(body.email, body.password);
   if (typeof(user) === 'string') return res.status(401).json({ success: false, message: user });
-
-  // Check user is verfied
-  if(!user.isVerified) return res.status(401).json({ success: false, message: "Veuillez confirmer votre adresse mail avant de vous connecter" });
 
   // Generate a token
   const token = generateToken(user);

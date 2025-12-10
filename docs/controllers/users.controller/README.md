@@ -11,4 +11,5 @@
 - [allUsers](functions/allUsers.md)
 - [deleteUserController](functions/deleteUserController.md)
 - [isAuthenticatedController](functions/isAuthenticatedController.md)
+- [isVerifiedController](functions/isVerifiedController.md)
 - [updateUserController](functions/updateUserController.md)

@@ -8,11 +8,13 @@
 
 > **getRequestorId**(`token`): `number`
 
-Defined in: [src/services/token.service.ts:69](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/c8c533ab6fd4749c61887011f2eaf102002dd722/src/services/token.service.ts#L69)
+Defined in: [src/services/token.service.ts:66](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/ee7c1c461a940a1b958617819327f544dba91c27/src/services/token.service.ts#L66)
 
 **`Function`**
 
 Get the id of the user who sent a token, by checking payload informations.
+
+ getRequestorId
 
 ## Parameters
 
@@ -27,10 +29,6 @@ The token sotring the user ID.
 `number`
 
 The user ID in the token payload.
-
-## Async
-
-getRequestorId
 
 ## Throws
 

@@ -69,21 +69,21 @@ export async function testLoginRequest(email: string, password: string): Promise
  */
 export function setCookies(res: Response, token: string, isAdmin: boolean): Response {
   res.cookie('token', token, {
-    sameSite: 'lax',
+    sameSite: 'none',
     httpOnly: true,
     secure: process.env.SECURE_COOKIE_OPTION,
     maxAge: 1000 * 60 * 60 * 24
   });
 
   res.cookie('isAuth', true, {
-    sameSite: 'lax',
+    sameSite: 'none',
     httpOnly: false,
     secure: process.env.SECURE_COOKIE_OPTION,
     maxAge: 1000 * 60 * 60 * 24
   })
 
   if (isAdmin) res.cookie('isAdmin', true, {
-    sameSite: 'lax',
+    sameSite: 'none',
     httpOnly: false,
     secure: process.env.SECURE_COOKIE_OPTION,
     maxAge: 1000 * 60 * 60 * 24

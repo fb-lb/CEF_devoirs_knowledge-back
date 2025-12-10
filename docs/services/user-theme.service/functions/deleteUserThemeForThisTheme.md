@@ -8,7 +8,7 @@
 
 > **deleteUserThemeForThisTheme**(`themeId`): `Promise`\<`void`\>
 
-Defined in: [src/services/user-theme.service.ts:443](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/c8c533ab6fd4749c61887011f2eaf102002dd722/src/services/user-theme.service.ts#L443)
+Defined in: [src/services/user-theme.service.ts:443](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/ee7c1c461a940a1b958617819327f544dba91c27/src/services/user-theme.service.ts#L443)
 
 **`Function`**
 
