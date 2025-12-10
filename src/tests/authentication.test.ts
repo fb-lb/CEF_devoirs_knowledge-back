@@ -90,23 +90,6 @@ describe('Authentication controller - login', () => {
     expect(res.status).toHaveBeenCalledWith(401);
     expect(res.json).toHaveBeenCalledWith({success: false, message: 'Cet email ne correspond à aucun compte enregistré.'});
   });
-
-  it('should return a response with 401 status because the user does not validate his email address', async () => {
-    user.isVerified = false;
-    validateLoginFormSpy.mockReturnValue(undefined);
-    testLoginRequestSpy.mockResolvedValue(user);
-    generateTokenSpy.mockReturnValue(undefined);
-    setCookiesSpy.mockReturnValue(undefined);
-
-    await login(req as Request<{}, {}, LoginBody>, res as unknown as Response);
-  
-    expect(validateLoginFormSpy).toHaveBeenCalledWith(req.body);
-    expect(testLoginRequestSpy).toHaveBeenCalledWith(req.body?.email, req.body?.password);
-    expect(generateTokenSpy).toHaveBeenCalledTimes(0);
-    expect(setCookiesSpy).toHaveBeenCalledTimes(0);
-    expect(res.status).toHaveBeenCalledWith(401);
-    expect(res.json).toHaveBeenCalledWith({success: false, message: 'Veuillez confirmer votre adresse mail avant de vous connecter'});
-  });
 });
 
 describe('Authentication service - testLoginRequest', () => {

@@ -73,6 +73,6 @@ export async function checkEmail(
 
   return res.status(200).json({
     success: true,
-    message: "Votre mail a bien été validé, vous pouvez désormais vous connecter à votre compte personnel avec vos identifiants.",
+    message: "Votre mail a bien été validé, vous pouvez désormais acheter des cours en vous connectant à votre compte personnel.",
   });
 }
