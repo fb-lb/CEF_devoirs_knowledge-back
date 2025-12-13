@@ -1,0 +1,123 @@
+"use strict";
+
+/** @type {import('sequelize-cli').Migration} */
+module.exports = {
+  async up(queryInterface, Sequelize) {
+    await queryInterface.bulkInsert("user_theme", [
+      { 
+        id: 1,
+        user_id: 1,
+        theme_id: 1,
+        isCertified: 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        createdBy: 1,
+        updatedBy: null,
+      },
+      { 
+        id: 2,
+        user_id: 1,
+        theme_id: 2,
+        isCertified: 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        createdBy: 1,
+        updatedBy: null,
+      },
+      { 
+        id: 3,
+        user_id: 1,
+        theme_id: 4,
+        isCertified: 0,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        createdBy: 1,
+        updatedBy: null,
+      },
+      { 
+        id: 4,
+        user_id: 1,
+        theme_id: 3,
+        isCertified: 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        createdBy: 1,
+        updatedBy: null,
+      },
+      { 
+        id: 5,
+        user_id: 2,
+        theme_id: 2,
+        isCertified: 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        createdBy: 1,
+        updatedBy: null,
+      },
+      { 
+        id: 6,
+        user_id: 2,
+        theme_id: 4,
+        isCertified: 0,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        createdBy: 1,
+        updatedBy: null,
+      },
+      { 
+        id: 7,
+        user_id: 3,
+        theme_id: 1,
+        isCertified: 0,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        createdBy: 1,
+        updatedBy: null,
+      },
+      { 
+        id: 8,
+        user_id: 3,
+        theme_id: 3,
+        isCertified: 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        createdBy: 1,
+        updatedBy: null,
+      },
+      { 
+        id: 9,
+        user_id: 4,
+        theme_id: 2,
+        isCertified: 0,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        createdBy: 1,
+        updatedBy: null,
+      },
+      { 
+        id: 10,
+        user_id: 4,
+        theme_id: 3,
+        isCertified: 0,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        createdBy: 1,
+        updatedBy: null,
+      },
+      { 
+        id: 11,
+        user_id: 4,
+        theme_id: 4,
+        isCertified: 0,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        createdBy: 1,
+        updatedBy: null,
+      },
+    ], {})
+  },
+
+  async down (queryInterface, Sequelize) {
+    return queryInterface.bulkDelete('user_theme', null, {});
+  }
+}
