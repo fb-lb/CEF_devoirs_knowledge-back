@@ -8,6 +8,7 @@
     "dev": "cross-env DEBUG=knowledge-back:* env-cmd -f ./env/.env tsx --inspect=9229 --watch ./src/bin/www.ts",
     "docs": "typedoc",
     "migrate": "cross-env env-cmd -f ./env/.env npx sequelize-cli db:migrate",
+    "migrate-render": "npx sequelize-cli db:migrate",
     "migrate-undo": "cross-env env-cmd -f ./env/.env npx sequelize-cli db:migrate:undo",
     "seeders": "cross-env env-cmd -f ./env/.env npx sequelize-cli db:seed:all",
     "start": "node ./dist/bin/www",
