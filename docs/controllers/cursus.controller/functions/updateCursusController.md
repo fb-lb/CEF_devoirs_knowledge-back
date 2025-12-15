@@ -8,7 +8,7 @@
 
 > **updateCursusController**(`req`, `res`): `Promise`\<`Response`\<[`ApiResponse`](../../../types/Interfaces/interfaces/ApiResponse.md)\<[`CursusData`](../../../types/Interfaces/interfaces/CursusData.md)[]\>, `Record`\<`string`, `any`\>\>\>
 
-Defined in: [src/controllers/cursus.controller.ts:221](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/ee7c1c461a940a1b958617819327f544dba91c27/src/controllers/cursus.controller.ts#L221)
+Defined in: [src/controllers/cursus.controller.ts:221](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/707c5f23a1385bd57d03f302c9d2a43ff591ca2f/src/controllers/cursus.controller.ts#L221)
 
 Handle cursus update.
 

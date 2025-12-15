@@ -7,6 +7,7 @@ declare namespace NodeJS {
         DATABASE_USERNAME: string;
         DATABASE_PASSWORD: string;
         DATABASE_HOST: string;
+        DATABASE_PORT: number;
         DATABASE_URL: string;
         EMAILJS_PUBLIC_API_KEY: string;
         EMAILJS_PRIVATE_API_KEY: string;
