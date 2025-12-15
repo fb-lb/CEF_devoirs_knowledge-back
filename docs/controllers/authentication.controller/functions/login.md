@@ -8,7 +8,7 @@
 
 > **login**(`req`, `res`): `Promise`\<`Response`\<[`ApiResponse`](../../../types/Interfaces/interfaces/ApiResponse.md)\<`undefined`\>, `Record`\<`string`, `any`\>\>\>
 
-Defined in: [src/controllers/authentication.controller.ts:24](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/ee7c1c461a940a1b958617819327f544dba91c27/src/controllers/authentication.controller.ts#L24)
+Defined in: [src/controllers/authentication.controller.ts:24](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/707c5f23a1385bd57d03f302c9d2a43ff591ca2f/src/controllers/authentication.controller.ts#L24)
 
 Handle user login request.
 

@@ -8,7 +8,7 @@
 
 > **changeOrderLessonsController**(`req`, `res`): `Promise`\<`Response`\<[`ApiResponse`](../../../types/Interfaces/interfaces/ApiResponse.md)\<`any`\>, `Record`\<`string`, `any`\>\>\>
 
-Defined in: [src/controllers/lesson.controller.ts:56](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/ee7c1c461a940a1b958617819327f544dba91c27/src/controllers/lesson.controller.ts#L56)
+Defined in: [src/controllers/lesson.controller.ts:56](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/707c5f23a1385bd57d03f302c9d2a43ff591ca2f/src/controllers/lesson.controller.ts#L56)
 
 Handle lesson order update.
 

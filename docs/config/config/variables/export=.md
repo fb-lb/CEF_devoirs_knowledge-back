@@ -8,7 +8,7 @@
 
 > **export=**: `object`
 
-Defined in: [src/config/config.cjs:1](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/ee7c1c461a940a1b958617819327f544dba91c27/src/config/config.cjs#L1)
+Defined in: [src/config/config.cjs:1](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/707c5f23a1385bd57d03f302c9d2a43ff591ca2f/src/config/config.cjs#L1)
 
 ## Type Declaration
 
@@ -18,7 +18,7 @@ Defined in: [src/config/config.cjs:1](https://github.com/fb-lb/CEF_devoirs_knowl
 
 #### development.database
 
-> **database**: `string` = `process.env.DB_NAME`
+> **database**: `string` = `process.env.DATABASE_NAME`
 
 #### development.dialect
 
@@ -26,15 +26,15 @@ Defined in: [src/config/config.cjs:1](https://github.com/fb-lb/CEF_devoirs_knowl
 
 #### development.host
 
-> **host**: `string` = `process.env.DB_HOST`
+> **host**: `string` = `process.env.DATABASE_HOST`
 
 #### development.password
 
-> **password**: `string` = `process.env.DB_PASSWORD`
+> **password**: `string` = `process.env.DATABASE_PASSWORD`
 
 #### development.username
 
-> **username**: `string` = `process.env.DB_USERNAME`
+> **username**: `string` = `process.env.DATABASE_USERNAME`
 
 ### production
 
@@ -42,23 +42,43 @@ Defined in: [src/config/config.cjs:1](https://github.com/fb-lb/CEF_devoirs_knowl
 
 #### production.database
 
-> **database**: `string` = `"database_production"`
+> **database**: `string` = `process.env.DATABASE_NAME`
 
 #### production.dialect
 
 > **dialect**: `string` = `"mysql"`
 
+#### production.dialectOptions
+
+> **dialectOptions**: `object`
+
+#### production.dialectOptions.ssl
+
+> **ssl**: `object`
+
+#### production.dialectOptions.ssl.rejectUnauthorized
+
+> **rejectUnauthorized**: `boolean` = `true`
+
+#### production.dialectOptions.ssl.require
+
+> **require**: `boolean` = `true`
+
 #### production.host
 
-> **host**: `string` = `"127.0.0.1"`
+> **host**: `string` = `process.env.DATABASE_HOST`
 
 #### production.password
 
-> **password**: `null` = `null`
+> **password**: `string` = `process.env.DATABASE_PASSWORD`
+
+#### production.port
+
+> **port**: `number` = `process.env.DATABASE_PORT`
 
 #### production.username
 
-> **username**: `string` = `"root"`
+> **username**: `string` = `process.env.DATABASE_USERNAME`
 
 ### test
 

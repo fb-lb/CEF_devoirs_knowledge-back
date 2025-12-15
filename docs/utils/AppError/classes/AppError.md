@@ -6,7 +6,7 @@
 
 # Class: AppError
 
-Defined in: [src/utils/AppError.ts:1](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/ee7c1c461a940a1b958617819327f544dba91c27/src/utils/AppError.ts#L1)
+Defined in: [src/utils/AppError.ts:1](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/707c5f23a1385bd57d03f302c9d2a43ff591ca2f/src/utils/AppError.ts#L1)
 
 ## Extends
 
@@ -18,7 +18,7 @@ Defined in: [src/utils/AppError.ts:1](https://github.com/fb-lb/CEF_devoirs_knowl
 
 > **new AppError**(`status`, `message`, `messageFront`, `options?`): `AppError`
 
-Defined in: [src/utils/AppError.ts:5](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/ee7c1c461a940a1b958617819327f544dba91c27/src/utils/AppError.ts#L5)
+Defined in: [src/utils/AppError.ts:5](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/707c5f23a1385bd57d03f302c9d2a43ff591ca2f/src/utils/AppError.ts#L5)
 
 #### Parameters
 
@@ -54,7 +54,7 @@ Defined in: [src/utils/AppError.ts:5](https://github.com/fb-lb/CEF_devoirs_knowl
 
 > **messageFront**: `string`
 
-Defined in: [src/utils/AppError.ts:3](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/ee7c1c461a940a1b958617819327f544dba91c27/src/utils/AppError.ts#L3)
+Defined in: [src/utils/AppError.ts:3](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/707c5f23a1385bd57d03f302c9d2a43ff591ca2f/src/utils/AppError.ts#L3)
 
 ***
 
@@ -62,4 +62,4 @@ Defined in: [src/utils/AppError.ts:3](https://github.com/fb-lb/CEF_devoirs_knowl
 
 > **status**: `number`
 
-Defined in: [src/utils/AppError.ts:2](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/ee7c1c461a940a1b958617819327f544dba91c27/src/utils/AppError.ts#L2)
+Defined in: [src/utils/AppError.ts:2](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/707c5f23a1385bd57d03f302c9d2a43ff591ca2f/src/utils/AppError.ts#L2)

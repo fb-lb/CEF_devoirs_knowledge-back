@@ -8,7 +8,7 @@
 
 > **getAllLessonsAvailableController**(`req`, `res`): `Promise`\<`Response`\<[`ApiResponse`](../../../types/Interfaces/interfaces/ApiResponse.md)\<[`LessonData`](../../../types/Interfaces/interfaces/LessonData.md)[]\>, `Record`\<`string`, `any`\>\>\>
 
-Defined in: [src/controllers/user-lesson.controller.ts:118](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/ee7c1c461a940a1b958617819327f544dba91c27/src/controllers/user-lesson.controller.ts#L118)
+Defined in: [src/controllers/user-lesson.controller.ts:118](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/707c5f23a1385bd57d03f302c9d2a43ff591ca2f/src/controllers/user-lesson.controller.ts#L118)
 
 Handle retrieval of all available lesson for a specific user.
 
