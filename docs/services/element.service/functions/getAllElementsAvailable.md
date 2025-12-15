@@ -8,7 +8,7 @@
 
 > **getAllElementsAvailable**(`userId`): `Promise`\<[`ElementData`](../../../types/Interfaces/type-aliases/ElementData.md)[]\>
 
-Defined in: [src/services/element.service.ts:100](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/707c5f23a1385bd57d03f302c9d2a43ff591ca2f/src/services/element.service.ts#L100)
+Defined in: [src/services/element.service.ts:100](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/services/element.service.ts#L100)
 
 **`Function`**
 

@@ -8,7 +8,7 @@
 
 > **addImage**(`lessonId`, `requestorId`, `legend`, `source`, `alternative`, `allElements`): `Promise`\<`void`\>
 
-Defined in: [src/services/element.service.ts:328](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/707c5f23a1385bd57d03f302c9d2a43ff591ca2f/src/services/element.service.ts#L328)
+Defined in: [src/services/element.service.ts:328](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/services/element.service.ts#L328)
 
 **`Function`**
 
