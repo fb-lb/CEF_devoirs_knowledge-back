@@ -13,7 +13,7 @@ import http from 'http';
  * Get port from environment and store in Express.
  */
 
-var port: string | number | boolean = normalizePort(process.env.BACK_PORT || '3000');
+var port: string | number | boolean = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 /**

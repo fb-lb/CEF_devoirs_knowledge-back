@@ -15,7 +15,7 @@ import {
  * @returns {string} The Json Web Token generated.
  */
 export function generateToken(user: MyCheckingPayload['user']): string {
-  const token = jwt.sign({user: user}, process.env.JWT_SECRET_KEY, { expiresIn: 60 * 60 * 24 });
+  const token = jwt.sign({user: user}, process.env.JWT_SECRET, { expiresIn: 60 * 60 * 24 });
   return token;
 }
 
@@ -34,7 +34,7 @@ export function isTokenValid(token: string): ApiResponse<MyCheckingPayload['user
   try {
     const payload: string | JwtPayload = jwt.verify(
       token,
-      process.env.JWT_SECRET_KEY as string
+      process.env.JWT_SECRET as string
     );
 
     return {
