@@ -6,7 +6,7 @@
 
 # Interface: AddUser
 
-Defined in: [src/types/Interfaces.ts:17](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/707c5f23a1385bd57d03f302c9d2a43ff591ca2f/src/types/Interfaces.ts#L17)
+Defined in: [src/types/Interfaces.ts:17](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/types/Interfaces.ts#L17)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/types/Interfaces.ts:17](https://github.com/fb-lb/CEF_devoirs_kn
 
 > **email**: `string`
 
-Defined in: [src/types/Interfaces.ts:20](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/707c5f23a1385bd57d03f302c9d2a43ff591ca2f/src/types/Interfaces.ts#L20)
+Defined in: [src/types/Interfaces.ts:20](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/types/Interfaces.ts#L20)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [src/types/Interfaces.ts:20](https://github.com/fb-lb/CEF_devoirs_kn
 
 > **firstName**: `string`
 
-Defined in: [src/types/Interfaces.ts:18](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/707c5f23a1385bd57d03f302c9d2a43ff591ca2f/src/types/Interfaces.ts#L18)
+Defined in: [src/types/Interfaces.ts:18](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/types/Interfaces.ts#L18)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [src/types/Interfaces.ts:18](https://github.com/fb-lb/CEF_devoirs_kn
 
 > **lastName**: `string`
 
-Defined in: [src/types/Interfaces.ts:19](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/707c5f23a1385bd57d03f302c9d2a43ff591ca2f/src/types/Interfaces.ts#L19)
+Defined in: [src/types/Interfaces.ts:19](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/types/Interfaces.ts#L19)
 
 ***
 
@@ -38,4 +38,4 @@ Defined in: [src/types/Interfaces.ts:19](https://github.com/fb-lb/CEF_devoirs_kn
 
 > **password**: `string`
 
-Defined in: [src/types/Interfaces.ts:21](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/707c5f23a1385bd57d03f302c9d2a43ff591ca2f/src/types/Interfaces.ts#L21)
+Defined in: [src/types/Interfaces.ts:21](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/types/Interfaces.ts#L21)

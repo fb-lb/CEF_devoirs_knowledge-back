@@ -38,7 +38,7 @@ export async function sendEmail(
         firstName: body.firstName,
         lastName: body.lastName,
         email: body.email,
-        link: process.env.FRONT_URL + "/inscription/check-email/" + token,
+        link: process.env.FRONT_URL + process.env.FRONT_BASE_HREF === 'null' ? '' : process.env.FRONT_BASE_HREF + "/inscription/check-email/" + token,
       }
     );
   } catch (error: any) {

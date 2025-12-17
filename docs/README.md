@@ -46,6 +46,7 @@ Inside this folder create a file '.env' put :
 ```.env
 NODE_ENV=development
 FRONT_URL=your_front_url
+FRONT_BASE_HREF=null      // null in dev, just in case in producion mode
 BACK_URL=your_back_url
 DATABASE_NAME=your_database_name
 DATABASE_USERNAME=your_user_name

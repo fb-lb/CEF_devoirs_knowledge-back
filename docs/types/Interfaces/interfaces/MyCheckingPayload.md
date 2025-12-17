@@ -6,7 +6,7 @@
 
 # Interface: MyCheckingPayload
 
-Defined in: [src/types/Interfaces.ts:24](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/707c5f23a1385bd57d03f302c9d2a43ff591ca2f/src/types/Interfaces.ts#L24)
+Defined in: [src/types/Interfaces.ts:24](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/types/Interfaces.ts#L24)
 
 ## Extends
 
@@ -22,7 +22,7 @@ Defined in: [src/types/Interfaces.ts:24](https://github.com/fb-lb/CEF_devoirs_kn
 
 > **user**: `object`
 
-Defined in: [src/types/Interfaces.ts:25](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/707c5f23a1385bd57d03f302c9d2a43ff591ca2f/src/types/Interfaces.ts#L25)
+Defined in: [src/types/Interfaces.ts:25](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/types/Interfaces.ts#L25)
 
 #### createdAt
 

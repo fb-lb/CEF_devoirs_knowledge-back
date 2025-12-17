@@ -8,7 +8,7 @@
 
 > **getUsersWhoHaveUserLessonForThisCursus**(`cursusId`): `Promise`\<[`User`](../../../models/User/classes/User.md)[]\>
 
-Defined in: [src/services/user-lesson.service.ts:371](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/707c5f23a1385bd57d03f302c9d2a43ff591ca2f/src/services/user-lesson.service.ts#L371)
+Defined in: [src/services/user-lesson.service.ts:371](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/services/user-lesson.service.ts#L371)
 
 Retrieves the users who have a user-lesson association related to a specific cursus.
 
