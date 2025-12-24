@@ -8,7 +8,7 @@
 
 > **getAllThemesAvailableController**(`req`, `res`): `Promise`\<`Response`\<[`ApiResponse`](../../../types/Interfaces/interfaces/ApiResponse.md)\<[`ThemeData`](../../../types/Interfaces/interfaces/ThemeData.md)[]\>, `Record`\<`string`, `any`\>\>\>
 
-Defined in: [src/controllers/user-theme.controller.ts:47](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/controllers/user-theme.controller.ts#L47)
+Defined in: [src/controllers/user-theme.controller.ts:57](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/148f492cd1e7888bd6f05a7623a4561610d539d1/src/controllers/user-theme.controller.ts#L57)
 
 Handle retrieval of all available themes for a specific user.
 

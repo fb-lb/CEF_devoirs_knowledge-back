@@ -8,7 +8,7 @@
 
 > **changeOrderThemes**(`themeId`, `move`, `userId`): `Promise`\<[`ApiResponse`](../../../types/Interfaces/interfaces/ApiResponse.md)\<`undefined`\>\>
 
-Defined in: [src/services/theme.service.ts:107](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/services/theme.service.ts#L107)
+Defined in: [src/services/theme.service.ts:107](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/148f492cd1e7888bd6f05a7623a4561610d539d1/src/services/theme.service.ts#L107)
 
 **`Function`**
 

@@ -6,9 +6,9 @@
 
 # Function: allUsers()
 
-> **allUsers**(`req`, `res`): `Promise`\<`Response`\<[`ApiResponse`](../../../types/Interfaces/interfaces/ApiResponse.md)\<`object`[]\>, `Record`\<`string`, `any`\>\>\>
+> **allUsers**(`req`, `res`): `Promise`\<`Response`\<[`ApiResponse`](../../../types/Interfaces/interfaces/ApiResponse.md)\<[`UserData`](../../../types/Interfaces/interfaces/UserData.md)[]\>, `Record`\<`string`, `any`\>\>\>
 
-Defined in: [src/controllers/users.controller.ts:22](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/controllers/users.controller.ts#L22)
+Defined in: [src/controllers/users.controller.ts:27](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/148f492cd1e7888bd6f05a7623a4561610d539d1/src/controllers/users.controller.ts#L27)
 
 Handle all users retrieval.
 
@@ -28,7 +28,7 @@ Express response containing all user informations.
 
 ## Returns
 
-`Promise`\<`Response`\<[`ApiResponse`](../../../types/Interfaces/interfaces/ApiResponse.md)\<`object`[]\>, `Record`\<`string`, `any`\>\>\>
+`Promise`\<`Response`\<[`ApiResponse`](../../../types/Interfaces/interfaces/ApiResponse.md)\<[`UserData`](../../../types/Interfaces/interfaces/UserData.md)[]\>, `Record`\<`string`, `any`\>\>\>
 
 Returns:
 - 200 with a list of objects containing user informations in data property.

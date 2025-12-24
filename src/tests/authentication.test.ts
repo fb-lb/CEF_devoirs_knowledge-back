@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, Mock, vi } from "vitest";
 import { Request, Response } from "express";
 import { login } from "../controllers/authentication.controller.js";
-import { LoginBody, MyCheckingPayload } from "../types/Interfaces.js";
+import { LoginBody, UserData } from "../types/Interfaces.js";
 import { MockResponse } from "../types/types.js";
 import * as formService from '../services/form.service.js';
 import * as authenticationService from '../services/authentication.service.js';
@@ -13,6 +13,7 @@ function createMockResponse(): MockResponse {
   const res = {} as MockResponse ;
   res.status = vi.fn().mockReturnValue(res);
   res.json = vi.fn().mockReturnValue(res);
+  res.setHeader = vi.fn().mockReturnValue(res);
   return res;
 }
 
@@ -21,9 +22,8 @@ describe('Authentication controller - login', () => {
   let res: MockResponse;
   let validateLoginFormSpy: Mock;
   let testLoginRequestSpy: Mock;
-  let generateTokenSpy: Mock;
-  let setCookiesSpy: Mock;
-  let user: MyCheckingPayload['user'];
+  let generateUserTokenSpy: Mock;
+  let user: UserData;
   let token: string;
   
   beforeEach(() => {
@@ -38,8 +38,7 @@ describe('Authentication controller - login', () => {
 
     validateLoginFormSpy = vi.spyOn(formService, 'validateLoginForm');
     testLoginRequestSpy = vi.spyOn(authenticationService, 'testLoginRequest');
-    generateTokenSpy = vi.spyOn(tokenService, 'generateToken');
-    setCookiesSpy = vi.spyOn(authenticationService, 'setCookies');
+    generateUserTokenSpy = vi.spyOn(tokenService, 'generateUserToken');
 
     user = {
       id: 1,
@@ -62,15 +61,14 @@ describe('Authentication controller - login', () => {
   it('should return response object with 200 status code', async () => {
     validateLoginFormSpy.mockReturnValue(undefined);
     testLoginRequestSpy.mockResolvedValue(user);
-    generateTokenSpy.mockReturnValue(token);
-    setCookiesSpy.mockReturnValue(res);
+    generateUserTokenSpy.mockReturnValue(token);
 
     await login(req as Request<{}, {}, LoginBody>, res as unknown as Response);
   
     expect(validateLoginFormSpy).toHaveBeenCalledWith(req.body);
     expect(testLoginRequestSpy).toHaveBeenCalledWith(req.body?.email, req.body?.password);
-    expect(generateTokenSpy).toHaveBeenCalledWith(user);
-    expect(setCookiesSpy).toHaveBeenCalledWith(res, token, false);
+    expect(generateUserTokenSpy).toHaveBeenCalledWith(user);
+    expect(res.setHeader).toHaveBeenCalledWith('Authorization', `Bearer ${token}`);
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith({success: true, message: ""});
   });
@@ -78,15 +76,14 @@ describe('Authentication controller - login', () => {
   it('should return a response with 401 status because testLoginRequest did not found a user', async () => {
     validateLoginFormSpy.mockReturnValue(undefined);
     testLoginRequestSpy.mockResolvedValue('Cet email ne correspond à aucun compte enregistré.');
-    generateTokenSpy.mockReturnValue(undefined);
-    setCookiesSpy.mockReturnValue(undefined);
+    generateUserTokenSpy.mockReturnValue(undefined);
 
     await login(req as Request<{}, {}, LoginBody>, res as unknown as Response);
   
     expect(validateLoginFormSpy).toHaveBeenCalledWith(req.body);
     expect(testLoginRequestSpy).toHaveBeenCalledWith(req.body?.email, req.body?.password);
-    expect(generateTokenSpy).toHaveBeenCalledTimes(0);
-    expect(setCookiesSpy).toHaveBeenCalledTimes(0);
+    expect(generateUserTokenSpy).toHaveBeenCalledTimes(0);
+    expect(res.setHeader).toHaveBeenCalledTimes(0);
     expect(res.status).toHaveBeenCalledWith(401);
     expect(res.json).toHaveBeenCalledWith({success: false, message: 'Cet email ne correspond à aucun compte enregistré.'});
   });
@@ -174,63 +171,5 @@ describe('Authentication service - testLoginRequest', () => {
       attributes: ['id', 'email', 'firstName', 'lastName', 'password', 'roles', 'isVerified', 'createdAt', 'updatedAt', 'updatedBy']
     });
     expect(compareBcrypt).toHaveBeenCalledTimes(0);
-  });
-});
-
-describe('Authentication service - setCookies', () => {
-  let res: Partial<Response>;
-  let cookieSpy: Mock;
-  let token: string;
-
-  beforeEach(() => {
-    token = 'false-token-eynrejfgeoing.ergneoinapgrnmon.erjgvbminamiupn';
-    cookieSpy = vi.fn().mockReturnValue(res);
-    res = { cookie: cookieSpy};
-  });
-
-  afterEach(() => {
-    vi.restoreAllMocks();
-  });
-
-  it('should return res object with token and isAuth cookie', () => {
-    const response = authenticationService.setCookies(res as Response, token, false);
-  
-    expect(response).toBe(res);
-    expect(cookieSpy).toHaveBeenCalledTimes(2);
-    expect(cookieSpy).toHaveBeenNthCalledWith(1, 'token', token, expect.objectContaining({
-      sameSite: 'none',
-      httpOnly: true,
-      maxAge: expect.any(Number)
-    }));
-
-    expect(cookieSpy).toHaveBeenNthCalledWith(2, 'isAuth', true, expect.objectContaining({
-      sameSite: 'none',
-      httpOnly: false,
-      maxAge: expect.any(Number)
-    }));
-  });
-
-  it('should return res object with token, isAuth and isAdmin cookie', () => {
-    const response = authenticationService.setCookies(res as Response, token, true);
-  
-    expect(response).toBe(res);
-    expect(cookieSpy).toHaveBeenCalledTimes(3);
-    expect(cookieSpy).toHaveBeenNthCalledWith(1, 'token', token, expect.objectContaining({
-      sameSite: 'none',
-      httpOnly: true,
-      maxAge: expect.any(Number)
-    }));
-
-    expect(cookieSpy).toHaveBeenNthCalledWith(2, 'isAuth', true, expect.objectContaining({
-      sameSite: 'none',
-      httpOnly: false,
-      maxAge: expect.any(Number)
-    }));
-
-    expect(cookieSpy).toHaveBeenNthCalledWith(3, 'isAdmin', true, expect.objectContaining({
-      sameSite: 'none',
-      httpOnly: false,
-      maxAge: expect.any(Number)
-    }));
   });
 });

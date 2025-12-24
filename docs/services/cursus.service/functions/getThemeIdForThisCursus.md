@@ -8,7 +8,7 @@
 
 > **getThemeIdForThisCursus**(`cursusId`): `Promise`\<`number`\>
 
-Defined in: [src/services/cursus.service.ts:301](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/services/cursus.service.ts#L301)
+Defined in: [src/services/cursus.service.ts:301](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/148f492cd1e7888bd6f05a7623a4561610d539d1/src/services/cursus.service.ts#L301)
 
 **`Function`**
 

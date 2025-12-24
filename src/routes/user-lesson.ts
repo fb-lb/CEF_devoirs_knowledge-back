@@ -8,5 +8,5 @@ router.post('/add', privateUser, addUserLessonController);
 router.get('/all', privateAdmin, getAllUserLessonController);
 router.get('/some', privateUser, getSomeUserLessonController);
 router.get('/lesson/all', privateUser, getAllLessonsAvailableController);
-router.patch('/:userLessonId', privateAdmin, updateUserLessonController);
+router.patch('/:userLessonId', privateUser, updateUserLessonController);
 router.delete('/:userLessonId', privateAdmin, deleteUserLessonController);

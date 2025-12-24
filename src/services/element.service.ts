@@ -10,6 +10,7 @@ import { Cursus } from "../models/Cursus.js";
 import { Lesson } from "../models/Lesson.js";
 import fs, { promises as fsPromises } from "fs";
 import { UserLesson } from "../models/User-Lesson.js";
+import { generateImageToken } from "./token.service.js";
 
 /**
  * Retrieves all elements from the database with relative informations if its type is 'text' or 'image'.
@@ -62,12 +63,15 @@ export async function getAllElements(): Promise<ElementData[]> {
           "Nous ne parvenons pas à retrouver les informations d'un élément image en base de données, veuillez contacter le support",
         );
 
+        const token = generateImageToken(imageElement.id);
+
         const fullElementData: ElementData = {
           ...baseElementData,
           type: element.type,
           legend: imageElement.legend,
           source: imageElement.source,
           alternative: imageElement.alternative,
+          token: token,
         }
 
         allElementsData.push(fullElementData);
@@ -150,12 +154,14 @@ export async function getAllElementsAvailable(userId: number): Promise<ElementDa
       }
 
       if (element.type === 'image') {
+        const token = generateImageToken(element.IncludeImage.id);
         const fullElementData: ElementData = {
           ...baseElementData,
           type: element.type,
           legend: element.IncludeImage.legend,
           source: element.IncludeImage.source,
           alternative: element.IncludeImage.alternative,
+          token: token,
         }
 
         allElementsDataAvailable.push(fullElementData);
@@ -171,6 +177,36 @@ export async function getAllElementsAvailable(userId: number): Promise<ElementDa
     { cause: error },
   );
   }
+}
+
+/**
+ * Retrieves the file path of an image by its file name.
+ * 
+ * @function getImageFilePath
+ * 
+ * @param {string} fileName - The name of the file to retrieve.
+ * 
+ * @returns {string} Returns the file path of the image.
+ * 
+ * @throws {AppError} If file is not found with provided file name.
+ */
+export function getImageFilePath(fileName: string): string {
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__filename);
+  const filePath = path.join(
+    __dirname,
+    "../../uploads/elements_images",
+    fileName
+  );
+
+  if (!fs.existsSync(filePath))
+    throw new AppError(
+      404,
+      "getImageFilePath function in element service failed : image not found with provided file name",
+      "Nous ne pouvons pas trouver l'image avec le nom fourni, veuillez contacter le support pour solutionner le problème au plus vite."
+    );
+  
+  return filePath; 
 }
 
 /**

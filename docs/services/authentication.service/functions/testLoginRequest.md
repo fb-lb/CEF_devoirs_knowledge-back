@@ -6,9 +6,9 @@
 
 # Function: testLoginRequest()
 
-> **testLoginRequest**(`email`, `password`): `Promise`\<`string` \| \{ `createdAt`: `string`; `email`: `string`; `firstName`: `string`; `id`: `number`; `isVerified`: `boolean`; `lastName`: `string`; `roles`: (`"user"` \| `"admin"`)[]; `updatedAt`: `string`; `updatedBy`: `number` \| `null`; \}\>
+> **testLoginRequest**(`email`, `password`): `Promise`\<`string` \| [`UserData`](../../../types/Interfaces/interfaces/UserData.md)\>
 
-Defined in: [src/services/authentication.service.ts:22](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/services/authentication.service.ts#L22)
+Defined in: [src/services/authentication.service.ts:21](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/148f492cd1e7888bd6f05a7623a4561610d539d1/src/services/authentication.service.ts#L21)
 
 **`Function`**
 
@@ -30,10 +30,10 @@ Password compared to password of retrieved user to check user authentication.
 
 ## Returns
 
-`Promise`\<`string` \| \{ `createdAt`: `string`; `email`: `string`; `firstName`: `string`; `id`: `number`; `isVerified`: `boolean`; `lastName`: `string`; `roles`: (`"user"` \| `"admin"`)[]; `updatedAt`: `string`; `updatedBy`: `number` \| `null`; \}\>
+`Promise`\<`string` \| [`UserData`](../../../types/Interfaces/interfaces/UserData.md)\>
 
 Returns Promise<string> if no user retrieved with the provided email
-and Promise<MyCheckingPayload['user']> if email and password match with a user in the database.
+and Promise<UserData> if email and password match with a user in the database.
 
 ## Async
 

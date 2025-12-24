@@ -8,7 +8,7 @@
 
 > **getSomeUserThemeController**(`req`, `res`): `Promise`\<`Response`\<[`ApiResponse`](../../../types/Interfaces/interfaces/ApiResponse.md)\<[`UserThemeData`](../../../types/Interfaces/interfaces/UserThemeData.md)[]\>, `Record`\<`string`, `any`\>\>\>
 
-Defined in: [src/controllers/user-theme.controller.ts:74](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/controllers/user-theme.controller.ts#L74)
+Defined in: [src/controllers/user-theme.controller.ts:87](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/148f492cd1e7888bd6f05a7623a4561610d539d1/src/controllers/user-theme.controller.ts#L87)
 
 Handle all user-themes retrieval for a specific user.
 

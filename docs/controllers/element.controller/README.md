@@ -14,6 +14,6 @@
 - [deleteElementController](functions/deleteElementController.md)
 - [getAllElementsAvailableController](functions/getAllElementsAvailableController.md)
 - [getAllElementsController](functions/getAllElementsController.md)
-- [getImageController](functions/getImageController.md)
+- [getPrivateImageController](functions/getPrivateImageController.md)
 - [updateImageController](functions/updateImageController.md)
 - [updateTextController](functions/updateTextController.md)

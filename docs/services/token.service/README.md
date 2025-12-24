@@ -8,6 +8,8 @@
 
 ## Functions
 
-- [generateToken](functions/generateToken.md)
+- [generateImageToken](functions/generateImageToken.md)
+- [generateUserToken](functions/generateUserToken.md)
 - [getRequestorId](functions/getRequestorId.md)
-- [isTokenValid](functions/isTokenValid.md)
+- [isImageTokenValid](functions/isImageTokenValid.md)
+- [isUserTokenValid](functions/isUserTokenValid.md)

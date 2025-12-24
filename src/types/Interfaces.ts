@@ -21,18 +21,21 @@ export interface AddUser {
   password: string;
 }
 
-export interface MyCheckingPayload extends JwtPayload {
-  user: {
-    id: number;
-    firstName: string;        
-    lastName: string;
-    email: string;
-    roles: ('user' | 'admin')[];
-    isVerified: boolean;
-    createdAt: string;
-    updatedAt: string;
-    updatedBy: number | null;
-  };
+export interface UserData {
+  id: number;
+  firstName: string;        
+  lastName: string;
+  email: string;
+  roles: ('user' | 'admin')[];
+  isVerified: boolean;
+  createdAt: string;
+  updatedAt: string;
+  updatedBy: number | null;
+}
+
+export interface TokenPayload extends JwtPayload {
+  id: number;
+  roles: ('user' | 'admin')[];
 }
 
 export interface LoginBody {
@@ -104,6 +107,7 @@ export type ElementData =
     legend: string | null;
     source: string;
     alternative: string;
+    token: string;
   });
 
 export interface UserThemeData {

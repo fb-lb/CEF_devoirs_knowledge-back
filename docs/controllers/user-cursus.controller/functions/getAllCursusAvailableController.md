@@ -8,7 +8,7 @@
 
 > **getAllCursusAvailableController**(`req`, `res`): `Promise`\<`Response`\<[`ApiResponse`](../../../types/Interfaces/interfaces/ApiResponse.md)\<[`CursusData`](../../../types/Interfaces/interfaces/CursusData.md)[]\>, `Record`\<`string`, `any`\>\>\>
 
-Defined in: [src/controllers/user-cursus.controller.ts:114](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/controllers/user-cursus.controller.ts#L114)
+Defined in: [src/controllers/user-cursus.controller.ts:136](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/148f492cd1e7888bd6f05a7623a4561610d539d1/src/controllers/user-cursus.controller.ts#L136)
 
 Handle retrieval of all available cursus for a specific user.
 

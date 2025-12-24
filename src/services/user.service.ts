@@ -2,9 +2,9 @@ import bcrypt from "bcrypt";
 import {
   RegistrationBody,
   AddUser,
-  MyCheckingPayload,
   UpdateUserBody,
   ApiResponse,
+  UserData,
 } from "../types/Interfaces.js";
 import { User } from "../models/databaseAssociations.js";
 import { AppError } from "../utils/AppError.js";
@@ -25,7 +25,7 @@ import { Request } from "express";
  *   confirmPassword: string;
  * }
  *  
- * @returns {Promise<MyCheckingPayload['user']>} Returns an object containing the user informations.
+ * @returns {Promise<UserData>} Returns an object containing the user informations.
  * {
  *   id: number;
  *   firstName: string;
@@ -41,7 +41,7 @@ import { Request } from "express";
  * @throws {AppError} If the email address is already used by a registered user.
  * @throws {AppError} If an unexpected error occurs during the creation.
  */
-export async function addUser(body: RegistrationBody): Promise<MyCheckingPayload['user']> {
+export async function addUser(body: RegistrationBody): Promise<UserData> {
   try {
     const { confirmPassword, ...userData } = body;
 
@@ -88,7 +88,7 @@ export async function addUser(body: RegistrationBody): Promise<MyCheckingPayload
  * 
  * @param {number} userId - Id of the user to retrieve.
  *  
- * @returns {Promise<MyCheckingPayload['user']>} Returns an object containing the user informations.
+ * @returns {Promise<UserData>} Returns an object containing the user informations.
  * {
  *   id: number;
  *   firstName: string;
@@ -104,7 +104,7 @@ export async function addUser(body: RegistrationBody): Promise<MyCheckingPayload
  * @throws {AppError} If the user is not found in the database with the provided id.
  * @throws {AppError} If an unexpected error occurs during the retrieval.
  */
-export async function getUser(userId: number): Promise<MyCheckingPayload['user']> {
+export async function getUser(userId: number): Promise<UserData> {
   try {
     const user = await User.findByPk(userId);
 
@@ -181,14 +181,14 @@ export async function setIsVerified(id: number): Promise<ApiResponse> {
  * @async
  * @function getAllUsers
  * 
- * @returns {Promise<MyCheckingPayload['user'][]>} Return a list of object containing informations on all users in the database.
+ * @returns {Promise<UserData[]>} Return a list of object containing informations on all users in the database.
  * 
  * @throws {AppError} If an unexpected error occurs during users retrieval.
  */
-export async function getAllUsers(): Promise<MyCheckingPayload['user'][]> {
+export async function getAllUsers(): Promise<UserData[]> {
   try {
     const allUsers = await User.findAll({attributes: ['id', 'email', 'firstName', 'lastName', 'roles', 'isVerified', 'createdAt', 'updatedAt', 'updatedBy']});
-    const allPlainUsers: MyCheckingPayload['user'][] = [];
+    const allPlainUsers: UserData[] = [];
 
     allUsers.forEach(user => {
       allPlainUsers.push({

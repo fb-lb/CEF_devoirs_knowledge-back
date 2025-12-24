@@ -4,7 +4,7 @@ import * as formService from '../services/form.service.js';
 import * as userService from '../services/user.service.js';
 import * as tokenService from '../services/token.service.js';
 import * as emailService from '../services/email.service.js';
-import { MyCheckingPayload } from '../types/Interfaces.js';
+import { UserData } from '../types/Interfaces.js';
 import { userRegistration } from '../controllers/registration.controller.js';
 import { MockResponse } from '../types/types.js';
 
@@ -20,9 +20,9 @@ describe('Registration controller - userRegistration', () => {
   let res: MockResponse;
   let validateRegistrationFormSpy: Mock;
   let addUserSpy: Mock;
-  let generateTokenSpy: Mock;
+  let generateUserTokenSpy: Mock;
   let sendEmailSpy: Mock;
-  let newUser: MyCheckingPayload["user"];
+  let newUser: UserData;
   let token: string;
   
   beforeEach(() => {
@@ -38,7 +38,7 @@ describe('Registration controller - userRegistration', () => {
 
     validateRegistrationFormSpy = vi.spyOn(formService,"validateRegistrationForm");
     addUserSpy = vi.spyOn(userService, "addUser");
-    generateTokenSpy = vi.spyOn(tokenService, "generateToken");
+    generateUserTokenSpy = vi.spyOn(tokenService, "generateUserToken");
     sendEmailSpy = vi.spyOn(emailService, "sendEmail");
     res = createMockResponse();
 
@@ -63,14 +63,14 @@ describe('Registration controller - userRegistration', () => {
   it('should return 200, with a token in the response and the created user', async () => {
     validateRegistrationFormSpy.mockReturnValue(true);
     addUserSpy.mockResolvedValue(newUser);
-    generateTokenSpy.mockReturnValue(token);
+    generateUserTokenSpy.mockReturnValue(token);
     sendEmailSpy.mockResolvedValue(true);
 
     await userRegistration(req as Request, res as unknown as Response);
 
     expect(validateRegistrationFormSpy).toHaveBeenCalledWith(req.body);
     expect(addUserSpy).toHaveBeenCalledWith(req.body);
-    expect(generateTokenSpy).toHaveBeenCalledWith(newUser);
+    expect(generateUserTokenSpy).toHaveBeenCalledWith(newUser, 24);
     expect(sendEmailSpy).toHaveBeenCalledWith(req.body, token);
     expect(res.status).toHaveBeenCalledWith(200);
     const jsonArg = res.json.mock.calls[0]![0];

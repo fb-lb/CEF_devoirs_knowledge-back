@@ -13,6 +13,13 @@ import { router as userThemeRoute } from './user-theme.js';
 
 export const router: Router = Router();
 
+router.get('/', (req, res) => {
+  return res.status(200).json({
+    success: true,
+    message: "Le back-end de l'application Knowledge est prêt à recevoir des requêtes.",
+  });
+});
+
 router.use('/api/inscription', regisrationRoute);
 router.use('/api/authentification', authenticationRoute);
 router.use('/api/utilisateurs', usersRoute);

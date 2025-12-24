@@ -9,4 +9,3 @@
 ## Functions
 
 - [login](functions/login.md)
-- [logout](functions/logout.md)

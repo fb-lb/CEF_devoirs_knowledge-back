@@ -8,7 +8,7 @@
 
 > **updateImage**(`elementId`, `newAlternative`, `newLegend`, `newSource`, `requestorId`): `Promise`\<`void`\>
 
-Defined in: [src/services/element.service.ts:637](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/services/element.service.ts#L637)
+Defined in: [src/services/element.service.ts:673](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/148f492cd1e7888bd6f05a7623a4561610d539d1/src/services/element.service.ts#L673)
 
 **`Function`**
 

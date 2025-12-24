@@ -1,8 +1,7 @@
 import { User } from "../models/databaseAssociations.js";
 import { AppError } from "../utils/AppError.js";
-import { Response } from "express";
 import bcrypt from 'bcrypt';
-import { MyCheckingPayload } from "../types/Interfaces.js";
+import { UserData } from "../types/Interfaces.js";
 
 /**
  * Login test. Retrieves a user whith the provided email and check if password provided and password of the retrieved user are the same.
@@ -13,13 +12,13 @@ import { MyCheckingPayload } from "../types/Interfaces.js";
  * @param {string} email - Email used to retrieve user trying to login.
  * @param {string} password - Password compared to password of retrieved user to check user authentication.
  *  
- * @returns {Promise<MyCheckingPayload['user']|string>}
+ * @returns {Promise<UserData|string>}
  * Returns Promise<string> if no user retrieved with the provided email
- * and Promise<MyCheckingPayload['user']> if email and password match with a user in the database.
+ * and Promise<UserData> if email and password match with a user in the database.
  * 
  * @throws {AppError} If an unexpected error occurs during the login test.
  */
-export async function testLoginRequest(email: string, password: string): Promise<MyCheckingPayload['user']|string> {
+export async function testLoginRequest(email: string, password: string): Promise<UserData | string> {
   try {
     const user = await User.findOne(
       { where: { email: email }, 
@@ -53,43 +52,6 @@ export async function testLoginRequest(email: string, password: string): Promise
       { cause : error }
     )
   }
-}
-
-/**
- * Set new cookies in the response. An admin cookie is set if isAdmin is true.
- * 
- * @async
- * @function setCookies
- * 
- * @param {Response} res - Http Response where cookies are setting.
- * @param {string} token - JsonWebToken stored in the cookie. 
- * @param {boolean} isAdmin - True if the user is an admin, otherwise false
- *  
- * @returns {Response} The Http Response with stored cookies. 
- */
-export function setCookies(res: Response, token: string, isAdmin: boolean): Response {
-  res.cookie('token', token, {
-    sameSite: 'none',
-    httpOnly: true,
-    secure: process.env.SECURE_COOKIE_OPTION,
-    maxAge: 1000 * 60 * 60 * 24
-  });
-
-  res.cookie('isAuth', true, {
-    sameSite: 'none',
-    httpOnly: false,
-    secure: process.env.SECURE_COOKIE_OPTION,
-    maxAge: 1000 * 60 * 60 * 24
-  })
-
-  if (isAdmin) res.cookie('isAdmin', true, {
-    sameSite: 'none',
-    httpOnly: false,
-    secure: process.env.SECURE_COOKIE_OPTION,
-    maxAge: 1000 * 60 * 60 * 24
-  })
-
-  return res;
 }
 
 /**
