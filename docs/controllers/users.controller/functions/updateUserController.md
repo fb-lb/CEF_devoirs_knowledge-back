@@ -8,7 +8,7 @@
 
 > **updateUserController**(`req`, `res`): `Response`\<[`ApiResponse`](../../../types/Interfaces/interfaces/ApiResponse.md)\<`undefined`\>\>
 
-Defined in: [src/controllers/users.controller.ts:47](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/controllers/users.controller.ts#L47)
+Defined in: [src/controllers/users.controller.ts:55](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/148f492cd1e7888bd6f05a7623a4561610d539d1/src/controllers/users.controller.ts#L55)
 
 Handle user update.
 

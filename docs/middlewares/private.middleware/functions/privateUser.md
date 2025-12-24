@@ -8,7 +8,7 @@
 
 > **privateUser**(`req`, `res`, `next`): `Promise`\<`void`\>
 
-Defined in: [src/middlewares/private.middleware.ts:21](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/middlewares/private.middleware.ts#L21)
+Defined in: [src/middlewares/private.middleware.ts:22](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/148f492cd1e7888bd6f05a7623a4561610d539d1/src/middlewares/private.middleware.ts#L22)
 
 **`Function`**
 

@@ -4,7 +4,7 @@ import { addUserCursusController, deleteUserCursusController, getAllCursusAvaila
 
 export const router = Router();
 
-router.post('/add', privateAdmin, addUserCursusController);
+router.post('/add', privateUser, addUserCursusController);
 router.get('/all', privateAdmin, getAllUserCursusController);
 router.get('/some', privateUser, getSomeUserCursusController);
 router.get('/cursus/all', privateUser, getAllCursusAvailableController);

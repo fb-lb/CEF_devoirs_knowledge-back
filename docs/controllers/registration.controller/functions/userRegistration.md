@@ -6,9 +6,9 @@
 
 # Function: userRegistration()
 
-> **userRegistration**(`req`, `res`): `Promise`\<`Response`\<[`ApiResponse`](../../../types/Interfaces/interfaces/ApiResponse.md)\<\{ `createdAt`: `string`; `email`: `string`; `firstName`: `string`; `id`: `number`; `isVerified`: `boolean`; `lastName`: `string`; `roles`: (`"user"` \| `"admin"`)[]; `updatedAt`: `string`; `updatedBy`: `number` \| `null`; \}\>, `Record`\<`string`, `any`\>\>\>
+> **userRegistration**(`req`, `res`): `Promise`\<`Response`\<[`ApiResponse`](../../../types/Interfaces/interfaces/ApiResponse.md)\<[`UserData`](../../../types/Interfaces/interfaces/UserData.md)\>, `Record`\<`string`, `any`\>\>\>
 
-Defined in: [src/controllers/registration.controller.ts:25](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/controllers/registration.controller.ts#L25)
+Defined in: [src/controllers/registration.controller.ts:25](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/148f492cd1e7888bd6f05a7623a4561610d539d1/src/controllers/registration.controller.ts#L25)
 
 Handle user creation.
 
@@ -22,13 +22,13 @@ Express request containing the user informations in the body.
 
 ### res
 
-`Response`\<[`ApiResponse`](../../../types/Interfaces/interfaces/ApiResponse.md)\<\{ `createdAt`: `string`; `email`: `string`; `firstName`: `string`; `id`: `number`; `isVerified`: `boolean`; `lastName`: `string`; `roles`: (`"user"` \| `"admin"`)[]; `updatedAt`: `string`; `updatedBy`: `number` \| `null`; \}\>\>
+`Response`\<[`ApiResponse`](../../../types/Interfaces/interfaces/ApiResponse.md)\<[`UserData`](../../../types/Interfaces/interfaces/UserData.md)\>\>
 
 Express response containing the informations of the new user.
 
 ## Returns
 
-`Promise`\<`Response`\<[`ApiResponse`](../../../types/Interfaces/interfaces/ApiResponse.md)\<\{ `createdAt`: `string`; `email`: `string`; `firstName`: `string`; `id`: `number`; `isVerified`: `boolean`; `lastName`: `string`; `roles`: (`"user"` \| `"admin"`)[]; `updatedAt`: `string`; `updatedBy`: `number` \| `null`; \}\>, `Record`\<`string`, `any`\>\>\>
+`Promise`\<`Response`\<[`ApiResponse`](../../../types/Interfaces/interfaces/ApiResponse.md)\<[`UserData`](../../../types/Interfaces/interfaces/UserData.md)\>, `Record`\<`string`, `any`\>\>\>
 
 Returns:
 - 200 with an object containing the new user informations in data property.

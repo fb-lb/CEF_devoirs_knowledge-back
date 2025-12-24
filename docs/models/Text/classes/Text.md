@@ -6,7 +6,7 @@
 
 # Class: Text
 
-Defined in: [src/models/Text.ts:22](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/models/Text.ts#L22)
+Defined in: [src/models/Text.ts:22](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/148f492cd1e7888bd6f05a7623a4561610d539d1/src/models/Text.ts#L22)
 
 ## Extends
 
@@ -52,7 +52,7 @@ an object of key value pairs
 
 > **content**: `string`
 
-Defined in: [src/models/Text.ts:26](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/models/Text.ts#L26)
+Defined in: [src/models/Text.ts:26](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/148f492cd1e7888bd6f05a7623a4561610d539d1/src/models/Text.ts#L26)
 
 #### Implementation of
 
@@ -64,7 +64,7 @@ Defined in: [src/models/Text.ts:26](https://github.com/fb-lb/CEF_devoirs_knowled
 
 > `readonly` **createdAt**: `Date`
 
-Defined in: [src/models/Text.ts:28](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/models/Text.ts#L28)
+Defined in: [src/models/Text.ts:28](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/148f492cd1e7888bd6f05a7623a4561610d539d1/src/models/Text.ts#L28)
 
 #### Implementation of
 
@@ -76,7 +76,7 @@ Defined in: [src/models/Text.ts:28](https://github.com/fb-lb/CEF_devoirs_knowled
 
 > **createdBy**: `number` \| `null`
 
-Defined in: [src/models/Text.ts:30](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/models/Text.ts#L30)
+Defined in: [src/models/Text.ts:30](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/148f492cd1e7888bd6f05a7623a4561610d539d1/src/models/Text.ts#L30)
 
 #### Implementation of
 
@@ -88,7 +88,7 @@ Defined in: [src/models/Text.ts:30](https://github.com/fb-lb/CEF_devoirs_knowled
 
 > **element\_id**: `number`
 
-Defined in: [src/models/Text.ts:24](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/models/Text.ts#L24)
+Defined in: [src/models/Text.ts:24](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/148f492cd1e7888bd6f05a7623a4561610d539d1/src/models/Text.ts#L24)
 
 #### Implementation of
 
@@ -100,7 +100,7 @@ Defined in: [src/models/Text.ts:24](https://github.com/fb-lb/CEF_devoirs_knowled
 
 > **id**: `number`
 
-Defined in: [src/models/Text.ts:23](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/models/Text.ts#L23)
+Defined in: [src/models/Text.ts:23](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/148f492cd1e7888bd6f05a7623a4561610d539d1/src/models/Text.ts#L23)
 
 #### Implementation of
 
@@ -112,7 +112,7 @@ Defined in: [src/models/Text.ts:23](https://github.com/fb-lb/CEF_devoirs_knowled
 
 > **IncludedInElement**: [`Element`](../../Element/classes/Element.md)
 
-Defined in: [src/models/Text.ts:33](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/models/Text.ts#L33)
+Defined in: [src/models/Text.ts:33](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/148f492cd1e7888bd6f05a7623a4561610d539d1/src/models/Text.ts#L33)
 
 #### Implementation of
 
@@ -124,7 +124,7 @@ Defined in: [src/models/Text.ts:33](https://github.com/fb-lb/CEF_devoirs_knowled
 
 > **type**: `"title1"` \| `"title2"` \| `"title3"` \| `"paragraph"`
 
-Defined in: [src/models/Text.ts:25](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/models/Text.ts#L25)
+Defined in: [src/models/Text.ts:25](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/148f492cd1e7888bd6f05a7623a4561610d539d1/src/models/Text.ts#L25)
 
 #### Implementation of
 
@@ -136,7 +136,7 @@ Defined in: [src/models/Text.ts:25](https://github.com/fb-lb/CEF_devoirs_knowled
 
 > `readonly` **updatedAt**: `Date`
 
-Defined in: [src/models/Text.ts:29](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/models/Text.ts#L29)
+Defined in: [src/models/Text.ts:29](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/148f492cd1e7888bd6f05a7623a4561610d539d1/src/models/Text.ts#L29)
 
 #### Implementation of
 
@@ -148,7 +148,7 @@ Defined in: [src/models/Text.ts:29](https://github.com/fb-lb/CEF_devoirs_knowled
 
 > **updatedBy**: `number` \| `null`
 
-Defined in: [src/models/Text.ts:31](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/models/Text.ts#L31)
+Defined in: [src/models/Text.ts:31](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/148f492cd1e7888bd6f05a7623a4561610d539d1/src/models/Text.ts#L31)
 
 #### Implementation of
 
@@ -160,7 +160,7 @@ Defined in: [src/models/Text.ts:31](https://github.com/fb-lb/CEF_devoirs_knowled
 
 > **UpdatedByUser**: [`User`](../../User/classes/User.md)
 
-Defined in: [src/models/Text.ts:34](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/models/Text.ts#L34)
+Defined in: [src/models/Text.ts:34](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/148f492cd1e7888bd6f05a7623a4561610d539d1/src/models/Text.ts#L34)
 
 #### Implementation of
 

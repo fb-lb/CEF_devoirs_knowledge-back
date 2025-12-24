@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import { ApiResponse, MyCheckingPayload, RegistrationBody } from "../types/Interfaces.js";
+import { ApiResponse, TokenPayload, RegistrationBody, UserData } from "../types/Interfaces.js";
 import { addUser, setIsVerified } from "../services/user.service.js";
 import { validateRegistrationForm } from "../services/form.service.js";
 import { sendEmail } from "../services/email.service.js";
-import { isTokenValid, generateToken } from "../services/token.service.js";
+import { isUserTokenValid, generateUserToken } from "../services/token.service.js";
 
 /**
  * Handle user creation.
@@ -12,7 +12,7 @@ import { isTokenValid, generateToken } from "../services/token.service.js";
  * @param {Request} req - Express request containing the user informations in the body.
  * @param {Response} res - Express response containing the informations of the new user.
  * 
- * @returns {Promise<Response<ApiResponse<MyCheckingPayload['user']>>>} Returns:
+ * @returns {Promise<Response<ApiResponse<UserData>>>} Returns:
  * - 200 with an object containing the new user informations in data property.
  *
  * @description
@@ -24,8 +24,8 @@ import { isTokenValid, generateToken } from "../services/token.service.js";
  */
 export async function userRegistration(
   req: Request<{}, {}, RegistrationBody>,
-  res: Response<ApiResponse<MyCheckingPayload['user']>>
-): Promise<Response<ApiResponse<MyCheckingPayload['user']>>> {
+  res: Response<ApiResponse<UserData>>
+): Promise<Response<ApiResponse<UserData>>> {
   const body: RegistrationBody = {
     firstName: req.body.firstName,
     lastName: req.body.lastName,
@@ -35,8 +35,8 @@ export async function userRegistration(
   };
 
   validateRegistrationForm(body);
-  const user: MyCheckingPayload['user'] = await addUser(body);
-  const token: string = generateToken(user);
+  const user: UserData = await addUser(body);
+  const token: string = generateUserToken(user, 24);
   await sendEmail(body, token);
 
   return res.status(200).json({
@@ -66,10 +66,10 @@ export async function checkEmail(
 ): Promise<Response<ApiResponse>> {
   // Check the token is valid
   const token: string = req.body.token;
-  const user = isTokenValid(token).data as MyCheckingPayload['user'];
+  const userPayload = isUserTokenValid(token).data as TokenPayload;
 
   // Set isVerified to true for this user
-  await setIsVerified(user.id);
+  await setIsVerified(userPayload.id);
 
   return res.status(200).json({
     success: true,

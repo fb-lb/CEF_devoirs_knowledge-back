@@ -6,9 +6,9 @@
 
 # Function: privateAdmin()
 
-> **privateAdmin**(`req`, `res`, `next`): `Promise`\<`void` \| `Response`\<[`ApiResponse`](../../../types/Interfaces/interfaces/ApiResponse.md)\<`undefined`\>, `Record`\<`string`, `any`\>\>\>
+> **privateAdmin**(`req`, `res`, `next`): `Promise`\<`void`\>
 
-Defined in: [src/middlewares/private.middleware.ts:55](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/middlewares/private.middleware.ts#L55)
+Defined in: [src/middlewares/private.middleware.ts:79](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/148f492cd1e7888bd6f05a7623a4561610d539d1/src/middlewares/private.middleware.ts#L79)
 
 **`Function`**
 
@@ -36,7 +36,7 @@ Used to go on the next middleware.
 
 ## Returns
 
-`Promise`\<`void` \| `Response`\<[`ApiResponse`](../../../types/Interfaces/interfaces/ApiResponse.md)\<`undefined`\>, `Record`\<`string`, `any`\>\>\>
+`Promise`\<`void`\>
 
 Returns `Promise<void>` if requestor has `admin` in his roles property.
 Returns `Promise<Promise<Response<ApiResponse>>>` user has not `admin` in his roles property.

@@ -8,7 +8,7 @@
 
 > **updateUserCursusController**(`req`, `res`): `Promise`\<`Response`\<[`ApiResponse`](../../../types/Interfaces/interfaces/ApiResponse.md)\<`undefined`\>, `Record`\<`string`, `any`\>\>\>
 
-Defined in: [src/controllers/user-cursus.controller.ts:141](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/controllers/user-cursus.controller.ts#L141)
+Defined in: [src/controllers/user-cursus.controller.ts:166](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/148f492cd1e7888bd6f05a7623a4561610d539d1/src/controllers/user-cursus.controller.ts#L166)
 
 Handle user-cursus update.
 

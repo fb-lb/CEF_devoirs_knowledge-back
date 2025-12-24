@@ -56,7 +56,6 @@ EMAILJS_SERVICE_ID=your_email_js_service_id
 EMAILJS_TEMPLATE_ID=your_email_js_template_id
 JWT_SECRET=your_jwt_secret_key
 PORT=your_back_end_port
-SECURE_COOKIE_OPTION=false_if_http_or_true_if_https
 STRIPE_PUBLIC_KEY=pk_test_your_stripe_public_key
 STRIPE_SECRET_KEY=sk_test_your_stripe_secret_key
 ```

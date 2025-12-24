@@ -14,11 +14,12 @@
 - [CursusData](interfaces/CursusData.md)
 - [LessonData](interfaces/LessonData.md)
 - [LoginBody](interfaces/LoginBody.md)
-- [MyCheckingPayload](interfaces/MyCheckingPayload.md)
 - [RegistrationBody](interfaces/RegistrationBody.md)
 - [ThemeData](interfaces/ThemeData.md)
+- [TokenPayload](interfaces/TokenPayload.md)
 - [UpdateUserBody](interfaces/UpdateUserBody.md)
 - [UserCursusData](interfaces/UserCursusData.md)
+- [UserData](interfaces/UserData.md)
 - [UserLessonData](interfaces/UserLessonData.md)
 - [UserThemeData](interfaces/UserThemeData.md)
 

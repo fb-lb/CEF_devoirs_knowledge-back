@@ -8,7 +8,7 @@
 
 > **addLessonController**(`req`, `res`): `Promise`\<`Response`\<[`ApiResponse`](../../../types/Interfaces/interfaces/ApiResponse.md)\<[`LessonData`](../../../types/Interfaces/interfaces/LessonData.md)[]\>, `Record`\<`string`, `any`\>\>\>
 
-Defined in: [src/controllers/lesson.controller.ts:99](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/controllers/lesson.controller.ts#L99)
+Defined in: [src/controllers/lesson.controller.ts:124](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/148f492cd1e7888bd6f05a7623a4561610d539d1/src/controllers/lesson.controller.ts#L124)
 
 Handle lesson creation.
 

@@ -9,5 +9,4 @@
 ## Functions
 
 - [checkAuthorization](functions/checkAuthorization.md)
-- [setCookies](functions/setCookies.md)
 - [testLoginRequest](functions/testLoginRequest.md)

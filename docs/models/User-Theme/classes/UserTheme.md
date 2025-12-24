@@ -6,7 +6,7 @@
 
 # Class: UserTheme
 
-Defined in: [src/models/User-Theme.ts:35](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/models/User-Theme.ts#L35)
+Defined in: [src/models/User-Theme.ts:35](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/148f492cd1e7888bd6f05a7623a4561610d539d1/src/models/User-Theme.ts#L35)
 
 ## Extends
 
@@ -52,7 +52,7 @@ an object of key value pairs
 
 > `readonly` **createdAt**: `Date`
 
-Defined in: [src/models/User-Theme.ts:44](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/models/User-Theme.ts#L44)
+Defined in: [src/models/User-Theme.ts:44](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/148f492cd1e7888bd6f05a7623a4561610d539d1/src/models/User-Theme.ts#L44)
 
 #### Implementation of
 
@@ -64,7 +64,7 @@ Defined in: [src/models/User-Theme.ts:44](https://github.com/fb-lb/CEF_devoirs_k
 
 > **createdBy**: `number` \| `null`
 
-Defined in: [src/models/User-Theme.ts:46](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/models/User-Theme.ts#L46)
+Defined in: [src/models/User-Theme.ts:46](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/148f492cd1e7888bd6f05a7623a4561610d539d1/src/models/User-Theme.ts#L46)
 
 #### Implementation of
 
@@ -76,7 +76,7 @@ Defined in: [src/models/User-Theme.ts:46](https://github.com/fb-lb/CEF_devoirs_k
 
 > **CreatedByUser**: [`User`](../../User/classes/User.md)
 
-Defined in: [src/models/User-Theme.ts:50](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/models/User-Theme.ts#L50)
+Defined in: [src/models/User-Theme.ts:50](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/148f492cd1e7888bd6f05a7623a4561610d539d1/src/models/User-Theme.ts#L50)
 
 #### Implementation of
 
@@ -88,7 +88,7 @@ Defined in: [src/models/User-Theme.ts:50](https://github.com/fb-lb/CEF_devoirs_k
 
 > **id**: `number`
 
-Defined in: [src/models/User-Theme.ts:39](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/models/User-Theme.ts#L39)
+Defined in: [src/models/User-Theme.ts:39](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/148f492cd1e7888bd6f05a7623a4561610d539d1/src/models/User-Theme.ts#L39)
 
 #### Implementation of
 
@@ -100,7 +100,7 @@ Defined in: [src/models/User-Theme.ts:39](https://github.com/fb-lb/CEF_devoirs_k
 
 > **isCertified**: `boolean`
 
-Defined in: [src/models/User-Theme.ts:42](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/models/User-Theme.ts#L42)
+Defined in: [src/models/User-Theme.ts:42](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/148f492cd1e7888bd6f05a7623a4561610d539d1/src/models/User-Theme.ts#L42)
 
 #### Implementation of
 
@@ -112,7 +112,7 @@ Defined in: [src/models/User-Theme.ts:42](https://github.com/fb-lb/CEF_devoirs_k
 
 > **PurchasedByUser**: [`User`](../../User/classes/User.md)
 
-Defined in: [src/models/User-Theme.ts:49](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/models/User-Theme.ts#L49)
+Defined in: [src/models/User-Theme.ts:49](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/148f492cd1e7888bd6f05a7623a4561610d539d1/src/models/User-Theme.ts#L49)
 
 #### Implementation of
 
@@ -124,7 +124,7 @@ Defined in: [src/models/User-Theme.ts:49](https://github.com/fb-lb/CEF_devoirs_k
 
 > **RelatedToTheme**: [`Theme`](../../Theme/classes/Theme.md)
 
-Defined in: [src/models/User-Theme.ts:52](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/models/User-Theme.ts#L52)
+Defined in: [src/models/User-Theme.ts:52](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/148f492cd1e7888bd6f05a7623a4561610d539d1/src/models/User-Theme.ts#L52)
 
 #### Implementation of
 
@@ -136,7 +136,7 @@ Defined in: [src/models/User-Theme.ts:52](https://github.com/fb-lb/CEF_devoirs_k
 
 > **theme\_id**: `number`
 
-Defined in: [src/models/User-Theme.ts:41](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/models/User-Theme.ts#L41)
+Defined in: [src/models/User-Theme.ts:41](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/148f492cd1e7888bd6f05a7623a4561610d539d1/src/models/User-Theme.ts#L41)
 
 #### Implementation of
 
@@ -148,7 +148,7 @@ Defined in: [src/models/User-Theme.ts:41](https://github.com/fb-lb/CEF_devoirs_k
 
 > `readonly` **updatedAt**: `Date`
 
-Defined in: [src/models/User-Theme.ts:45](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/models/User-Theme.ts#L45)
+Defined in: [src/models/User-Theme.ts:45](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/148f492cd1e7888bd6f05a7623a4561610d539d1/src/models/User-Theme.ts#L45)
 
 #### Implementation of
 
@@ -160,7 +160,7 @@ Defined in: [src/models/User-Theme.ts:45](https://github.com/fb-lb/CEF_devoirs_k
 
 > **updatedBy**: `number` \| `null`
 
-Defined in: [src/models/User-Theme.ts:47](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/models/User-Theme.ts#L47)
+Defined in: [src/models/User-Theme.ts:47](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/148f492cd1e7888bd6f05a7623a4561610d539d1/src/models/User-Theme.ts#L47)
 
 #### Implementation of
 
@@ -172,7 +172,7 @@ Defined in: [src/models/User-Theme.ts:47](https://github.com/fb-lb/CEF_devoirs_k
 
 > **UpdatedByUser**: [`User`](../../User/classes/User.md)
 
-Defined in: [src/models/User-Theme.ts:51](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/models/User-Theme.ts#L51)
+Defined in: [src/models/User-Theme.ts:51](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/148f492cd1e7888bd6f05a7623a4561610d539d1/src/models/User-Theme.ts#L51)
 
 #### Implementation of
 
@@ -184,7 +184,7 @@ Defined in: [src/models/User-Theme.ts:51](https://github.com/fb-lb/CEF_devoirs_k
 
 > **user\_id**: `number`
 
-Defined in: [src/models/User-Theme.ts:40](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/models/User-Theme.ts#L40)
+Defined in: [src/models/User-Theme.ts:40](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/148f492cd1e7888bd6f05a7623a4561610d539d1/src/models/User-Theme.ts#L40)
 
 #### Implementation of
 

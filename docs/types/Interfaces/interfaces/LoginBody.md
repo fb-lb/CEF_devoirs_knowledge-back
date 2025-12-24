@@ -6,7 +6,7 @@
 
 # Interface: LoginBody
 
-Defined in: [src/types/Interfaces.ts:38](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/types/Interfaces.ts#L38)
+Defined in: [src/types/Interfaces.ts:41](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/148f492cd1e7888bd6f05a7623a4561610d539d1/src/types/Interfaces.ts#L41)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/types/Interfaces.ts:38](https://github.com/fb-lb/CEF_devoirs_kn
 
 > **email**: `string`
 
-Defined in: [src/types/Interfaces.ts:39](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/types/Interfaces.ts#L39)
+Defined in: [src/types/Interfaces.ts:42](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/148f492cd1e7888bd6f05a7623a4561610d539d1/src/types/Interfaces.ts#L42)
 
 ***
 
@@ -22,4 +22,4 @@ Defined in: [src/types/Interfaces.ts:39](https://github.com/fb-lb/CEF_devoirs_kn
 
 > **password**: `string`
 
-Defined in: [src/types/Interfaces.ts:40](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/92bce3fddfb9a7cbf0a922fbf3e1fb365cc1842a/src/types/Interfaces.ts#L40)
+Defined in: [src/types/Interfaces.ts:43](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/148f492cd1e7888bd6f05a7623a4561610d539d1/src/types/Interfaces.ts#L43)

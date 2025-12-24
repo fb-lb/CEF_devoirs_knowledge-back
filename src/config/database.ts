@@ -19,7 +19,6 @@ export const sequelize = new Sequelize(
       },
     } 
     : {},
-    // logging: console.log,
   }
 );
 
