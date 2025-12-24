@@ -54,7 +54,8 @@ EMAILJS_PUBLIC_API_KEY=your_email_js_public_key
 EMAILJS_PRIVATE_API_KEY=your_email_js_private_key
 EMAILJS_SERVICE_ID=your_email_js_service_id
 EMAILJS_TEMPLATE_ID=your_email_js_template_id
-JWT_SECRET=your_jwt_secret_key
+JWT_USER_SECRET=your_jwt_secret_key_for_user_token
+JWT_IMAGE_SECRET=your_jwt_secret_key_for_image_token
 PORT=your_back_end_port
 STRIPE_PUBLIC_KEY=pk_test_your_stripe_public_key
 STRIPE_SECRET_KEY=sk_test_your_stripe_secret_key
@@ -102,7 +103,7 @@ npm run test
 
 ### Users password to login
 
-> Here is the different user name to connect, John and Jane are admin and the other are users :  
+> Here is the different user name to connect, John and Jane are admin and the other are only users :  
 john.doe@test.com  
 jane.doe@test.com  
 jack.doe@test.com  
