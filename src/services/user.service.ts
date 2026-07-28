@@ -236,14 +236,14 @@ export async function getAllUsers(): Promise<UserData[]> {
  * 
  * @throws {AppError} If an unexpected error occurs during the update.
  */
-export async function updateUser(requestorId: number, userData: UpdateUserBody): Promise<void> {
+export async function updateUser(requestorId: number, userData: UpdateUserBody, userId: number): Promise<void> {
   try {
-    const user = await User.findByPk(userData.id);
+    const user = await User.findByPk(userId);
     if(!user) throw new AppError(404, "User not found with provided Id in updateUser function in user services", "L'identifiant fourni ne permet pas de retrouver l'utilisateur à modifier.");
     user.email = userData.email;
     user.firstName = userData.firstName;
     user.lastName = userData.lastName;
-    user.roles = userData.roles
+    user.roles = userData.roles;
     user.isVerified = userData.isVerified;
     user.updatedBy = requestorId;
     user.save();

@@ -241,24 +241,11 @@ export function validateUpdateUserForm(body: UpdateUserBody): void {
 
   // Test required validator
   if (
-    !body.id ||
     !body.firstName ||
     !body.lastName ||
     !body.email
   ) {
     error.messageFront = 'Les champs "Identifiant", "Nom", "Prénom" et "Email" sont obligatoires.';
-    throw error;
-  }
-
-  // Test id value
-  if (body.id < 1) {
-    error.messageFront = `La valeur du champ "Identifiant" doit être d'au moins 1.`;
-    throw error;
-  }
-
-  // Test id length
-  if (body.id.toLocaleString.length > 20) {
-    error.messageFront = `Le champ "Identifiant" doit contenir au maximum 20 caractères.`;
     throw error;
   }
 
