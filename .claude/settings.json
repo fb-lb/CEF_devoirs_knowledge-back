@@ -1,0 +1,46 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm test)",
+      "Bash(npm run lint)",
+      "Bash(npm run build)"
+    ],
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(git push *)",
+      "Read(.env)",
+      "Read(secrets/**)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "...", 
+        "hooks": [
+          {
+            "type": "command",
+            "command": "..."
+          }
+        ]
+      }
+    ]
+  },
+  "env": {
+    "NODE_ENV": "development"  
+  },
+  "mcpServers": { 
+    "github": {
+      "command": "..."
+    },
+    "postgres": {
+      "command": "..."
+    } 
+  },
+  "model": "sonnet", 
+  "effortLevel": "medium",
+  "alwaysThinkingEnabled": false,
+  "showThinkingSummaries": true,
+  "cleanupPeriodDays": 30, 
+  "includeCoAuthoredBy": true, 
+  "plugins": {}
+}

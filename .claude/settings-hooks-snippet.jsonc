@@ -1,0 +1,40 @@
+// Ce fichier n'est PAS chargé par Claude Code — c'est un extrait à fusionner
+// manuellement dans le bloc "hooks" de votre vrai .claude/settings.json
+// (qui doit rester du JSON strict, sans commentaires).
+// Penser à rendre les scripts exécutables : chmod +x .claude/hooks/*.sh
+
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Read|Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/block-secrets.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/block-dangerous-bash.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/lint-format.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

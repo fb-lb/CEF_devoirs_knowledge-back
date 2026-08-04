@@ -1,0 +1,12 @@
+// Ce fichier de configuration n'a pas pour vocation à être versionné
+
+{
+  "permissions": {
+    "allow": [
+      "Bash(mon-script-local)"
+    ]
+  },
+  "env": {
+    "LOCAL_PATH": "..."
+  }
+}
