@@ -1,78 +1,44 @@
 # Conventions TypeScript
 
+## Configuration
+
+`tsconfig.json` active `strict: true`, `noImplicitAny`, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`, `isolatedModules`, `moduleResolution: NodeNext`. Modules ESM natifs (`"type": "module"` dans `package.json`, imports relatifs avec extension `.js` même en TypeScript, ex. `import { User } from "./User.js"`).
+
 ## Nommage
 
-Décrire les conventions.
-
-Exemples :
-- variables
-- fonctions
-- classes
-- interfaces
-- types
-- enums
-- constantes
+- variables et fonctions : camelCase (`getRequestorId`, `validateLoginForm`) ;
+- classes et interfaces : PascalCase (`AppError`, `UserData`, `ApiResponse<T>`) ;
+- fichiers : `<domaine>.<rôle>.ts` en kebab-case/point (`authentication.controller.ts`, `token.service.ts`, `User-Cursus.ts` pour les modèles composés) ;
+- constantes de rôle/type : chaînes littérales typées en union (`("user" | "admin")[]`, `"text" | "image"`) plutôt que des enums.
 
 ## Types
 
-Décrire les conventions utilisées.
-
-Exemples :
-- préférer `type` ou `interface`
-- éviter `any`
-- privilégier `unknown`
-- typer les retours de fonctions publiques
+- une interface `XAttributes` par modèle Sequelize, dérivée en `XCreationAttributes` via `Optional<XAttributes, "champ1" | "champ2">` pour les champs optionnels à la création (`id`, timestamps, associations) ;
+- les interfaces de DTO/réponse API sont centralisées dans `src/types/Interfaces.ts` (`ApiResponse<T>`, `UserData`, `TokenPayload`, etc.) ;
+- éviter `any` ; utilisé ponctuellement uniquement dans les blocs `catch (error: any)` pour accéder à `error.cause`/`error.message` sans complexifier le typage des erreurs.
 
 ## Fonctions
 
-Décrire les règles générales.
-
-Exemples :
-- privilégier les fonctions courtes
-- limiter le nombre de paramètres
-- utiliser des objets de paramètres lorsque nécessaire
+- une fonction exportée par responsabilité, documentée en JSDoc complet (description, `@param`, `@returns`, `@throws`) ;
+- signature explicite du type de retour sur toutes les fonctions publiques (controllers, services).
 
 ## Asynchronisme
 
-Décrire les conventions.
-
-Exemples :
-- privilégier `async/await`
-- éviter les chaînes de `.then()`
-- toujours gérer les erreurs
+- `async/await` systématique pour les fonctions de service et de controller interagissant avec la base de données ou des services externes ;
+- gestion des erreurs via `try/catch` avec relance systématique en `AppError` (`if (error instanceof AppError) throw error; throw new AppError(...)`).
 
 ## Gestion des erreurs
 
-Décrire les conventions.
-
-Exemples :
-- préférer des exceptions métier
-- ne jamais lancer une chaîne de caractères
-- utiliser les classes d'erreur du projet
-
-## Immutabilité
-
-Décrire les conventions.
-
-Exemples :
-- utiliser `readonly` lorsque pertinent
-- éviter les mutations inutiles
-- privilégier les fonctions pures lorsque possible
+- toujours lever une instance d'`AppError` (jamais une chaîne de caractères ou une `Error` générique) pour toute erreur prévisible ;
+- `AppError` porte `status`, `message` (technique) et `messageFront` (utilisateur), avec un `cause` optionnel pour chaîner l'erreur d'origine.
 
 ## Imports
 
-Décrire les conventions.
-
-Exemples :
-- ordre des imports
-- alias
-- imports absolus ou relatifs
+- imports relatifs avec extension `.js` explicite (résolution ESM `NodeNext`), pas d'alias de chemin configuré ;
+- import des types Express (`Request`, `Response`, `NextFunction`) explicitement typés sur chaque fonction de controller/middleware.
 
 ## Invariants
 
-Ces règles doivent toujours être respectées.
-
-Exemples :
-- éviter `any` sans justification
-- conserver un typage explicite lorsque cela améliore la lisibilité
-- privilégier un code simple et fortement typé
+- `strict` reste activé dans `tsconfig.json` ;
+- pas de `any` non justifié ;
+- toute fonction publique (controller, service) documente son comportement en JSDoc, y compris les cas d'erreur (`@throws`).

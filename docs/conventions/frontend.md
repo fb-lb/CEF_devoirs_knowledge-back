@@ -1,75 +1,45 @@
 # Conventions Frontend
 
+Ce fichier appartient au dépôt backend ; il résume les conventions du frontend (`knowledge-front`, dépôt Git séparé) utiles pour comprendre le contrat d'intégration. La documentation détaillée et faisant foi se trouve dans `knowledge-front/docs/conventions/frontend.md`.
+
 ## Composants
 
-Décrire les conventions de développement.
-
-Exemples :
-- composants courts et spécialisés
-- une responsabilité par composant
-- privilégier la composition à l'héritage
+- composants standalone Angular uniquement (pas de `NgModule`) ;
+- classes de composants nommées sans suffixe `Component` (ex. `Register`, `Login`, `Home`) ;
+- composants de `pages/` : orchestration (appel des services, formulaires, affichage des erreurs) + affichage ;
+- composants de `components/` : purement pilotés par `@Input()`/`@Output()`, aucun appel HTTP direct.
 
 ## Gestion de l'état
 
-Décrire les conventions.
-
-Exemples :
-- état local
-- état global
-- synchronisation avec le backend
+- pas de state manager externe (pas de NgRx) ;
+- état partagé via des services Angular exposant des `BehaviorSubject`/`Observable` RxJS, jamais exposés en écriture hors du service.
 
 ## Réactivité
 
-Décrire les conventions permettant de conserver une interface réactive.
-
-Exemples :
-- mettre à jour l'interface après une modification sans rechargement de page
-- éviter les rechargements complets lorsque seules certaines données changent
-- privilégier les mécanismes réactifs du framework utilisé
+- après une mutation (POST/PATCH/DELETE), le service met à jour son `BehaviorSubject` local pour resynchroniser tous les composants abonnés, sans rechargement de page.
 
 ## Appels API
 
-Décrire les conventions.
-
-Exemples :
-- centraliser les appels HTTP
-- ne jamais effectuer d'appel HTTP directement depuis un composant si une couche de service existe
-- gérer systématiquement les états de chargement et d'erreur
+- tout appel HTTP passe par un service dédié (`authentication.service.ts`, `courses.service.ts`, `user-courses.ts`, `user.service.ts`) ; aucun composant n'appelle `HttpClient` directement ;
+- un intercepteur fonctionnel unique (`authInterceptor`) gère l'ajout de l'en-tête `Authorization` sur chaque requête et la resynchronisation du token à chaque réponse (rolling token renvoyé par le backend).
 
 ## Formulaires
 
-Décrire les conventions.
-
-Exemples :
-- validation côté client
-- validation côté serveur
-- affichage des messages d'erreur
+- Reactive Forms exclusivement (pas de template-driven forms) ;
+- validation client via les `Validators` natifs Angular et des validators custom (mots de passe) ;
+- toute règle de validation dupliquée entre backend (`form.service.ts` de `knowledge-back`) et frontend doit rester synchronisée manuellement ; la validation serveur fait foi.
 
 ## Interface utilisateur
 
-Décrire les conventions.
-
-Exemples :
-- accessibilité
-- responsive
-- cohérence visuelle
-- réutilisation des composants existants
+- réutilisation systématique des composants existants pour les interactions récurrentes (ex. `WarningModal` pour toute confirmation, jamais `confirm()` natif) ;
+- messages utilisateur toujours en français, alignés sur les messages `messageFront` renvoyés par le backend.
 
 ## Performances
 
-Décrire les principes importants.
-
-Exemples :
-- lazy loading
-- limiter les re-rendus inutiles
-- optimiser les listes volumineuses
+- chargement eager des routes (pas de lazy loading à ce jour, voir `knowledge-front/docs/architecture.md`).
 
 ## Invariants
 
-Ces règles doivent toujours être respectées.
-
-Exemples :
-- ne pas dupliquer les composants
-- conserver une interface réactive
-- respecter le design system
-- privilégier la réutilisation
+- aucun accès direct à la base de données ou contournement de l'API backend depuis le frontend ;
+- toute donnée affichée provient d'un service frontend, jamais d'un appel HTTP fait dans un composant ;
+- le contrat de réponse `ApiResponse<T>` doit rester synchronisé entre `knowledge-back/src/types/Interfaces.ts` et `knowledge-front/src/app/core/models/api-response.model.ts`.

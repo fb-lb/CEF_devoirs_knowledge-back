@@ -2,73 +2,56 @@
 
 ## Environnements
 
-Décrire les environnements disponibles.
+- Développement : local, base MySQL servie par XAMPP, variables chargées depuis `env/.env` via `env-cmd` (`npm run dev`, avec `tsx --watch` et l'inspecteur Node sur le port 9229).
+- Production : backend hébergé sur Render (URL observée côté frontend : `https://knowledge-back-jrzv.onrender.com`), variables d'environnement injectées directement par la plateforme.
 
-Exemple :
-- Développement
-- Recette
-- Préproduction
-- Production
-
-Préciser le rôle de chacun.
+Pas d'environnement de recette/préproduction distinct documenté.
 
 ## Variables d'environnement
 
-Décrire l'organisation générale.
+Définies dans `env/.env` en local (non versionné, chargé via `env-cmd -f ./env/.env`). Liste complète documentée dans `README.md` :
 
-Exemples :
-- variables communes
-- variables spécifiques à chaque environnement
-- gestion des secrets
+- `NODE_ENV`, `FRONT_URL`, `FRONT_BASE_HREF`, `BACK_URL`
+- `DATABASE_NAME`, `DATABASE_USERNAME`, `DATABASE_PASSWORD`, `DATABASE_HOST`, `DATABASE_PORT`, `DATABASE_URL`
+- `EMAILJS_PUBLIC_API_KEY`, `EMAILJS_PRIVATE_API_KEY`, `EMAILJS_SERVICE_ID`, `EMAILJS_TEMPLATE_ID`
+- `JWT_USER_SECRET`, `JWT_IMAGE_SECRET`
+- `PORT`
+- `STRIPE_PUBLIC_KEY`, `STRIPE_SECRET_KEY`
 
-Ne jamais stocker de secrets dans le dépôt.
+Il n'existe pas de fichier `.env.example` versionné ; le `README.md` sert actuellement de référence pour la liste des variables attendues.
+
+En production (Render), les mêmes variables sont injectées directement par la plateforme (pas de fichier `.env`, scripts `migrate-render`/`seeders-render` sans `env-cmd`).
 
 ## Pipeline
 
-Décrire les principales étapes du pipeline de déploiement.
+Pas de pipeline CI/CD automatisé (aucun dossier `.github/workflows`, aucune configuration CI trouvée). Le déploiement sur Render s'appuie a priori sur son intégration Git native (build à partir du dépôt), sans étape de test automatisée avant déploiement.
 
-Exemple :
-- installation
-- compilation
-- tests
-- build
-- déploiement
+Étapes de mise en production manuelles déduites des scripts disponibles :
+1. `npm install`
+2. `npm run build` (compilation TypeScript → `dist/`)
+3. `npm run migrate-render` (application des migrations Sequelize sur la base de production)
+4. `npm run seeders-render` (uniquement lors de l'initialisation d'un nouvel environnement, pas à chaque déploiement)
+5. `npm start` (`node ./dist/bin/www`)
 
 ## Stratégie de déploiement
 
-Décrire la procédure générale.
-
-Exemples :
-- déclenchement automatique
-- validation manuelle
-- stratégie de mise en production
+Non formalisée : pas de validation manuelle ni de fenêtre de déploiement documentée. Projet à échelle pédagogique.
 
 ## Rollback
 
-Décrire la procédure de retour arrière.
-
-Exemple :
-- restauration de la version précédente
-- restauration de la base si nécessaire
+Non documenté. Aucune procédure de restauration automatisée n'est en place ; un retour arrière nécessiterait un redéploiement manuel d'une version antérieure et, si nécessaire, l'exécution manuelle de `npm run migrate-undo` (en adaptant la variante `-render` sans `env-cmd` pour la production).
 
 ## Dépendances externes
 
-Lister les services nécessaires au fonctionnement.
+- Base de données MySQL (obligatoire, tous environnements).
+- Stripe (obligatoire pour toute fonctionnalité d'achat).
+- EmailJS (obligatoire pour l'envoi de l'email de vérification de compte à l'inscription).
+- Frontend Angular, hébergé séparément (GitHub Pages), consommant cette API via `FRONT_URL`/`BACK_URL`.
 
-Exemples :
-- base de données
-- stockage d'objets
-- serveur SMTP
-- fournisseur OAuth
-- cache Redis
-
-Préciser lesquels sont indispensables selon l'environnement.
+Pas de stockage objet externe (les images uploadées sont stockées sur le système de fichiers local du serveur, `uploads/elements_images/`), pas de cache Redis, pas de fournisseur OAuth.
 
 ## Invariants
 
-Ces règles doivent toujours être respectées.
-
-Exemples :
-- ne jamais déployer sans validation des tests
-- les migrations doivent être compatibles avec le déploiement
-- les secrets ne doivent jamais être exposés
+- ne jamais commiter le dossier `env/` ni son fichier `.env` ;
+- toute migration de schéma doit être appliquée (`migrate-render`) avant que le code qui en dépend soit mis en production ;
+- les secrets de production (Stripe, JWT, base de données, EmailJS) sont gérés exclusivement via les variables d'environnement de la plateforme d'hébergement.

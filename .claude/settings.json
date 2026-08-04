@@ -12,30 +12,11 @@
       "Read(secrets/**)"
     ]
   },
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "...", 
-        "hooks": [
-          {
-            "type": "command",
-            "command": "..."
-          }
-        ]
-      }
-    ]
-  },
+  "hooks": {},
   "env": {
     "NODE_ENV": "development"  
   },
-  "mcpServers": { 
-    "github": {
-      "command": "..."
-    },
-    "postgres": {
-      "command": "..."
-    } 
-  },
+  "mcpServers": {},
   "model": "sonnet", 
   "effortLevel": "medium",
   "alwaysThinkingEnabled": false,

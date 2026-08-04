@@ -2,88 +2,49 @@
 
 ## Nommage
 
-Décrire les conventions de nommage.
-
-Exemples :
-- tables au singulier ou pluriel
-- colonnes en snake_case ou camelCase
-- nommage des clés primaires
-- nommage des clés étrangères
-- nommage des index
+- tables au singulier, en snake_case (`user`, `theme`, `cursus`, `lesson`, `element`, `text`, `image`, `user_theme`, `user_cursus`, `user_lesson`) ;
+- colonnes en camelCase pour les entités propres au modèle (`firstName`, `isVerified`, `createdAt`), en snake_case pour les clés étrangères (`theme_id`, `cursus_id`, `lesson_id`, `element_id`, `user_id`) ;
+- clé primaire nommée `id` sur toutes les tables ;
+- alias d'association Sequelize explicites et descriptifs plutôt que génériques (`IncludedInTheme`, `IncludesCursus`, `PurchasedByUser`, `RelatedToCursus`, `UpdatedByUser`...), définis une fois pour toutes dans `databaseAssociations.ts`.
 
 ## Modèles et entités
 
-Décrire les conventions générales.
-
-Exemples :
-- une entité représente une responsabilité métier claire
-- éviter les modèles trop volumineux
-- ne pas mélanger plusieurs domaines métier
+- une entité = une responsabilité métier claire (`Theme`, `Cursus`, `Lesson`, `Element`, `Text`, `Image`) ;
+- chaque modèle définit deux interfaces TypeScript (`XAttributes`, `XCreationAttributes` via `Optional<...>`) en plus de la classe `Model` ;
+- les associations ne sont pas déclarées dans les fichiers de modèle individuels mais centralisées dans `databaseAssociations.ts` (`setupAssociations()`), appelée une fois au démarrage de l'application (`app.ts`).
 
 ## Identifiants
 
-Décrire la stratégie utilisée.
-
-Exemples :
-- UUID (Universally Unique Identifier)
-- auto-incrément
-- autre stratégie
-
-Préciser les conventions associées.
+- clé primaire auto-incrémentée (`INTEGER.UNSIGNED`, `autoIncrement: true`) sur toutes les tables, pas d'UUID.
 
 ## Colonnes communes
 
-Décrire les colonnes standardisées.
-
-Exemples :
-- createdAt
-- updatedAt
-- deletedAt
-- version
+- `createdAt` / `updatedAt` : timestamps automatiques Sequelize (`timestamps: true`) sur toutes les tables ;
+- `createdBy` / `updatedBy` : sur les entités de contenu et les tables d'association, référence vers `user.id` de l'utilisateur ayant créé/modifié la ligne (nullable, pas de contrainte de clé étrangère stricte observée dans les migrations).
 
 ## Relations
 
-Décrire uniquement les conventions générales.
-
-Exemples :
-- nommage des relations
-- gestion des suppressions
-- utilisation des relations obligatoires ou optionnelles
-
-Les relations entre entités spécifiques sont documentées dans les modèles ou dans la documentation métier.
+- toutes les associations sont déclarées avec un alias (`as: '...'`) explicite, jamais l'alias par défaut de Sequelize ;
+- pas de suppression en cascade au niveau base de données (`ON DELETE CASCADE`) : la cohérence entre entités liées est assurée manuellement par la couche service (voir `docs/business-rules.md`).
 
 ## Migrations
 
-Décrire les règles.
-
-Exemples :
-- toujours créer une migration pour modifier le schéma
-- ne jamais modifier une migration déjà appliquée
-- tester les migrations avant déploiement
+- une migration par table, fichier `.cjs`, nommé `<timestamp>-<nom-entité>.cjs`, dans `src/migrations/` ;
+- ne jamais modifier une migration déjà appliquée : toute évolution de schéma passe par une nouvelle migration ;
+- exécution via `sequelize-cli` (`npm run migrate` en local, `npm run migrate-render` en production, sans chargement de `.env` car les variables sont déjà injectées par la plateforme).
 
 ## Requêtes
 
-Décrire les bonnes pratiques.
-
-Exemples :
-- éviter les requêtes inutiles
-- éviter les requêtes N+1
-- sélectionner uniquement les données nécessaires
+- utiliser `include` avec l'alias approprié pour récupérer des données liées plutôt que d'enchaîner des requêtes séparées, sauf quand une boucle est nécessaire pour appliquer une logique par élément (ex. cascade de validation) ;
+- pas de pagination généralisée (volumes de données réduits, catalogue de formations).
 
 ## Données sensibles
 
-Décrire les règles.
-
-Exemples :
-- ne jamais stocker de données sensibles en clair
-- chiffrer les données nécessaires
-- limiter les données récupérées
+- le mot de passe (`user.password`) est stocké hashé (`bcrypt`), jamais en clair ;
+- aucune autre donnée bancaire n'est stockée en base : le paiement est entièrement délégué à Stripe (seul un `payment_intent` transitoire est créé, sans persistance côté application).
 
 ## Invariants
 
-Ces règles doivent toujours être respectées.
-
-Exemples :
-- aucune modification directe de la base hors migration
-- les conventions de nommage sont respectées
-- les contraintes importantes sont définies au niveau de la base
+- aucune modification directe de la base hors migration ;
+- les conventions de nommage ci-dessus sont respectées pour toute nouvelle table/colonne ;
+- toute écriture passe par Sequelize, jamais de SQL brut.

@@ -1,10 +1,10 @@
-# Nom du projet
+# Knowledge Learning — Backend (knowledge-back)
 
-[Description courte du projet]
+API REST (Express/TypeScript) du site e-commerce de formations en ligne Knowledge Learning. Ce dépôt gère l'authentification, le catalogue pédagogique (thèmes/cursus/leçons), les achats (Stripe) et l'accès à la base de données MySQL. Il est consommé par un frontend Angular versionné séparément (`knowledge-front`).
 
 ## Objectif
 
-[Décrire en quelques lignes le but du projet]
+Permettre à des utilisateurs d'acheter et suivre des formations en ligne organisées en thèmes, cursus et leçons, avec une validation de progression en cascade (l'utilisateur valide ses leçons, un administrateur valide les cursus et certifie les thèmes). Voir `docs/architecture.md` et `docs/business-rules.md` pour le détail.
 
 ## Instructions générales
 
