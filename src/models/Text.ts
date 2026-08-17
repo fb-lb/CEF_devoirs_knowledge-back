@@ -3,10 +3,13 @@ import { User } from "./User.js";
 import { sequelize } from "../config/database.js";
 import { Element } from "./Element.js";
 
+export const TEXT_TYPES = ['title1', 'title2', 'title3', 'paragraph'] as const;
+export type TextType = typeof TEXT_TYPES[number];
+
 interface TextAttributes {
   id: number;
   element_id: number;
-  type: 'title1' | 'title2' | 'title3' | 'paragraph';
+  type: TextType;
   content: string;
   createdAt?: Date;
   updatedAt?: Date;
@@ -22,7 +25,7 @@ interface TextCreationAttributes extends Optional<TextAttributes, 'id' | 'create
 export class Text extends Model<TextAttributes, TextCreationAttributes> implements TextAttributes {
   declare id: number;
   declare element_id: number;
-  declare type: 'title1' | 'title2' | 'title3' | 'paragraph';
+  declare type: TextType;
   declare content: string;
 
   declare readonly createdAt: Date;
@@ -45,7 +48,7 @@ Text.init({
     allowNull: false,
   },
   type: {
-    type: DataTypes.ENUM('title1', 'title2', 'title3', 'paragraph'),
+    type: DataTypes.ENUM(...TEXT_TYPES),
     allowNull: false,
   },
   content: {

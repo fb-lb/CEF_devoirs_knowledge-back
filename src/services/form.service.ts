@@ -1,5 +1,72 @@
 import { RegistrationBody, UpdateUserBody } from "../types/Interfaces.js";
 import { AppError } from "../utils/AppError.js";
+import { TEXT_TYPES } from "../models/Text.js";
+
+/**
+ * Checks validity of an input text form field.
+ * 
+ * @function validateTextInputForm
+ * 
+ * @param {string} value - Input text value
+ * @param {boolean} required - Specificy if this input value is required
+ * @param {string} fieldName - The input field name used in error message
+ * @param {{minLength?: number, maxLength?: number, regex?: RegExp, email?: boolean} | undefined} options - Object containing optional rules for validation {
+ *   minLength?: number,
+ *   maxLength?: number,
+ *   regex?: RegExp,
+ *   email?: boolean,
+ * }
+ * 
+ * @returns {void}
+ * 
+ * @throws {AppError} If value is required and null.
+ * @throws {AppError} If value length > maxLength provided.
+ * @throws {AppError} If value length < minLength provided.
+ * @throws {AppError} If value unauthorized caracters specified by provided regex.
+ * @throws {AppError} If value is an email and don't have the right format.
+ */
+export function validateTextInputForm(value: string, required: boolean, fieldName: string, options?: {
+  minLength?: number,
+  maxLength?: number,
+  regex?: RegExp,
+  email?: boolean
+}) {
+  if (required && !value) throw new AppError(422, "validateTextInputForm function in form service failed because of an invalid form field", `Le champ "${fieldName}" est obligatoire.`);
+  if (options?.minLength && value.length < options.minLength) throw new AppError(422, "validateTextInputForm function in form service failed because of an invalid form field", `Le champ "${fieldName}" doit contenir au moins ${options.minLength} caractères.`);
+  if (options?.maxLength && value.length > options.maxLength) throw new AppError(422, "validateTextInputForm function in form service failed because of an invalid form field", `Le champ "${fieldName}" doit contenir au maximum ${options.maxLength} caractères.`);
+  if (options?.regex && !options.regex.test(value)) throw new AppError(422, "validateTextInputForm function in form service failed because of an invalid form field", `Le champ "${fieldName}" contient des caractères non autorisés.`);
+  if (options?.email && (
+    !value.includes("@") ||
+    !(value.indexOf("@") > 0) ||
+    !value.includes(".") ||
+    !(value.lastIndexOf(".") > value.indexOf("@") + 1) ||
+    !(value.lastIndexOf(".") < value.length - 1)
+  )) throw new AppError(422, "validateTextInputForm function in form service failed because of an invalid form field", "Le format email doit être respecté.");
+}
+
+/**
+ * Checks validity of an input number form field.
+ * 
+ * @function validateNumberInputForm
+ * 
+ * @param {string} value - Input number value
+ * @param {boolean} required - Specificy if this input value is required
+ * @param {string} fieldName - The input field name used in error message
+ * @param {{minValue?: number} | undefined} options - Object containing optional rules for validation {
+ *   minValue?: number,
+ * }
+ * 
+ * @returns {void}
+ * 
+ * @throws {AppError} If value is required and null.
+ * @throws {AppError} If value < minValue provided.
+ */
+export function validateNumberInputForm(value: number, required: boolean, fieldName: string, options?: {
+  minValue?: number
+}) {
+  if (required && (value === null || value === undefined)) throw new AppError(422, "validateNumberInputForm function in form service failed because of an invalid form field", `Le champ "${fieldName}" est obligatoire.`);
+  if (options?.minValue !== null && options?.minValue !== undefined && value < options?.minValue) throw new AppError(422, "validateNumberInputForm function in form service failed because of an invalid form field", `La valeur de "${fieldName}" doit être supérieure ou égale à ${options.minValue}.`);
+}
 
 /**
  * Checks validity of the registration form fields.
@@ -32,107 +99,32 @@ import { AppError } from "../utils/AppError.js";
  * @throws {AppError} If password and confirm password are not identical.
  */
 export function validateRegistrationForm(body: RegistrationBody): void {
-  const error = new AppError(
+  const formError = new AppError(
     422,
     "validateRegistrationForm function in form service failed because of an invalid form field",
     ""
   );
 
-  // Test required validator
-  if (
-    !body.firstName ||
-    !body.lastName ||
-    !body.email ||
-    !body.password ||
-    !body.confirmPassword
-  ) {
-    error.messageFront = 'Les champs "Nom", "Prénom", "Email", "Mot de passe" et "Confirmation du mot de passe" sont obligatoires.';
-    throw error;
-  }
-
-  // Test firstName length
-  if (body.firstName.length > 60) {
-    error.messageFront = 'Le champ "Prénom" doit contenir au maximum 60 caractères.';
-    throw error;
-  }
-
-  // Test lastName length
-  if (body.lastName.length > 60) {
-    error.messageFront = 'Le champ "Nom" doit contenir au maximum 60 caractères.';
-    throw error;
-  }
-
-  // Test firstName special caracters
-  const regex = /^[a-zA-ZÀ-ÖØ-öø-ÿŒœ '\-\.]*$/;
-  if (!regex.test(body.firstName)) {
-    error.messageFront = 'Le champ "Prénom" contient des caractères non autorisés.';
-    throw error;
-  }
-
-  // Test lastName special caracters
-  if (!regex.test(body.lastName)) {
-    error.messageFront = 'Le champ "Nom" contient des caractères non autorisés.';
-    throw error;
-  }
-
-  // Test email format
-  const email = body.email;
-  if (
-    !email.includes("@") ||
-    !(email.indexOf("@") > 0) ||
-    !email.includes(".") ||
-    !(email.lastIndexOf(".") > email.indexOf("@") + 1) ||
-    !(email.lastIndexOf(".") < email.length - 1)
-  ) {
-    error.messageFront = "Le format email doit être respecté.";
-    throw error;
-  }
-
-  // Test email length
-  if (body.email.length > 80) {
-    error.messageFront = 'Le champ "Email" doit contenir au maximum 80 caractères.';
-    throw error;
-  }
-
-  // Test password length
-  if (body.password.length < 8) {
-    error.messageFront= 'Le champ "Mot de passe" doit contenir au moins 8 caractères.';
-    throw error;
-  }
-
-  if (body.password.length > 100) {
-    error.messageFront = 'Le champ "Mot de passe" doit contenir au maximum 100 caractères.';
-    throw error;
-  }
-
-  // Test password special caracters
-  const passwordRegex = /^[a-zA-Z0-9À-ÖØ-öø-ÿŒœ*$%!§\-+&#]*$/;
-  if (!passwordRegex.test(body.password)) {
-    error.messageFront = 'Le champ "Mot de passe" contient des caractères non autorisés.';
-    throw error;
-  }
-
-  // Test confirmPassword length
-  if (body.confirmPassword.length < 8) {
-    error.messageFront = 'Le champ "Confirmation du mot de passe" doit contenir au moins 8 caractères.';
-    throw error;
-  }
-
-  if (body.confirmPassword.length > 100) {
-    error.messageFront= 'Le champ "Confirmation du mot de passe" doit contenir au maximum 100 caractères.';
-    throw error;
-  }
-
-  // Test confirmPassword special caracters
-  if (!passwordRegex.test(body.confirmPassword)) {
-    error.messageFront = 'Le champ "Confirmation du mot de passe" contient des caractères non autorisés.';
-    throw error;
+  try {
+    validateTextInputForm(body.firstName, true, "Prénom", {maxLength: 60, regex: /^[a-zA-ZÀ-ÖØ-öø-ÿŒœ '\-\.]*$/});
+    validateTextInputForm(body.lastName, true, "Nom", {maxLength: 60, regex: /^[a-zA-ZÀ-ÖØ-öø-ÿŒœ '\-\.]*$/});
+    validateTextInputForm(body.email, true, "Email", {maxLength: 80, email: true});
+    validateTextInputForm(body.password, true, "Mot de passe", {minLength: 8, maxLength: 100, regex: /^[a-zA-Z0-9À-ÖØ-öø-ÿŒœ*$%!§\-+&#]*$/});
+    validateTextInputForm(body.confirmPassword, true, "Confirmation du mot de passe");
+  } catch (error) {
+    if (error instanceof AppError) {
+      formError.messageFront = error.messageFront;
+    } else {
+      formError.messageFront = "Le formulaire est considéré comme invalide, veuillez contacter le support pour plus d'information.";
+      formError.cause = error;
+    }
+    throw formError;
   }
 
   // Test equality between password and confirm password
   if (body.password !== body.confirmPassword) {
-    error.messageFront = 'Les champs "Mot de passe" et "Confirmation du mot de passe" doivent être identiques.';
-    throw error;
+    formError.messageFront = 'Les champs "Mot de passe" et "Confirmation du mot de passe" doivent être identiques.';
+    throw formError;
   }
 }
 
@@ -156,53 +148,23 @@ export function validateRegistrationForm(body: RegistrationBody): void {
  * @throws {AppError} If password contains unauthorized character.
  */
 export function validateLoginForm(body: { email: string; password: string; }): void {
-  const error = new AppError(
+  const formError = new AppError(
     422,
     "validateLoginForm function in form service failed because of an invalid form field",
     ""
   );
 
-  // Test required validator
-  if (!body.email || !body.password) {
-    error.messageFront = 'Les champs "Email" et "Mot de passe" sont obligatoires.';
-    throw error;
-  }
-
-  // Test email format
-  const email = body.email;
-  if (
-    !email.includes("@") ||
-    !(email.indexOf("@") > 0) ||
-    !email.includes(".") ||
-    !(email.lastIndexOf(".") > email.indexOf("@") + 1) ||
-    !(email.lastIndexOf(".") < email.length - 1)
-  ) {
-    error.messageFront = "Le format email doit être respecté.";
-    throw error;
-  }
-
-  // Test email length
-  if (body.email.length > 80) {
-    error.messageFront = 'Le champ "Email" doit contenir au maximum 80 caractères.';
-    throw error;
-  }
-
-  // Test password length
-  if (body.password.length < 8) {
-    error.messageFront= 'Le champ "Mot de passe" doit contenir au moins 8 caractères.';
-    throw error;
-  }
-
-  if (body.password.length > 100) {
-    error.messageFront = 'Le champ "Mot de passe" doit contenir au maximum 100 caractères.';
-    throw error;
-  }
-
-  // Test password special caracters
-  const passwordRegex = /^[a-zA-Z0-9À-ÖØ-öø-ÿŒœ*$%!§\-+&#]*$/;
-  if (!passwordRegex.test(body.password)) {
-    error.messageFront = 'Le champ "Mot de passe" contient des caractères non autorisés.';
-    throw error;
+  try {
+    validateTextInputForm(body.email, true, "Email", {maxLength: 80, email: true});
+    validateTextInputForm(body.password, true, "Mot de passe", {minLength: 8, maxLength: 100, regex: /^[a-zA-Z0-9À-ÖØ-öø-ÿŒœ*$%!§\-+&#]*$/});
+  } catch (error) {
+    if (error instanceof AppError) {
+      formError.messageFront = error.messageFront;
+    } else {
+      formError.messageFront = "Le formulaire est considéré comme invalide, veuillez contacter le support pour plus d'information.";
+      formError.cause = error;
+    }
+    throw formError;
   }
 }
 
@@ -233,64 +195,24 @@ export function validateLoginForm(body: { email: string; password: string; }): v
  * @throws {AppError} If email length > 80.
  */
 export function validateUpdateUserForm(body: UpdateUserBody): void {
-  const error = new AppError(
+  const formError = new AppError(
     422,
     "validateUpdateUserForm function in form service failed because of an invalid form field",
     ""
   );
 
-  // Test required validator
-  if (
-    !body.firstName ||
-    !body.lastName ||
-    !body.email
-  ) {
-    error.messageFront = 'Les champs "Identifiant", "Nom", "Prénom" et "Email" sont obligatoires.';
-    throw error;
-  }
-
-  // Test firstName length
-  if (body.firstName.length > 60) {
-    error.messageFront = 'Le champ "Prénom" doit contenir au maximum 60 caractères.';
-    throw error;
-  }
-
-  // Test lastName length
-  if (body.lastName.length > 60) {
-    error.messageFront = 'Le champ "Nom" doit contenir au maximum 60 caractères.';
-    throw error;
-  }
-
-  // Test firstName special caracters
-  const regex = /^[a-zA-ZÀ-ÖØ-öø-ÿŒœ '\-\.]*$/;
-  if (!regex.test(body.firstName)) {
-    error.messageFront = 'Le champ "Prénom" contient des caractères non autorisés.';
-    throw error;
-  }
-
-  // Test lastName special caracters
-  if (!regex.test(body.lastName)) {
-    error.messageFront = 'Le champ "Nom" contient des caractères non autorisés.';
-    throw error;
-  }
-
-  // Test email format
-  const email = body.email;
-  if (
-    !email.includes("@") ||
-    !(email.indexOf("@") > 0) ||
-    !email.includes(".") ||
-    !(email.lastIndexOf(".") > email.indexOf("@") + 1) ||
-    !(email.lastIndexOf(".") < email.length - 1)
-  ) {
-    error.messageFront = "Le format email doit être respecté.";
-    throw error;
-  }
-
-  // Test email length
-  if (body.email.length > 80) {
-    error.messageFront = 'Le champ "Email" doit contenir au maximum 80 caractères.';
-    throw error;
+  try {
+    validateTextInputForm(body.firstName, true, "Prénom", {maxLength: 60, regex: /^[a-zA-ZÀ-ÖØ-öø-ÿŒœ '\-\.]*$/});
+    validateTextInputForm(body.lastName, true, "Nom", {maxLength: 60, regex: /^[a-zA-ZÀ-ÖØ-öø-ÿŒœ '\-\.]*$/});
+    validateTextInputForm(body.email, true, "Email", {maxLength: 80, email: true});
+  } catch (error) {
+    if (error instanceof AppError) {
+      formError.messageFront = error.messageFront;
+    } else {
+      formError.messageFront = "Le formulaire est considéré comme invalide, veuillez contacter le support pour plus d'information.";
+      formError.cause = error;
+    }
+    throw formError;
   }
 }
 
@@ -308,29 +230,22 @@ export function validateUpdateUserForm(body: UpdateUserBody): void {
  * @throws {AppError} If theme name contains unauthorized caracters.
  */
 export function validateAddThemeForm(themeName: string): void {
-  const error = new AppError(
+  const formError = new AppError(
     422,
     "validateAddThemeForm function in form service failed because of an invalid form field",
     ""
   );
 
-  // Test required validator
-  if (!themeName) {
-    error.messageFront = 'Le champ "Nom du thème" est obligatoire.';
-    throw error;
-  }
-
-  // Test themeName length
-  if (themeName.length > 255) {
-    error.messageFront = `Le champ "Nom du thème" doit contenir au maximum 255 caractères.`;
-    throw error;
-  }
-
-  // Test themeName special caracters
-  const regex = /^[a-zA-ZÀ-ÖØ-öø-ÿŒœ0-9 ?!\/:'"(),\.\-]*$/;
-  if (!regex.test(themeName)) {
-    error.messageFront = 'Le champ "Nom du thème" contient des caractères non autorisés.';
-    throw error;
+  try {
+    validateTextInputForm(themeName, true, "Nom du thème", {maxLength: 255, regex: /^[a-zA-ZÀ-ÖØ-öø-ÿŒœ0-9 ?!\/:'"(),\.\-]*$/});
+  } catch (error) {
+    if (error instanceof AppError) {
+      formError.messageFront = error.messageFront;
+    } else {
+      formError.messageFront = "Le formulaire est considéré comme invalide, veuillez contacter le support pour plus d'information.";
+      formError.cause = error;
+    }
+    throw formError;
   }
 }
 
@@ -352,40 +267,28 @@ export function validateAddThemeForm(themeName: string): void {
  * @throws {AppError} If price value < 0.
  */
 export function validateAddCursusForm(cursusName: string, themeId: number, price: number): void {
-  const error = new AppError(
+  const formError = new AppError(
     422,
     "validateAddCursusForm function in form service failed because of an invalid form field",
     ""
   );
 
-  // Test required validator
-  if (!cursusName || !price) {
-    error.messageFront = 'Les champs "Nom du cursus" et "Prix du cursus" sont obligatoires.';
-    throw error;
+  try {
+    validateTextInputForm(cursusName, true, "Nom du cursus", {maxLength: 255, regex: /^[a-zA-ZÀ-ÖØ-öø-ÿŒœ0-9 ?!\/:'"(),\.\-]*$/});
+    validateNumberInputForm(price, true, "Prix du cursus", {minValue: 0});
+  } catch (error) {
+    if (error instanceof AppError) {
+      formError.messageFront = error.messageFront;
+    } else {
+      formError.messageFront = "Le formulaire est considéré comme invalide, veuillez contacter le support pour plus d'information.";
+      formError.cause = error;
+    }
+    throw formError;
   }
 
   if (!themeId) {
-    error.messageFront = "L'identifiant du thème est manquant, veuillez contacter le support pour que le problème soit réglé au plus vite.";
-    throw error;
-  }
-
-  // Test cursusName length
-  if (cursusName.length > 255) {
-    error.messageFront = `Le champ "Nom du cursus" doit contenir au maximum 255 caractères.`;
-    throw error;
-  }
-
-  // Test cursusName special caracters
-  const regex = /^[a-zA-ZÀ-ÖØ-öø-ÿŒœ0-9 ?!\/:'"(),\.\-]*$/;
-  if (!regex.test(cursusName)) {
-    error.messageFront = 'Le champ "Nom du cursus" contient des caractères non autorisés.';
-    throw error;
-  }
-
-  // Test price value
-  if (price < 0) {
-    error.messageFront = 'Le prix doit être positif.';
-    throw error;
+    formError.messageFront = "L'identifiant du thème est manquant, veuillez contacter le support pour que le problème soit réglé au plus vite.";
+    throw formError;
   }
 }
 
@@ -407,40 +310,28 @@ export function validateAddCursusForm(cursusName: string, themeId: number, price
  * @throws {AppError} If price value < 0.
  */
 export function validateAddLessonForm(lessonName: string, cursusId: number, price: number): void {
-  const error = new AppError(
+  const formError = new AppError(
     422,
     "validateAddLessonForm function in form service failed because of an invalid form field",
     ""
   );
 
-  // Test required validator
-  if (!lessonName || !price) {
-    error.messageFront = 'Les champs "Nom de la leçon" et "Prix de la leçon" sont obligatoires.';
-    throw error;
+  try {
+    validateTextInputForm(lessonName, true, "Nom de la leçon", {maxLength: 255, regex: /^[a-zA-ZÀ-ÖØ-öø-ÿŒœ0-9 ?!\/:'"(),\.\-]*$/});
+    validateNumberInputForm(price, true, "Prix de la leçon", {minValue: 0});
+  } catch (error) {
+    if (error instanceof AppError) {
+      formError.messageFront = error.messageFront;
+    } else {
+      formError.messageFront = "Le formulaire est considéré comme invalide, veuillez contacter le support pour plus d'information.";
+      formError.cause = error;
+    }
+    throw formError;
   }
 
   if (!cursusId) {
-    error.messageFront = "L'identifiant du cursus est manquant, veuillez contacter le support pour que le problème soit réglé au plus vite.";
-    throw error;
-  }
-
-  // Test lessonName length
-  if (lessonName.length > 255) {
-    error.messageFront = `Le champ "Nom de la leçon" doit contenir au maximum 255 caractères.`;
-    throw error;
-  }
-
-  // Test lessonName special caracters
-  const regex = /^[a-zA-ZÀ-ÖØ-öø-ÿŒœ0-9 ?!\/:'"(),\.\-]*$/;
-  if (!regex.test(lessonName)) {
-    error.messageFront = 'Le champ "Nom de la leçon" contient des caractères non autorisés.';
-    throw error;
-  }
-
-  // Test price value
-  if (price < 0) {
-    error.messageFront = 'Le prix doit être positif.';
-    throw error;
+    formError.messageFront = "L'identifiant du cursus est manquant, veuillez contacter le support pour que le problème soit réglé au plus vite.";
+    throw formError;
   }
 }
 
@@ -462,38 +353,38 @@ export function validateAddLessonForm(lessonName: string, cursusId: number, pric
  * @throws {AppError} If alternative length > 255.
  */
 export function validateAddImageForm(source: string, alternative: string, lessonId: number): void {
-  const error = new AppError(
+  const formError = new AppError(
     422,
     "validateAddImageForm function in form service failed because of an invalid form field",
     ""
   );
 
-  // Test required validator
-  if (!alternative) {
-    error.messageFront = 'Le champ "Texte alternatif" est obligatoire.';
-    throw error;
-  }
-
   if (!source) {
-    error.messageFront = "Le nom du fichier est manquant, veuillez contacter le support pour que le problème soit réglé au plus vite.";
-    throw error;
+    formError.messageFront = "Le nom du fichier est manquant, veuillez contacter le support pour que le problème soit réglé au plus vite.";
+    throw formError;
   }
 
   if (!lessonId) {
-    error.messageFront = "L'identifiant de la leçon est manquant, veuillez contacter le support pour que le problème soit réglé au plus vite.";
-    throw error;
+    formError.messageFront = "L'identifiant de la leçon est manquant, veuillez contacter le support pour que le problème soit réglé au plus vite.";
+    throw formError;
   }
 
   // Test source length
   if (source.length > 255) {
-    error.messageFront = `Le nom du fichier est trop long, il doit contenir au maximum 255 caractères. Veuillez contacter le support.`;
-    throw error;
+    formError.messageFront = `Le nom du fichier est trop long, il doit contenir au maximum 255 caractères. Veuillez contacter le support.`;
+    throw formError;
   }
 
-  // Test alternative length
-  if (alternative.length > 255) {
-    error.messageFront = `Le champ "Alternative" doit contenir au maximum 255 caractères.`;
-    throw error;
+  try {
+    validateTextInputForm(alternative, true, "Texte alternatif", {maxLength: 255});
+  } catch (error) {
+    if (error instanceof AppError) {
+      formError.messageFront = error.messageFront;
+    } else {
+      formError.messageFront = "Le formulaire est considéré comme invalide, veuillez contacter le support pour plus d'information.";
+      formError.cause = error;
+    }
+    throw formError;
   }
 }
 
@@ -536,8 +427,8 @@ export function validateAddTextForm(textType: string, content: string, lessonId:
     throw error;
   }
 
-  // Test textType value
-  if (textType !== 'title1' && textType !== 'title2' && textType !== 'title3' && textType !== 'paragraph') {
+  // Test textType value against the allowed values defined on the TEXT_TYPES constant in Text model
+  if (!(TEXT_TYPES as unknown as string[]).includes(textType)) {
     error.messageFront = `Le type du texte n'est pas valide. Veuillez contacter le support.`;
     throw error;
   }
@@ -557,29 +448,22 @@ export function validateAddTextForm(textType: string, content: string, lessonId:
  * @throws {AppError} If theme name contains a caracter not allowed.
  */
 export function validateUpdateThemeForm(newThemeName: string): void {
-  const error = new AppError(
+  const formError = new AppError(
     422,
     "validateUpdateThemeForm function in form service failed because of an invalid form field",
     ""
   );
 
-  // Test required validator
-  if (!newThemeName) {
-    error.messageFront = 'Le champ "Nom du thème" est obligatoire.';
-    throw error;
-  }
-
-  // Test newThemeName length
-  if (newThemeName.length > 255) {
-    error.messageFront = `Le champ "Nom du thème" doit contenir au maximum 255 caractères.`;
-    throw error;
-  }
-
-  // Test newThemeName special caracters
-  const regex = /^[a-zA-ZÀ-ÖØ-öø-ÿŒœ0-9 ?!\/:'"(),\.\-]*$/;
-  if (!regex.test(newThemeName)) {
-    error.messageFront = 'Le champ "Nom du thème" contient des caractères non autorisés.';
-    throw error;
+  try {
+    validateTextInputForm(newThemeName, true, "Nom du thème", {maxLength: 255, regex: /^[a-zA-ZÀ-ÖØ-öø-ÿŒœ0-9 ?!\/:'"(),\.\-]*$/});
+  } catch (error) {
+    if (error instanceof AppError) {
+      formError.messageFront = error.messageFront;
+    } else {
+      formError.messageFront = "Le formulaire est considéré comme invalide, veuillez contacter le support pour plus d'information.";
+      formError.cause = error;
+    }
+    throw formError;
   }
 }
 
@@ -599,35 +483,23 @@ export function validateUpdateThemeForm(newThemeName: string): void {
  * @throws {AppError} If cursus price value < 0. 
  */
 export function validateUpdateCursusForm(newCursusName: string, newCursusPrice: number): void {
-  const error = new AppError(
+  const formError = new AppError(
     422,
     "validateUpdateCursusForm function in form service failed because of an invalid form field",
     ""
   );
 
-  // Test required validator
-  if (!newCursusName || !newCursusPrice) {
-    error.messageFront = 'Les champs "Nom du cursus" et "Prix du cursus" sont obligatoires.';
-    throw error;
-  }
-
-  // Test newCursusName length
-  if (newCursusName.length > 255) {
-    error.messageFront = `Le champ "Nom du cursus" doit contenir au maximum 255 caractères.`;
-    throw error;
-  }
-
-  // Test newCursusName special caracters
-  const regex = /^[a-zA-ZÀ-ÖØ-öø-ÿŒœ0-9 ?!\/:'"(),\.\-]*$/;
-  if (!regex.test(newCursusName)) {
-    error.messageFront = 'Le champ "Nom du cursus" contient des caractères non autorisés.';
-    throw error;
-  }
-
-  // Test newCursusPrice value
-  if (newCursusPrice < 0) {
-    error.messageFront = 'Le prix doit être positif.';
-    throw error;
+  try {
+    validateTextInputForm(newCursusName, true, "Nom du cursus", {maxLength: 255, regex: /^[a-zA-ZÀ-ÖØ-öø-ÿŒœ0-9 ?!\/:'"(),\.\-]*$/});
+    validateNumberInputForm(newCursusPrice, true, "Prix du cursus", {minValue: 0});
+  } catch (error) {
+    if (error instanceof AppError) {
+      formError.messageFront = error.messageFront;
+    } else {
+      formError.messageFront = "Le formulaire est considéré comme invalide, veuillez contacter le support pour plus d'information.";
+      formError.cause = error;
+    }
+    throw formError;
   }
 }
 
@@ -647,35 +519,23 @@ export function validateUpdateCursusForm(newCursusName: string, newCursusPrice: 
  * @throws {AppError} If lesson price value < 0. 
  */
 export function validateUpdateLessonForm(newLessonName: string, newLessonPrice: number): void {
-  const error = new AppError(
+  const formError = new AppError(
     422,
     "validateUpdateLessonForm function in form service failed because of an invalid form field",
     ""
   );
 
-  // Test required validator
-  if (!newLessonName || !newLessonPrice) {
-    error.messageFront = 'Les champs "Nom de la leçon" et "Prix de la leçon" sont obligatoires.';
-    throw error;
-  }
-
-  // Test newLessonName length
-  if (newLessonName.length > 255) {
-    error.messageFront = `Le champ "Nom de la leçon" doit contenir au maximum 255 caractères.`;
-    throw error;
-  }
-
-  // Test newLessonName special caracters
-  const regex = /^[a-zA-ZÀ-ÖØ-öø-ÿŒœ0-9 ?!\/:'"(),\.\-]*$/;
-  if (!regex.test(newLessonName)) {
-    error.messageFront = 'Le champ "Nom de la leçon" contient des caractères non autorisés.';
-    throw error;
-  }
-
-  // Test newLessonPrice value
-  if (newLessonPrice < 0) {
-    error.messageFront = 'Le prix doit être positif.';
-    throw error;
+  try {
+    validateTextInputForm(newLessonName, true, "Nom de la leçon", {maxLength: 255, regex: /^[a-zA-ZÀ-ÖØ-öø-ÿŒœ0-9 ?!\/:'"(),\.\-]*$/});
+    validateNumberInputForm(newLessonPrice, true, "Prix de la leçon", {minValue: 0});
+  } catch (error) {
+    if (error instanceof AppError) {
+      formError.messageFront = error.messageFront;
+    } else {
+      formError.messageFront = "Le formulaire est considéré comme invalide, veuillez contacter le support pour plus d'information.";
+      formError.cause = error;
+    }
+    throw formError;
   }
 }
 
@@ -712,7 +572,7 @@ export function validateUpdateTextForm(newTextType: string, newContent: string):
   }
 
   // Test newTextType value
-  if (newTextType !== 'title1' && newTextType !== 'title2' && newTextType !== 'title3' && newTextType !== 'paragraph') {
+  if (!(TEXT_TYPES as unknown as string[]).includes(newTextType)) {
     error.messageFront = `Le type du texte n'est pas valide. Veuillez contacter le support.`;
     throw error;
   }
@@ -734,33 +594,33 @@ export function validateUpdateTextForm(newTextType: string, newContent: string):
  * @throws {AppError} If new alternative length > 255.
  */
 export function validateUpdateImageForm(newSource: string, newAlternative: string): void {
-  const error = new AppError(
+  const formError = new AppError(
     422,
     "validateUpdateImageForm function in form service failed because of an invalid form field",
     ""
   );
 
-  // Test required validator
-  if (!newAlternative) {
-    error.messageFront = 'Le champ "Texte alternatif" est obligatoire.';
-    throw error;
+  try {
+    validateTextInputForm(newAlternative, true, "Texte alternatif", {maxLength: 255});
+  } catch (error) {
+    if (error instanceof AppError) {
+      formError.messageFront = error.messageFront;
+    } else {
+      formError.messageFront = "Le formulaire est considéré comme invalide, veuillez contacter le support pour plus d'information.";
+      formError.cause = error;
+    }
+    throw formError;
   }
 
   if (!newSource) {
-    error.messageFront = "Le nom du fichier est manquant, veuillez contacter le support pour que le problème soit réglé au plus vite.";
-    throw error;
+    formError.messageFront = "Le nom du fichier est manquant, veuillez contacter le support pour que le problème soit réglé au plus vite.";
+    throw formError;
   }
 
   // Test newSource length
   if (newSource.length > 255) {
-    error.messageFront = `Le nom du fichier est trop long, il doit contenir au maximum 255 caractères. Veuillez contacter le support.`;
-    throw error;
-  }
-
-  // Test newAlternative length
-  if (newAlternative.length > 255) {
-    error.messageFront = `Le champ "Alternative" doit contenir au maximum 255 caractères.`;
-    throw error;
+    formError.messageFront = `Le nom du fichier est trop long, il doit contenir au maximum 255 caractères. Veuillez contacter le support.`;
+    throw formError;
   }
 }
 
