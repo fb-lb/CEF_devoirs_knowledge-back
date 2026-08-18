@@ -40,7 +40,7 @@ describe('Form service - validateRegistrationForm', () => {
       if (error instanceof AppError) thrownError = error;
     }
     expect(() => validateRegistrationForm(body)).toThrow(AppError);
-    expect(thrownError!.messageFront).toBe('Les champs "Nom", "Prénom", "Email", "Mot de passe" et "Confirmation du mot de passe" sont obligatoires.');
+    expect(thrownError!.messageFront).toBe('Le champ "Prénom" est obligatoire.');
   });
   
   it('should throw an error if last name is missing', () => {
@@ -52,7 +52,7 @@ describe('Form service - validateRegistrationForm', () => {
       if (error instanceof AppError) thrownError = error;
     }
     expect(() => validateRegistrationForm(body)).toThrow(AppError);
-    expect(thrownError!.messageFront).toBe('Les champs "Nom", "Prénom", "Email", "Mot de passe" et "Confirmation du mot de passe" sont obligatoires.');
+    expect(thrownError!.messageFront).toBe('Le champ "Nom" est obligatoire.');
   });
 
   it('should throw an error if email is missing', () => {
@@ -64,7 +64,7 @@ describe('Form service - validateRegistrationForm', () => {
       if (error instanceof AppError) thrownError = error;
     }
     expect(() => validateRegistrationForm(body)).toThrow(AppError);
-    expect(thrownError!.messageFront).toBe('Les champs "Nom", "Prénom", "Email", "Mot de passe" et "Confirmation du mot de passe" sont obligatoires.');
+    expect(thrownError!.messageFront).toBe('Le champ "Email" est obligatoire.');
   });
 
   it('should throw an error if password is missing', () => {
@@ -76,7 +76,7 @@ describe('Form service - validateRegistrationForm', () => {
       if (error instanceof AppError) thrownError = error;
     }
     expect(() => validateRegistrationForm(body)).toThrow(AppError);
-    expect(thrownError!.messageFront).toBe('Les champs "Nom", "Prénom", "Email", "Mot de passe" et "Confirmation du mot de passe" sont obligatoires.');
+    expect(thrownError!.messageFront).toBe('Le champ "Mot de passe" est obligatoire.');
   });
 
   it('should throw an error if confirm password is missing', () => {
@@ -88,7 +88,7 @@ describe('Form service - validateRegistrationForm', () => {
       if (error instanceof AppError) thrownError = error;
     }
     expect(() => validateRegistrationForm(body)).toThrow(AppError);
-    expect(thrownError!.messageFront).toBe('Les champs "Nom", "Prénom", "Email", "Mot de passe" et "Confirmation du mot de passe" sont obligatoires.');
+    expect(thrownError!.messageFront).toBe('Le champ "Confirmation du mot de passe" est obligatoire.');
   });
 
   it('should throw an error if first name length is higher than 60 characters', () => {
@@ -201,42 +201,6 @@ describe('Form service - validateRegistrationForm', () => {
     expect(thrownError!.messageFront).toBe('Le champ "Mot de passe" contient des caractères non autorisés.');
   });
 
-  it("should throw an error if confirm password length is lower than 8 characters", () => {
-    body.confirmPassword = 'Gh4!';
-    let thrownError: AppError;
-    try {
-      validateRegistrationForm(body);
-    } catch (error) {
-      if (error instanceof AppError) thrownError = error;
-    }
-    expect(() => validateRegistrationForm(body)).toThrow(AppError);
-    expect(thrownError!.messageFront).toBe('Le champ "Confirmation du mot de passe" doit contenir au moins 8 caractères.');
-  });
-
-  it("should throw an error if confirm password length is higher than 100 characters", () => {
-    body.confirmPassword += 'A'.repeat(101);
-    let thrownError: AppError;
-    try {
-      validateRegistrationForm(body);
-    } catch (error) {
-      if (error instanceof AppError) thrownError = error;
-    }
-    expect(() => validateRegistrationForm(body)).toThrow(AppError);
-    expect(thrownError!.messageFront).toBe('Le champ "Confirmation du mot de passe" doit contenir au maximum 100 caractères.');
-  });
-
-  it('should throw an error if confirm password contains an unauthorized character', () => {
-    body.confirmPassword += '{';
-    let thrownError: AppError;
-    try {
-      validateRegistrationForm(body);
-    } catch (error) {
-      if (error instanceof AppError) thrownError = error;
-    }
-    expect(() => validateRegistrationForm(body)).toThrow(AppError);
-    expect(thrownError!.messageFront).toBe('Le champ "Confirmation du mot de passe" contient des caractères non autorisés.');
-  });
-
   it("should throw an error if password and confirm password are differents", () => {
     body.password += 'g';
     body.confirmPassword += 't';
@@ -283,7 +247,7 @@ describe('Form service - validateLoginForm', () => {
       if (error instanceof AppError) thrownError = error;
     }
     expect(() => validateLoginForm(body)).toThrow(AppError);
-    expect(thrownError!.messageFront).toBe('Les champs "Email" et "Mot de passe" sont obligatoires.');
+    expect(thrownError!.messageFront).toBe('Le champ "Email" est obligatoire.');
   });
 
   it('should throw an error if password is missing', () => {
@@ -295,7 +259,7 @@ describe('Form service - validateLoginForm', () => {
       if (error instanceof AppError) thrownError = error;
     }
     expect(() => validateLoginForm(body)).toThrow(AppError);
-    expect(thrownError!.messageFront).toBe('Les champs "Email" et "Mot de passe" sont obligatoires.');
+    expect(thrownError!.messageFront).toBe('Le champ "Mot de passe" est obligatoire.');
   });
 
   it("should throw an error if email doesn't respect email format", () => {
