@@ -59,7 +59,7 @@ export function updateUserController(
   const body = req.body;
   validateUpdateUserForm(body);
   const requestorId = getRequestorId(req.headers.authorization?.split(" ")[1]!);
-  updateUser(requestorId, body);
+  updateUser(requestorId, body, Number(req.params.id));
   return res.status(200).json({
     success: true,
     message: "L'utilisateur a bien été mis à jour.",
