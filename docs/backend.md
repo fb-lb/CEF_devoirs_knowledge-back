@@ -33,6 +33,7 @@ TypeScript 5.9.2 (ESM natif, `"type": "module"` dans `package.json`)
 
 - ORM : Sequelize (+ `sequelize-cli` pour migrations et seeders)
 - Base de données : MySQL (`mysql2`)
+- ODM : Mongoose, pour les logs applicatifs (base MongoDB séparée, voir `database.md`)
 - Authentification : JWT (`jsonwebtoken`), mots de passe hashés avec `bcrypt`
 - Upload de fichiers : `multer` (images des leçons)
 - Paiement : `stripe`
@@ -46,14 +47,15 @@ TypeScript 5.9.2 (ESM natif, `"type": "module"` dans `package.json`)
 ```
 src/
 ├── bin/            # point d'entrée (www.ts)
-├── config/         # configuration DB (database.ts) et Sequelize CLI (config.cjs)
+├── config/         # configuration DB MySQL (database.ts), Sequelize CLI (config.cjs) et connexion MongoDB (mongo.ts)
 ├── controllers/     # gestion HTTP : parsing requête, appel des services, formatage réponse
-├── services/         # logique métier et accès aux données via les modèles Sequelize
-├── models/           # modèles Sequelize + associations (databaseAssociations.ts)
+├── services/         # logique métier et accès aux données via les modèles Sequelize / Mongoose
+├── models/           # modèles Sequelize + associations (databaseAssociations.ts), modèle Mongoose Log.ts
 ├── routes/          # déclaration des routes Express, montées dans routes/index.ts
 ├── middlewares/    # authentification (private.middleware.ts), upload (uploadImage.middleware.ts)
 ├── migrations/     # migrations Sequelize (une par table)
-├── seeders/          # jeux de données de test/démo
+├── seeders/          # jeux de données de test/démo (MySQL)
+├── data-mongo-db/  # jeu de données et script de seed pour les logs MongoDB (seed-logs.ts, logs.json)
 ├── types/           # interfaces et types partagés (Interfaces.ts, types.ts, env.d.ts, express.d.ts)
 ├── utils/            # utilitaires (AppError.ts)
 ├── tests/            # tests Vitest
@@ -66,12 +68,12 @@ Controllers :
 Reçoivent la requête HTTP, en extraient les données, appellent le(s) service(s) nécessaires et renvoient une réponse JSON au format `ApiResponse`. Contiennent peu ou pas de logique métier.
 
 Services :
-Contiennent la logique métier et l'accès aux données (via les modèles Sequelize). Un service par domaine métier (`authentication`, `user`, `theme`, `cursus`, `lesson`, `element`, `user-theme`, `user-cursus`, `user-lesson`, `token`, `email`, `form`).
+Contiennent la logique métier et l'accès aux données (via les modèles Sequelize, ou via le modèle Mongoose `Log` pour les logs). Un service par domaine métier (`authentication`, `user`, `theme`, `cursus`, `lesson`, `element`, `user-theme`, `user-cursus`, `user-lesson`, `token`, `email`, `form`, `log`).
 
 Models :
-Définissent le schéma Sequelize de chaque entité (typé via des interfaces `Attributes`/`CreationAttributes`) ainsi que les associations entre entités (`databaseAssociations.ts`).
+Définissent le schéma Sequelize de chaque entité (typé via des interfaces `Attributes`/`CreationAttributes`) ainsi que les associations entre entités (`databaseAssociations.ts`). `Log.ts` définit de la même façon le schéma Mongoose du modèle `Log`.
 
-Il n'y a pas de couche `repositories/` distincte : les services appellent directement les modèles Sequelize.
+Il n'y a pas de couche `repositories/` distincte : les services appellent directement les modèles Sequelize (ou Mongoose pour les logs).
 
 ## Flux d'une requête
 
@@ -123,5 +125,6 @@ Conventions globales :
   - `/stripe` : création de payment intent
   - `/content/theme`, `/content/cursus`, `/content/lesson`, `/content/element` : catalogue pédagogique
   - `/user-theme`, `/user-cursus`, `/user-lesson` : achats et progression des utilisateurs
+  - `/logs` : consultation des logs applicatifs (MongoDB), réservée aux administrateurs
 - pas de versionnement d'API à ce jour (une seule version) ;
 - pas de pagination généralisée (catalogue de taille réduite).

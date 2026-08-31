@@ -10,6 +10,7 @@ import { router as stripeRoute } from './stripe.js';
 import { router as userCursusRoute } from './user-cursus.js';
 import { router as userLessonRoute } from './user-lesson.js';
 import { router as userThemeRoute } from './user-theme.js';
+import { router as logsRoute } from './logs.js';
 
 export const router: Router = Router();
 
@@ -24,6 +25,7 @@ router.use('/api/inscription', regisrationRoute);
 router.use('/api/authentification', authenticationRoute);
 router.use('/api/utilisateurs', usersRoute);
 router.use('/api/stripe', stripeRoute);
+router.use('/api/logs', logsRoute);
 
 router.use('/api/content/theme', themeRoute);
 router.use('/api/content/cursus', cursusRoute);

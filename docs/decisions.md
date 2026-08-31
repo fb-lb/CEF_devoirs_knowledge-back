@@ -174,3 +174,32 @@ Non documentées précisément ; cohérent avec un hébergement gratuit/à faibl
 Conséquences :
 - deux processus de déploiement indépendants (backend sur Render, frontend sur GitHub Pages) ;
 - l'URL du backend en production (`https://knowledge-back-jrzv.onrender.com`) doit être tenue à jour dans la configuration du frontend (`environment.prod.ts`).
+
+### MongoDB pour les logs applicatifs, en complément de MySQL
+
+Date :
+2026-08-31
+
+Statut :
+Acceptée
+
+Contexte :
+
+Le besoin est de journaliser des évènements applicatifs (authentification, audit, erreurs) dont la structure varie fortement selon le type d'évènement (`metadata` différent pour `LOGIN_FAILED`, `DATABASE_ERROR`, `USER_ROLE_CHANGED`...). Ces écritures sont indépendantes des données métier existantes (utilisateurs, catalogue, achats) déjà en MySQL.
+
+Décision :
+
+Introduction d'une seconde base de données, MongoDB, dédiée aux logs, accédée via `mongoose` (voir `src/config/mongo.ts`, `src/models/Log.ts`). Le reste de l'application (données métier) continue de reposer exclusivement sur MySQL/Sequelize.
+
+Alternatives étudiées :
+- une table `log` dans MySQL, avec une colonne `JSON` pour les métadonnées variables.
+
+Raisons du choix :
+
+Le schéma des logs varie par type d'évènement (`metadata` libre), ce que MongoDB modélise nativement sans multiplier les colonnes nullables ni les migrations à chaque nouvel évènement ; ce choix isole aussi les écritures de logs (potentiellement fréquentes) de la base transactionnelle métier.
+
+Conséquences :
+- le projet gère désormais deux bases de données et deux outillages distincts (Sequelize/`sequelize-cli` pour MySQL, Mongoose pour MongoDB, sans migrations pour ce dernier) ;
+- pas d'intégrité référentielle entre `Log.userId` et `user.id` (deux bases indépendantes) ;
+- un jeu de seed dédié (`src/data-mongo-db/seed-logs.ts`), exécuté via `tsx` plutôt que `sequelize-cli` ;
+- accès aux logs réservé aux administrateurs (voir `security.md`), certains logs contenant des données personnelles (email, IP).

@@ -11,10 +11,14 @@ import { router as usersRouter } from "./routes/users.js";
 import { AppError } from "./utils/AppError.js";
 import { ApiResponse } from "./types/Interfaces.js";
 import { setupAssociations } from "./models/databaseAssociations.js";
+import { connectMongoDB } from "./config/mongo.js";
 
-// Set Database
+// Set Database SQL (MariaDB)
 await connectDB();
-setupAssociations()
+setupAssociations();
+
+// Set Database NoSQL (MongoDB)
+await connectMongoDB();
 
 // Get public folder path
 const __filename = fileURLToPath(import.meta.url);

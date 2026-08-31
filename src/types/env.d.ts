@@ -16,6 +16,7 @@ declare namespace NodeJS {
         EMAILJS_TEMPLATE_ID: string;
         JWT_USER_SECRET: string;
         JWT_IMAGE_SECRET: string;
+        DATABASE_MONGO_DB_URI: string;
         PORT: number;
         STRIPE_PUBLIC_KEY: string;
         STRIPE_SECRET_KEY: string;

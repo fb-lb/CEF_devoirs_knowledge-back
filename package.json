@@ -12,6 +12,8 @@
     "migrate-undo": "cross-env env-cmd -f ./env/.env npx sequelize-cli db:migrate:undo",
     "seeders": "cross-env env-cmd -f ./env/.env npx sequelize-cli db:seed:all",
     "seeders-render": "npx sequelize-cli db:seed:all",
+    "seeders-logs": "cross-env env-cmd -f ./env/.env tsx ./src/data-mongo-db/seed-logs.ts",
+    "seeders-logs-render": "npx --yes tsx@4.20.5 ./src/data-mongo-db/seed-logs.ts",
     "start": "node ./dist/bin/www",
     "test": "vitest run"
   },
@@ -23,6 +25,7 @@
     "debug": "~4.4.1",
     "express": "~5.1.0",
     "jsonwebtoken": "^9.0.2",
+    "mongoose": "^9.9.2",
     "morgan": "^1.11.0",
     "multer": "^2.0.2",
     "mysql2": "^3.14.5",

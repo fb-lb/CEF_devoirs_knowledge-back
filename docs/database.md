@@ -68,3 +68,40 @@ Les entités de contenu (`theme`, `cursus`, `lesson`, `element`, `text`, `image`
 - ne jamais contourner Sequelize par du SQL brut ;
 - toute modification de schéma doit passer par une nouvelle migration (jamais de modification directe en base ni de migration déjà appliquée modifiée a posteriori) ;
 - les prix (`cursus.price`, `lesson.price`) sont stockés en `DECIMAL(10,2)` et convertis en centimes uniquement au moment de l'appel Stripe.
+
+## Logs applicatifs (MongoDB)
+
+En complément de la base MySQL (données métier), une base **MongoDB** dédiée stocke les logs applicatifs (authentification, audit, erreurs).
+
+### SGBD / ODM
+
+- MongoDB, connexion établie via `mongoose` (`src/config/mongo.ts`, `connectMongoDB()`, appelée au démarrage dans `app.ts`) ;
+- URI de connexion fournie par la variable d'environnement `DATABASE_MONGO_DB_URI`.
+
+### Schéma
+
+Une seule collection `Log` (`src/models/Log.ts`), avec un schéma Mongoose validé côté application :
+- `level` : `'info' | 'warn' | 'error'` (`LOG_LEVELS`) ;
+- `type` : `'audit' | 'auth' | 'error'` (`LOG_TYPES`) ;
+- `event` : évènement précis parmi `LOG_EVENTS` (ex. `LOGIN_SUCCESS`, `LOGIN_FAILED`, `DATABASE_ERROR`, `USER_ROLE_CHANGED`) ;
+- `userId` : identifiant de l'utilisateur MySQL à l'origine du log, optionnel selon l'évènement ;
+- `metadata` : objet libre (`Schema.Types.Mixed`), dont la forme dépend de l'`event` (ex. `ip`/`email` pour un échec de connexion, `model`/`operation`/`errorCode` pour une erreur base de données) ;
+- `createdAt` : horodatage automatique (`updatedAt` désactivé, un log n'est jamais modifié).
+
+Ces combinaisons `event`/`level`/`type`/`metadata` sont typées côté TypeScript par le type discriminé `NewLog` (`src/types/types.ts`), qui fait foi pour ajouter un nouvel évènement de log.
+
+### Principes
+
+- `userId` référence un utilisateur MySQL (`user.id`) sans contrainte de clé étrangère (les deux bases sont indépendantes, la cohérence entre `userId` et l'utilisateur MySQL n'est pas garantie par la base) ;
+- pas de migrations Sequelize pour cette collection : le schéma est défini et validé uniquement côté Mongoose (`enum`, `required`), pas de `src/migrations/` associé ;
+- jeu de données de test/démo dans `src/data-mongo-db/` (`logs.json` + script `seed-logs.ts`, exécuté via `tsx` et non `sequelize-cli`, commandes `npm run seeders-logs` / `seeders-logs-render`).
+
+### Données sensibles
+
+- certains `metadata` contiennent des données personnelles (`email`, `ip` sur les évènements d'authentification) : voir `security.md` pour les implications et la restriction d'accès à ces logs.
+
+### Invariants
+
+- toute écriture de log passe par `addNewLog` (`log.service.ts`), jamais d'insertion Mongoose directe depuis un controller ;
+- un log n'est jamais modifié après création (`updatedAt` désactivé) ;
+- l'accès en lecture aux logs (`GET /api/logs/getAll`) est réservé aux administrateurs (`privateAdmin`).
