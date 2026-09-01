@@ -1,6 +1,7 @@
 import { Log } from "../models/Log.js";
 import { NewLog, StoredLog } from "../types/types.js";
 import { AppError } from "../utils/AppError.js";
+import { Request } from "express";
 
 
 export async function getAllLogs(): Promise<StoredLog[]> {
@@ -17,7 +18,18 @@ export async function getAllLogs(): Promise<StoredLog[]> {
   }
 }
 
-export async function addNewLog(log: NewLog): Promise<void> {
+export async function getClientIp(req: Request) {
+  console.log({
+    ip: req.ip,
+    ips: req.ips,
+    forwarded: req.headers.forwarded,
+    xForwardedFor: req.headers['x-forwarded-for'],
+    cfConnectingIp: req.headers['cf-connecting-ip'],
+    headers: req.headers,
+  });
+}
+
+export async function createLog(log: NewLog): Promise<void> {
   try {
     await Log.create(log);
   } catch (error: any) {

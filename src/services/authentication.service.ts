@@ -2,6 +2,8 @@ import { User } from "../models/databaseAssociations.js";
 import { AppError } from "../utils/AppError.js";
 import bcrypt from 'bcrypt';
 import { UserData } from "../types/Interfaces.js";
+import { createLog } from "./log.service.js";
+import { NewLog } from "../types/types.js";
 
 /**
  * Login test. Retrieves a user whith the provided email and check if password provided and password of the retrieved user are the same.
@@ -45,6 +47,16 @@ export async function testLoginRequest(email: string, password: string): Promise
 
     return cleanUser;  
   } catch (error: any) {
+    // const newLog: NewLog = {
+    //   event: 'LOGIN_FAILED',
+    //   level: 'warn',
+    //   type: 'auth',
+    //   metadata: {
+    //     email,
+    //     ip: 
+    //   }
+    // }
+    // await createLog();
     throw new AppError(
       500,
       "internal server error",
