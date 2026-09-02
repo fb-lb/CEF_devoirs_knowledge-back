@@ -8,7 +8,7 @@
 
 > **changeOrderLessons**(`lessonId`, `move`, `userId`): `Promise`\<[`ApiResponse`](../../../types/Interfaces/interfaces/ApiResponse.md)\<`undefined`\>\>
 
-Defined in: [src/services/lesson.service.ts:153](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/148f492cd1e7888bd6f05a7623a4561610d539d1/src/services/lesson.service.ts#L153)
+Defined in: [src/services/lesson.service.ts:153](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/a2ea6a85c9a696b582add7a1af0a3500ca474c01/src/services/lesson.service.ts#L153)
 
 **`Function`**
 

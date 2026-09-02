@@ -3,7 +3,8 @@ import { ApiResponse, LoginBody, UserData } from "../types/Interfaces.js";
 import { testLoginRequest } from "../services/authentication.service.js";
 import { generateUserToken } from "../services/token.service.js";
 import { validateLoginForm } from "../services/form.service.js";
-import { getClientIp } from "../services/log.service.js";
+import { createLog, getClientIp } from "../services/log.service.js";
+import { NewLog } from "../types/types.js";
 
 /**
  * Handle user login request.
@@ -30,10 +31,10 @@ export async function login(req: Request<{}, {}, LoginBody>, res: Response): Pro
 
   validateLoginForm(body);
   
-  getClientIp(req);
+  const clientIp = getClientIp(req);
 
   // Check that email and password are valid
-  const user: UserData|string = await testLoginRequest(body.email, body.password);
+  const user: UserData|string = await testLoginRequest(body.email, body.password, clientIp);
   if (typeof(user) === 'string') return res.status(401).json({ success: false, message: user });
 
   // Generate a token

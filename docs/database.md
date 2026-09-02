@@ -90,6 +90,13 @@ Une seule collection `Log` (`src/models/Log.ts`), avec un schéma Mongoose valid
 
 Ces combinaisons `event`/`level`/`type`/`metadata` sont typées côté TypeScript par le type discriminé `NewLog` (`src/types/types.ts`), qui fait foi pour ajouter un nouvel évènement de log.
 
+### Émission des logs
+
+Tous les logs sont créés via `createLog` (`log.service.ts`), appelée sans être attendue (`await`) à ses points de déclenchement — une écriture de log ne doit jamais ralentir ni faire échouer le flux métier qui la déclenche (elle avale ses propres erreurs et renvoie `false` en cas d'échec, voir `backend.md`) :
+- `LOGIN_SUCCESS` / `LOGIN_FAILED` : `testLoginRequest` (`authentication.service.ts`), à chaque tentative de connexion (IP récupérée via `getClientIp`) ;
+- `USER_ROLE_CHANGED` : `updateUser` (`user.service.ts`), uniquement si le rôle de l'utilisateur modifié change réellement ;
+- `DATABASE_ERROR` : centralisé dans le middleware d'erreur global (`app.ts`), voir `backend.md`.
+
 ### Principes
 
 - `userId` référence un utilisateur MySQL (`user.id`) sans contrainte de clé étrangère (les deux bases sont indépendantes, la cohérence entre `userId` et l'utilisateur MySQL n'est pas garantie par la base) ;
@@ -102,6 +109,6 @@ Ces combinaisons `event`/`level`/`type`/`metadata` sont typées côté TypeScrip
 
 ### Invariants
 
-- toute écriture de log passe par `addNewLog` (`log.service.ts`), jamais d'insertion Mongoose directe depuis un controller ;
+- toute écriture de log passe par `createLog` (`log.service.ts`), jamais d'insertion Mongoose directe depuis un controller ;
 - un log n'est jamais modifié après création (`updatedAt` désactivé) ;
 - l'accès en lecture aux logs (`GET /api/logs/getAll`) est réservé aux administrateurs (`privateAdmin`).

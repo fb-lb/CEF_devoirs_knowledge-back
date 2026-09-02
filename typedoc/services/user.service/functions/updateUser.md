@@ -6,9 +6,9 @@
 
 # Function: updateUser()
 
-> **updateUser**(`requestorId`, `userData`): `Promise`\<`void`\>
+> **updateUser**(`requestorId`, `userData`, `userId`): `Promise`\<`void`\>
 
-Defined in: [src/services/user.service.ts:239](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/148f492cd1e7888bd6f05a7623a4561610d539d1/src/services/user.service.ts#L239)
+Defined in: [src/services/user.service.ts:241](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/a2ea6a85c9a696b582add7a1af0a3500ca474c01/src/services/user.service.ts#L241)
 
 **`Function`**
 
@@ -35,6 +35,10 @@ Object containing the new informations :
   roles: ("user" | "admin")[];
   isVerified: boolean;
 }
+
+### userId
+
+`number`
 
 ## Returns
 

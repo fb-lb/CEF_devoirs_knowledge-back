@@ -1,5 +1,5 @@
 import { User } from "../models/databaseAssociations.js";
-import { AppError } from "../utils/AppError.js";
+import { AppError, extractDbErrorCode } from "../utils/AppError.js";
 import bcrypt from 'bcrypt';
 import { UserData } from "../types/Interfaces.js";
 import { createLog } from "./log.service.js";
@@ -13,6 +13,7 @@ import { NewLog } from "../types/types.js";
  * 
  * @param {string} email - Email used to retrieve user trying to login.
  * @param {string} password - Password compared to password of retrieved user to check user authentication.
+ * @param {string} clientIp - Client IP address used to create a log if user isn't retrieved.
  *  
  * @returns {Promise<UserData|string>}
  * Returns Promise<string> if no user retrieved with the provided email
@@ -20,18 +21,52 @@ import { NewLog } from "../types/types.js";
  * 
  * @throws {AppError} If an unexpected error occurs during the login test.
  */
-export async function testLoginRequest(email: string, password: string): Promise<UserData | string> {
+export async function testLoginRequest(email: string, password: string, clientIp: string): Promise<UserData | string> {
+  const loginFailedLog: NewLog = {
+    event: 'LOGIN_FAILED',
+    level: 'warn',
+    type: 'auth',
+    metadata: {
+      email,
+      ip: clientIp
+    }
+  }
+
+  let user: User | null;
+
   try {
-    const user = await User.findOne(
+    user = await User.findOne(
       { where: { email: email }, 
       attributes: ['id', 'email', 'firstName', 'lastName', 'password', 'roles', 'isVerified', 'createdAt', 'updatedAt', 'updatedBy']
     });
+  } catch (error: any) {
+    throw new AppError(
+      500,
+      "internal server error",
+      "Une erreur interne est survenue, si vous ne parvenez pas à vous connecter, merci de contacter le support.",
+      { 
+        cause : error,
+        dbErrorContext: {
+          model: 'User',
+          operation: 'findOne',
+          errorCode: extractDbErrorCode(error)
+        }
+      }
+    )
+  }
 
-    if (!user) return 'Cet email ne correspond à aucun compte enregistré.';
-    
+  if (!user) {
+    createLog(loginFailedLog);
+    return 'Cet email ne correspond à aucun compte enregistré.';
+  }
+
+  try {
     const checkPassword = await bcrypt.compare(password, user.password);
     
-    if (!checkPassword) return 'Email et/ou mot de passe invalide.';
+    if (!checkPassword) {
+      createLog(loginFailedLog);
+      return 'Email et/ou mot de passe invalide.';
+    }
 
     const cleanUser = {
       id: user.id,
@@ -45,18 +80,19 @@ export async function testLoginRequest(email: string, password: string): Promise
       updatedBy: user.updatedBy,
     };
 
+    const loginSuccessLog: NewLog = {
+      event: 'LOGIN_SUCCESS',
+      type: 'auth',
+      level: 'info',
+      userId: user.id,
+      metadata: {
+        ip: clientIp
+      }
+    };
+    createLog(loginSuccessLog);
+
     return cleanUser;  
   } catch (error: any) {
-    // const newLog: NewLog = {
-    //   event: 'LOGIN_FAILED',
-    //   level: 'warn',
-    //   type: 'auth',
-    //   metadata: {
-    //     email,
-    //     ip: 
-    //   }
-    // }
-    // await createLog();
     throw new AppError(
       500,
       "internal server error",
@@ -99,7 +135,14 @@ export async function checkAuthorization(userId: number, role: 'user' | 'admin')
       500,
       "internal server error",
       "Une erreur interne est survenue, si vous ne parvenez pas à accéder au contenu, merci de contacter le support.",
-      { cause : error }
+      { 
+        cause : error,
+        dbErrorContext: {
+          model: 'User',
+          operation: 'findByPk',
+          errorCode: extractDbErrorCode(error)
+        }
+      }
     )
   }
 }

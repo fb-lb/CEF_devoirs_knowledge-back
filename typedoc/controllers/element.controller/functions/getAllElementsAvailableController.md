@@ -8,7 +8,7 @@
 
 > **getAllElementsAvailableController**(`req`, `res`): `Promise`\<`Response`\<[`ApiResponse`](../../../types/Interfaces/interfaces/ApiResponse.md)\<[`ElementData`](../../../types/Interfaces/type-aliases/ElementData.md)[]\>, `Record`\<`string`, `any`\>\>\>
 
-Defined in: [src/controllers/element.controller.ts:522](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/148f492cd1e7888bd6f05a7623a4561610d539d1/src/controllers/element.controller.ts#L522)
+Defined in: [src/controllers/element.controller.ts:522](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/a2ea6a85c9a696b582add7a1af0a3500ca474c01/src/controllers/element.controller.ts#L522)
 
 Handle the retrieval of the elements available for the user who made the request.
 

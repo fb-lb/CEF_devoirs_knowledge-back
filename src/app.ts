@@ -12,6 +12,7 @@ import { AppError } from "./utils/AppError.js";
 import { ApiResponse } from "./types/Interfaces.js";
 import { setupAssociations } from "./models/databaseAssociations.js";
 import { connectMongoDB } from "./config/mongo.js";
+import { createLog } from "./services/log.service.js";
 
 // Set Database SQL (MariaDB)
 await connectDB();
@@ -89,6 +90,16 @@ app.use(function (err: unknown, req: Request, res: Response, next: NextFunction)
       stack: err.stack,
       cause: err.cause
     });
+    if (err.dbErrorContext) {
+      createLog({
+        event: 'DATABASE_ERROR',
+        level: 'error',
+        type: 'error',
+        metadata: err.dbErrorContext
+      }).then(isDatabaseLogCreated => {
+        if (!isDatabaseLogCreated) console.error("Log creation tried by global error handler in app.ts");
+        });
+    }
   } else if (err instanceof Error) {
     console.error({
       name: err.name,

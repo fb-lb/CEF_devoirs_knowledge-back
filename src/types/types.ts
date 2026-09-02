@@ -21,7 +21,7 @@ export const LOG_EVENTS = [
 type LogLevel = typeof LOG_LEVELS[number];
 type LogType = typeof LOG_TYPES[number];
 type LogEvent = typeof LOG_EVENTS[number];
-type ModelList = 'User' | 'Theme' | 'Cursus' | 'Lesson' | 'Element' | 'Text' | 'Image' | 'UserTheme' | 'UserCursus' | 'UserLesson';
+export type ModelList = 'User' | 'Theme' | 'Cursus' | 'Lesson' | 'Element' | 'Text' | 'Image' | 'UserTheme' | 'UserCursus' | 'UserLesson';
 type RoleList = 'user' | 'admin';
 
 interface BaseLog {

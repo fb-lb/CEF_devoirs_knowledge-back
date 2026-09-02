@@ -108,6 +108,14 @@ Response (format ApiResponse)
 - un middleware d'erreur central dans `app.ts` intercepte toutes les erreurs, logge le détail technique côté serveur (`console.error`) et ne renvoie que `messageFront` au client ;
 - les erreurs non prévues (hors `AppError`) renvoient un message générique HTTP 500, sans exposer la stack ni le détail interne.
 
+### Journalisation des erreurs base de données (`DATABASE_ERROR`)
+
+- `AppError` porte un champ optionnel `dbErrorContext` (`{ model, operation, errorCode }`) renseigné dans les services au moment où une opération Sequelize échoue ;
+- `extractDbErrorCode` (`AppError.ts`) normalise le code d'erreur technique (`error.parent?.code` pour une erreur Sequelize, sinon `error.name`) ;
+- `throwDbError` (`AppError.ts`) est le point d'entrée à utiliser dans un `catch` de service pour lever directement une `AppError` avec son `dbErrorContext` sans dupliquer sa construction ;
+- le middleware d'erreur central (`app.ts`) lit `err.dbErrorContext` quand présent et crée en conséquence un log `DATABASE_ERROR` (via `createLog`, `log.service.ts`), de façon non bloquante pour la réponse HTTP renvoyée au client ;
+- convention : un `try/catch` par opération Sequelize quand une fonction en enchaîne plusieurs de nature différente (modèle et/ou opération distincts), pour que `dbErrorContext` reste précis ; un seul `try/catch` global reste suffisant pour une fonction ne faisant qu'un seul type d'accès BDD.
+
 ## API
 
 Style :
