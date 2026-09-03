@@ -14,4 +14,4 @@ Defined in: node\_modules/@types/express-serve-static-core/index.d.ts:10
 
 > `optional` **user**: `UserId`
 
-Defined in: [src/types/express.d.ts:10](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/148f492cd1e7888bd6f05a7623a4561610d539d1/src/types/express.d.ts#L10)
+Defined in: [src/types/express.d.ts:10](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/a2ea6a85c9a696b582add7a1af0a3500ca474c01/src/types/express.d.ts#L10)

@@ -9,3 +9,8 @@
 ## Classes
 
 - [AppError](classes/AppError.md)
+
+## Functions
+
+- [extractDbErrorCode](functions/extractDbErrorCode.md)
+- [throwDbError](functions/throwDbError.md)

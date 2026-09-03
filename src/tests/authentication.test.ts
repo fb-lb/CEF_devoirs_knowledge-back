@@ -6,6 +6,7 @@ import { MockResponse } from "../types/types.js";
 import * as formService from '../services/form.service.js';
 import * as authenticationService from '../services/authentication.service.js';
 import * as tokenService from "../services/token.service.js";
+import * as logService from "../services/log.service.js";
 import { User } from "../models/User.js";
 import bcrypt from 'bcrypt';
 
@@ -23,8 +24,10 @@ describe('Authentication controller - login', () => {
   let validateLoginFormSpy: Mock;
   let testLoginRequestSpy: Mock;
   let generateUserTokenSpy: Mock;
+  let getClientIpSpy: Mock;
   let user: UserData;
   let token: string;
+  let clientIp: string;
   
   beforeEach(() => {
     req = {
@@ -39,6 +42,7 @@ describe('Authentication controller - login', () => {
     validateLoginFormSpy = vi.spyOn(formService, 'validateLoginForm');
     testLoginRequestSpy = vi.spyOn(authenticationService, 'testLoginRequest');
     generateUserTokenSpy = vi.spyOn(tokenService, 'generateUserToken');
+    getClientIpSpy = vi.spyOn(logService, 'getClientIp');
 
     user = {
       id: 1,
@@ -52,6 +56,7 @@ describe('Authentication controller - login', () => {
       updatedBy: null,
     };
     token = 'false-token-eyfgregrggfbb.tnttrhrthn.erthtrhytzh';
+    clientIp = 'fake-ip-address';
   });
 
   afterEach(() => {
@@ -60,13 +65,15 @@ describe('Authentication controller - login', () => {
 
   it('should return response object with 200 status code', async () => {
     validateLoginFormSpy.mockReturnValue(undefined);
+    getClientIpSpy.mockReturnValue(clientIp);
     testLoginRequestSpy.mockResolvedValue(user);
     generateUserTokenSpy.mockReturnValue(token);
 
     await login(req as Request<{}, {}, LoginBody>, res as unknown as Response);
   
     expect(validateLoginFormSpy).toHaveBeenCalledWith(req.body);
-    expect(testLoginRequestSpy).toHaveBeenCalledWith(req.body?.email, req.body?.password);
+    expect(getClientIpSpy).toHaveBeenCalledWith(req);
+    expect(testLoginRequestSpy).toHaveBeenCalledWith(req.body?.email, req.body?.password, clientIp);
     expect(generateUserTokenSpy).toHaveBeenCalledWith(user);
     expect(res.setHeader).toHaveBeenCalledWith('Authorization', `Bearer ${token}`);
     expect(res.status).toHaveBeenCalledWith(200);
@@ -75,13 +82,15 @@ describe('Authentication controller - login', () => {
 
   it('should return a response with 401 status because testLoginRequest did not found a user', async () => {
     validateLoginFormSpy.mockReturnValue(undefined);
+    getClientIpSpy.mockReturnValue(clientIp);
     testLoginRequestSpy.mockResolvedValue('Cet email ne correspond à aucun compte enregistré.');
     generateUserTokenSpy.mockReturnValue(undefined);
 
     await login(req as Request<{}, {}, LoginBody>, res as unknown as Response);
   
     expect(validateLoginFormSpy).toHaveBeenCalledWith(req.body);
-    expect(testLoginRequestSpy).toHaveBeenCalledWith(req.body?.email, req.body?.password);
+    expect(getClientIpSpy).toHaveBeenCalledWith(req);
+    expect(testLoginRequestSpy).toHaveBeenCalledWith(req.body?.email, req.body?.password, clientIp);
     expect(generateUserTokenSpy).toHaveBeenCalledTimes(0);
     expect(res.setHeader).toHaveBeenCalledTimes(0);
     expect(res.status).toHaveBeenCalledWith(401);
@@ -92,6 +101,7 @@ describe('Authentication controller - login', () => {
 describe('Authentication service - testLoginRequest', () => {
   let email: string;
   let password: string;
+  let clientIp: string;
   let findOneUserSpy: Mock;
   let compareBcrypt: Mock;
   let user: Partial<User>;
@@ -99,6 +109,7 @@ describe('Authentication service - testLoginRequest', () => {
   beforeEach(() => {
     email = "john.doe@test.com";
     password = 'fake-password-12345-*ù$!';
+    clientIp = 'fake-ip-address';
     findOneUserSpy = vi.spyOn(User, 'findOne');
     compareBcrypt = vi.spyOn(bcrypt, 'compare');
     user = {
@@ -123,7 +134,7 @@ describe('Authentication service - testLoginRequest', () => {
     findOneUserSpy.mockResolvedValue(user);
     compareBcrypt.mockResolvedValue(true);
 
-    await authenticationService.testLoginRequest(email, password);
+    await authenticationService.testLoginRequest(email, password, clientIp);
 
     expect(findOneUserSpy).toHaveBeenCalledWith({ where: { email: email }, 
       attributes: ['id', 'email', 'firstName', 'lastName', 'password', 'roles', 'isVerified', 'createdAt', 'updatedAt', 'updatedBy']
@@ -135,7 +146,7 @@ describe('Authentication service - testLoginRequest', () => {
     findOneUserSpy.mockResolvedValue(null);
     compareBcrypt.mockResolvedValue(undefined);
 
-    const response = await authenticationService.testLoginRequest(email, password);
+    const response = await authenticationService.testLoginRequest(email, password, clientIp);
 
     expect(findOneUserSpy).toHaveBeenCalledWith({ where: { email: email }, 
       attributes: ['id', 'email', 'firstName', 'lastName', 'password', 'roles', 'isVerified', 'createdAt', 'updatedAt', 'updatedBy']
@@ -148,7 +159,7 @@ describe('Authentication service - testLoginRequest', () => {
     findOneUserSpy.mockResolvedValue(user);
     compareBcrypt.mockResolvedValue(false);
 
-    const response = await authenticationService.testLoginRequest(email, password);
+    const response = await authenticationService.testLoginRequest(email, password, clientIp);
 
     expect(findOneUserSpy).toHaveBeenCalledWith({ where: { email: email }, 
       attributes: ['id', 'email', 'firstName', 'lastName', 'password', 'roles', 'isVerified', 'createdAt', 'updatedAt', 'updatedBy']
@@ -161,7 +172,7 @@ describe('Authentication service - testLoginRequest', () => {
     findOneUserSpy.mockRejectedValue(new Error());
     compareBcrypt.mockResolvedValue(undefined);
 
-    await expect(authenticationService.testLoginRequest(email, password)).rejects.toMatchObject({
+    await expect(authenticationService.testLoginRequest(email, password, clientIp)).rejects.toMatchObject({
       status: 500,
       message: "internal server error",
       messageFront: "Une erreur interne est survenue, si vous ne parvenez pas à vous connecter, merci de contacter le support.",

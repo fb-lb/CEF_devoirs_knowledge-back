@@ -9,3 +9,11 @@
 ## Classes
 
 - [Text](classes/Text.md)
+
+## Type Aliases
+
+- [TextType](type-aliases/TextType.md)
+
+## Variables
+
+- [TEXT\_TYPES](variables/TEXT_TYPES.md)

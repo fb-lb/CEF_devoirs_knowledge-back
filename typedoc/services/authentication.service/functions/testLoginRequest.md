@@ -6,9 +6,9 @@
 
 # Function: testLoginRequest()
 
-> **testLoginRequest**(`email`, `password`): `Promise`\<`string` \| [`UserData`](../../../types/Interfaces/interfaces/UserData.md)\>
+> **testLoginRequest**(`email`, `password`, `clientIp`): `Promise`\<`string` \| [`UserData`](../../../types/Interfaces/interfaces/UserData.md)\>
 
-Defined in: [src/services/authentication.service.ts:21](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/148f492cd1e7888bd6f05a7623a4561610d539d1/src/services/authentication.service.ts#L21)
+Defined in: [src/services/authentication.service.ts:24](https://github.com/fb-lb/CEF_devoirs_knowledge-back/blob/a2ea6a85c9a696b582add7a1af0a3500ca474c01/src/services/authentication.service.ts#L24)
 
 **`Function`**
 
@@ -27,6 +27,12 @@ Email used to retrieve user trying to login.
 `string`
 
 Password compared to password of retrieved user to check user authentication.
+
+### clientIp
+
+`string`
+
+Client IP address used to create a log if user isn't retrieved.
 
 ## Returns
 

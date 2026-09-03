@@ -7,7 +7,8 @@ Knowledge Learning est un site e-commerce de formations en ligne. Ce dépôt (`k
 L'application est composée de :
 - un frontend Angular (dépôt Git séparé, voir `frontend.md` pour le contrat d'intégration) ;
 - une API backend Express/TypeScript (ce dépôt) ;
-- une base de données relationnelle MySQL ;
+- une base de données relationnelle MySQL (données métier) ;
+- une base de données MongoDB (logs applicatifs, voir `database.md`) ;
 - des services externes : Stripe (paiement), EmailJS (envoi d'email).
 
 ## Objectifs d'architecture
@@ -35,6 +36,9 @@ Backend (ce dépôt)
 Database (MySQL, via XAMPP en local)
 - persistance des utilisateurs, du contenu pédagogique et des achats
 
+Database (MongoDB)
+- persistance des logs applicatifs (authentification, audit, erreurs), voir `database.md`
+
 Services externes
 - Stripe : création de payment intents pour l'achat de cursus ou de leçons
 - EmailJS : envoi de l'email de vérification de compte
@@ -45,14 +49,16 @@ Services externes
 Frontend Angular
       ↓ HTTP (REST, JSON)
 API Backend Express
-      ↓ Sequelize (ORM)
-Base de données MySQL
+      ↓ Sequelize (ORM)        ↓ Mongoose (ODM)
+Base de données MySQL       Base de données MongoDB
+(données métier)             (logs applicatifs)
 ```
 
 - Frontend ↔ Backend : API REST, réponses JSON au format `{ success, message, data? }` (voir `types/Interfaces.ts` → `ApiResponse`).
 - Authentification : token JWT transmis dans l'en-tête `Authorization: Bearer <token>` (pas de cookies pour l'auth applicative).
 - Backend ↔ Stripe : SDK `stripe` côté serveur, création de payment intents.
 - Backend ↔ EmailJS : SDK `@emailjs/nodejs`, envoi de l'email de vérification d'inscription.
+- Backend ↔ MongoDB : SDK `mongoose` côté serveur, écriture/lecture des logs applicatifs.
 
 ## Dépendances autorisées
 
@@ -67,6 +73,8 @@ Route → Controller → Service → Model (Sequelize) → Base de données
 Dépendances interdites :
 - Frontend → Database (aucun accès direct, tout passe par l'API) ;
 - Controller → Model directement (doit passer par un service).
+
+Le même découpage Route → Controller → Service → Model s'applique aux logs, avec le modèle `Log` (Mongoose) à la place d'un modèle Sequelize (voir `backend.md` et `database.md`).
 
 ## Gestion de la configuration
 

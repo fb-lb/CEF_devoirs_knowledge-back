@@ -9,6 +9,8 @@ import {
 import { User } from "../models/databaseAssociations.js";
 import { AppError } from "../utils/AppError.js";
 import { Request } from "express";
+import { NewLog } from "../types/types.js";
+import { createLog } from "./log.service.js";
 
 /**
  * Creates a user in the database.
@@ -158,7 +160,7 @@ export async function setIsVerified(id: number): Promise<ApiResponse> {
     }
     user.isVerified = true;
     user.updatedBy = id;
-    user.save();
+    await user.save();
     return {
       success: true,
       message: "",
@@ -240,13 +242,31 @@ export async function updateUser(requestorId: number, userData: UpdateUserBody, 
   try {
     const user = await User.findByPk(userId);
     if(!user) throw new AppError(404, "User not found with provided Id in updateUser function in user services", "L'identifiant fourni ne permet pas de retrouver l'utilisateur à modifier.");
+    
+    const oldRole = user.roles.includes('admin') ? 'admin' : 'user';
+    const newRole = userData.roles.includes('admin') ? 'admin' : 'user';
+
+    const newLog: NewLog = {
+      event: 'USER_ROLE_CHANGED',
+      type: 'audit',
+      level: 'info',
+      userId: requestorId,
+      metadata: {
+        oldRole,
+        newRole,
+        targetUserId: user.id
+      }
+    };
+
     user.email = userData.email;
     user.firstName = userData.firstName;
     user.lastName = userData.lastName;
     user.roles = userData.roles;
     user.isVerified = userData.isVerified;
     user.updatedBy = requestorId;
-    user.save();
+    await user.save();
+
+    if (oldRole !== newRole) createLog(newLog);
   } catch (error: any) {
     if (error instanceof AppError) throw error;
     throw new AppError(

@@ -1,0 +1,110 @@
+[
+  {
+    "event": "LOGIN_SUCCESS",
+    "level": "info",
+    "type": "auth",
+    "userId": 1,
+    "createdAt": "2026-07-10T14:32:52.415Z",
+    "metadata": {
+      "ip": "203.0.113.42"
+    }
+  },
+  {
+    "event": "LOGIN_FAILED",
+    "level": "warn",
+    "type": "auth",
+    "createdAt": "2026-07-12T16:21:32.745Z",
+    "metadata": {
+      "ip": "203.0.113.33",
+      "email": "jack.doe@test.com"
+    }
+  },
+  {
+    "event": "LOGIN_SUCCESS",
+    "level": "info",
+    "type": "auth",
+    "userId": 3,
+    "createdAt": "2026-07-20T10:45:15.865Z",
+    "metadata": {
+      "ip": "203.0.113.33"
+    }
+  },
+  {
+    "event": "LOGIN_FAILED",
+    "level": "warn",
+    "type": "auth",
+    "createdAt": "2026-07-27T18:11:17.148Z",
+    "metadata": {
+      "ip": "203.0.113.76",
+      "email": "james.doe@test.com"
+    }
+  },
+  {
+    "event": "USER_ROLE_CHANGED",
+    "level": "info",
+    "type": "audit",
+    "userId": 1,
+    "createdAt": "2026-08-02T14:15:56.006Z",
+    "metadata": {
+      "newRole": "admin",
+      "oldRole": "user",
+      "targetUserId": 2
+    }
+  },
+  {
+    "event": "LOGIN_SUCCESS",
+    "level": "info",
+    "type": "auth",
+    "userId": 2,
+    "createdAt": "2026-08-04T13:04:28.957Z",
+    "metadata": {
+      "ip": "203.0.113.25"
+    }
+  },
+  {
+    "event": "USER_ROLE_CHANGED",
+    "level": "info",
+    "type": "audit",
+    "userId": 2,
+    "createdAt": "2026-08-04T13:10:16.343Z",
+    "metadata": {
+      "newRole": "user",
+      "oldRole": "admin",
+      "targetUserId": 3
+    }
+  },
+  {
+    "event": "DATABASE_ERROR",
+    "level": "error",
+    "type": "error",
+    "userId": 2,
+    "createdAt": "2026-08-04T15:52:27.648Z",
+    "metadata": {
+      "errorCode": "CURSUS_NOT_FOUND",
+      "model": "Cursus",
+      "operation": "getCursus"
+    }
+  },
+  {
+    "event": "LOGIN_SUCCESS",
+    "level": "info",
+    "type": "auth",
+    "userId": 4,
+    "createdAt": "2026-08-12T12:41:52.187Z",
+    "metadata": {
+      "ip": "203.0.113.76"
+    }
+  },
+  {
+    "event": "DATABASE_ERROR",
+    "level": "error",
+    "type": "error",
+    "userId": 1,
+    "createdAt": "2026-08-14T15:38:04.086Z",
+    "metadata": {
+      "errorCode": "THEME_NOT_FOUND",
+      "model": "Theme",
+      "operation": "getTheme"
+    }
+  }
+]

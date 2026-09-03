@@ -48,6 +48,8 @@
 - Logs HTTP via `morgan` (mode `dev`).
 - Les erreurs applicatives (`AppError`) et les erreurs inattendues sont journalisées côté serveur avec leur détail technique (`status`, `name`, `message`, `stack`, `cause`), jamais renvoyées telles quelles au client.
 - Aucun mot de passe ni secret n'est journalisé.
+- Logs applicatifs persistés (authentification, audit, erreurs) dans une base MongoDB dédiée (`src/models/Log.ts`, `log.service.ts`, voir `database.md`). Certains évènements journalisent des données personnelles (`metadata.email`, `metadata.ip` sur `LOGIN_FAILED`/`LOGIN_SUCCESS`) : ces logs sont donc une donnée sensible à part entière.
+- Lecture des logs (`GET /api/logs/getAll`) réservée aux administrateurs via `privateAdmin` — ne jamais rouvrir cette route sans authentification, vu les données personnelles qu'elle expose.
 
 ## Invariants
 
