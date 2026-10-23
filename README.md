@@ -3,7 +3,7 @@
 This project is the back-end of the Knowledge front angular application available here :  
 https://github.com/fb-lb/CEF_devoirs_knowledge-front/
 
-It contains all routes used by the front, it can access to the database and perform actions on it.
+It contains all routes used by the front, it can access to the databases and perform actions on them.
 
 ---
 
